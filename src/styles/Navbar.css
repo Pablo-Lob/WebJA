@@ -33,6 +33,10 @@
   border-bottom: 2px solid var(--accent-color);
 }
 
+.navbar-brand {
+  height: 70px;
+}
+
 @media (max-width: 600px) {
   .navbar {
     padding: 0.5rem 0;
