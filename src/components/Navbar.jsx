@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Navbar.css';
+import './Navbar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../assets/logo.webp';
 

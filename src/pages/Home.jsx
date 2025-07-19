@@ -1,6 +1,8 @@
 import React from 'react';
 import '../styles/Home.css';
 import ShineButton from '../components/ShineButton.jsx';
+import ContactForm from "../components/ContactForm.jsx";
+import Footer from '../components/Footer.jsx';
 
 function Home () {
     return (
@@ -55,17 +57,9 @@ function Home () {
             {/* Contacto */}
             <section id="contacto" className="contacto-home">
                 <h3>Solicita información o presupuesto</h3>
-                <form>
-                    <input type="text" name="empresa" placeholder="Nombre de la empresa" required />
-                    <input type="email" name="email" placeholder="Correo de contacto" required />
-                    <textarea name="mensaje" placeholder="¿Qué minerales necesitas y en qué cantidad?" required></textarea>
-                    {/* Aquí irá la integración de reCAPTCHA */}
-                    <button type="submit">Enviar consulta</button>
-                </form>
-                <p className="info-legal">
-                    Estamos en Dubái y exportamos minerales legalmente a todo el mundo.
-                </p>
+                <ContactForm />
             </section>
+            {/* Footer */}
         </>
     );
 }

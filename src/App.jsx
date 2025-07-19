@@ -4,6 +4,7 @@ import About from './pages/About.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Minerals from './pages/Minerals.jsx';
 import Navbar from './components/Navbar.jsx';
+import Footer from './components/Footer.jsx';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -18,6 +19,7 @@ function App () {
                     <Route path="/minerals" element={<Minerals />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
+                <Footer />
             </div>
         </Router>
     );
