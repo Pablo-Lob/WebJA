@@ -64,7 +64,7 @@ export default function Carrusel() {
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer"
             />
-            <div className="container">
+            <div className="carrusel-container-inside">
                 <div className="slide" ref={slideRef}>
                     {slides.map((slide, idx) => (
                         <div
