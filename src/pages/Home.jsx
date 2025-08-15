@@ -2,7 +2,7 @@ import React from 'react';
 import '../styles/Home.css';
 import ShineButton from '../components/ShineButton.jsx';
 import ContactForm from "../components/ContactForm.jsx";
-import Footer from '../components/Footer.jsx';
+import Carrusel from "../components/Carrusel.jsx";
 
 function Home () {
     return (
@@ -23,24 +23,10 @@ function Home () {
 
             {/* Productos principales */}
             <section className="productos-destacados">
-                <h3>Nuestros minerales principales</h3>
-                <div className="productos-grid">
-                    <div className="producto">
-                        <img src="/assets/ruby.webp" alt="Ruby" />
-                        <h4>Rubí</h4>
-                        <p>Lotes de hasta 100kg de rubí de la más alta calidad, listos para exportar.</p>
-                    </div>
-                    <div className="producto">
-                        <img src="/assets/esmeralda.webp" alt="Esmeralda" />
-                        <h4>Esmeralda</h4>
-                        <p>Esmeraldas naturales seleccionadas para el mercado mayorista internacional.</p>
-                    </div>
-                    <div className="producto">
-                        <img src="/assets/amatista.webp" alt="Amatista" />
-                        <h4>Amatista</h4>
-                        <p>Amatistas y otros minerales disponibles bajo pedido directo desde Dubái.</p>
-                    </div>
-                </div>
+                <h3>Nuestros minerales</h3>
+                <Carrusel>
+
+                </Carrusel>
             </section>
 
             {/* Beneficios B2B */}

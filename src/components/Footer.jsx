@@ -1,50 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube, Gem } from 'lucide-react';
 import './Footer.css';
 
 const Footer = () => {
-    const [email, setEmail] = useState('');
-
-    const handleSubmit = () => {
-        if (email) {
-            // Aquí manejarías la suscripción al newsletter
-            console.log('Email suscrito:', email);
-            setEmail('');
-            alert('¡Gracias por suscribirte a nuestro newsletter!');
-        }
-    };
-
     return (
         <footer className="mineral-footer">
-            {/* Newsletter Section */}
-            <div className="newsletter-section">
-                <div className="newsletter-container">
-                    <div className="newsletter-header">
-                        <Gem className="newsletter-icon" />
-                        <h2 className="newsletter-title">¡Descubre los minerales más raros!</h2>
-                    </div>
-                    <p className="newsletter-description">
-                        Suscríbete a nuestro newsletter y recibe ofertas exclusivas, guías de colección
-                        y las últimas novedades en minerales y cristales.
-                    </p>
-                    <div className="newsletter-form">
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="tucorreo@ejemplo.com"
-                            className="newsletter-input"
-                        />
-                        <button
-                            onClick={handleSubmit}
-                            className="newsletter-button"
-                        >
-                            SUSCRIBIRSE
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             {/* Main Footer Content */}
             <div className="footer-content">
                 <div className="footer-grid">
