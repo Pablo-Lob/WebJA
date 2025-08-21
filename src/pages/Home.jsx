@@ -21,12 +21,24 @@ function Home () {
                 </div>
             </section>
 
+            {/* ¿Para quien es esto? */}
+            <section className="quien-es esto">
+                <h3>Para quien es ITS-STONES?</h3>
+                <ul>
+                    <li>Distribuidores e inversores en busca de piezas unicas y exclusivas.</li>
+                    <li>Empresas o particulares que necesiten avalar préstamos con activos sólidos.</li>
+                    <li>Grandes comerciales de minerales y casas de subasta.</li>
+                </ul>
+            </section>
+
             {/* Productos principales */}
             <section className="productos-destacados">
                 <h3>Nuestros minerales</h3>
                 <Carrusel>
-
                 </Carrusel>
+                <p>Todas nuestras gemas cuentan con certificación de origen y autenticidad. Ofrecemos envío seguro y
+                    gestión aduanera internacional.
+                </p>
             </section>
 
             {/* Beneficios B2B */}
