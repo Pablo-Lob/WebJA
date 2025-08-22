@@ -12,3 +12,27 @@
     margin: 0;
     padding: 0;
 }
+
+section:not(:first-child) {
+    margin-top: 48px; /* o el espacio que quieras, por ejemplo 3rem */
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    display: inline-block;
+    text-align: left;
+}
+li {
+    position: relative;
+    padding-left: 1.5em; /* espacio para simular el bullet */
+}
+li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color); /* color personalizado */
+    font-size: 1.2em;
+    line-height: 1;
+}
