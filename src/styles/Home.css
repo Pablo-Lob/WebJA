@@ -13,10 +13,6 @@
     padding: 0;
 }
 
-section:not(:first-child) {
-    margin-top: 48px; /* o el espacio que quieras, por ejemplo 3rem */
-}
-
 ul {
     list-style: none;
     padding: 0;
