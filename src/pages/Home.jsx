@@ -1,8 +1,8 @@
 import React from 'react';
 import '../styles/Home.css';
 import ShineButton from '../components/ShineButton.jsx';
-import ContactForm from "../components/ContactForm.jsx";
-import Carrusel from "../components/Carrusel.jsx";
+import ContactForm from "../components/contactForm/ContactForm.jsx";
+import Carrusel from "../components/carrusel/Carrusel.jsx";
 
 function Home () {
     return (

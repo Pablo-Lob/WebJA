@@ -1,22 +1,41 @@
+/* src/App.css */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Space+Grotesk:wght@300;700&display=swap');
+
 :root {
-  --background-color: #1E1E1E;
-  --primary-text-color: #F5F5F5;
-  --accent-color: #D4AF37;
-  --button-color: #2E2E2E;
-  --button-text-color: #F5F5F5;
-  --button-hover-color: #D4AF37;
-  --link-color: #A0C1B8;
-  --card-background: #2A2A2A;
+    /* Paleta Futurista Dark-Luxe */
+    --bg-dark: #0a0a0a;
+    --bg-card: rgba(255, 255, 255, 0.03);
+    --accent-gold: #D4AF37;
+    --accent-glow: #ffd700;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --glass-border: rgba(255, 255, 255, 0.1);
+
+    /* Efectos */
+    --neon-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
 }
 
 body {
-  background-color: var(--background-color);
-  color: var(--primary-text-color);
-  overflow-x: hidden;
-  /* Center the content */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif; /* Fuente tecnológica */
+    overflow-x: hidden;
+    margin: 0;
 
+    /* Fondo con degradado sutil (efecto atmósfera) */
+    background-image:
+            radial-gradient(circle at 15% 50%, rgba(88, 70, 20, 0.08), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(40, 40, 60, 0.15), transparent 25%);
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+    border-radius: 4px;
 }
