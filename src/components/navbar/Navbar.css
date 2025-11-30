@@ -18,7 +18,7 @@
     align-items: center;
 
     /* Transicción con scroll */
-    transition: transform 0.35s ease, opacity 0.35s ease;
+    transition: transform 1s ease, opacity 0.7s ease;
     will-change: transform, opacity;
 }
 

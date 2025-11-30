@@ -1,37 +1,44 @@
 import React, { useRef } from "react";
 import "./Carrusel.css";
 
+
 // Puedes reemplazar/expandir este array con tus propios slides
 const slides = [
     {
-        image: "https://i.ibb.co/qCkd9jS/img1.jpg",
-        name: "Switzerland",
-        des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!",
+        image: "/carrusel/carrusel1.jpg",
+        name: "Esmeralda 322Kg",
+        des: "Una pieza de categoría museo, única en el mercado internacional. Extraída de nuestras minas en Brasil, esta esmeralda monumental representa la máxima seguridad como activo de inversión y garantía financiera para operaciones de gran volumen.",
+        route: "/carrusel"
     },
     {
-        image: "https://i.ibb.co/jrRb11q/img2.jpg",
-        name: "Finland",
-        des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!",
+        image: "/carrusel/carrusel2.jpg",
+        name: "Rubí 340Kg",
+        des: "Fuerza bruta de la naturaleza. Un espécimen de corindón masivo de 340 kilogramos. Su rareza y volumen lo convierten en un activo tangible excepcional para diversificación de patrimonio.",
+        route: "/carrusel"
     },
     {
-        image: "https://i.ibb.co/NSwVv8D/img3.jpg",
-        name: "Iceland",
-        des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!",
+        image: "/carrusel/carrusel3.jpg",
+        name: "Amatista",
+        des: "Cuarzo violeta de alta pureza. Ideal para talla, lapidación o decoración de gran escala. Suministro constante garantizado.",
+        route: "/carrusel"
     },
     {
-        image: "https://i.ibb.co/Bq4Q0M8/img4.jpg",
-        name: "Australia",
-        des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!",
+        image: "/carrusel/carrusel4.jpg",
+        name: "Esmeralda de 405Kg",
+        des: "Espécimen masivo no es solo una rareza geológica, es un vehículo de inversión. Su volumen y características lo posicionan como una garantía física excepcional (aval) para operaciones financieras complejas o diversificación de patrimonio corporativo.",
+        route: "/carrusel"
     },
     {
-        image: "https://i.ibb.co/jTQfmTq/img5.jpg",
-        name: "Netherland",
-        des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!",
+        image: "/carrusel/carrusel5.jpg",
+        name: "Esmeralda de 405Kg",
+        des: "",
+        route: "/carrusel"
     },
     {
-        image: "https://i.ibb.co/RNkk6L0/img6.jpg",
-        name: "Ireland",
-        des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!",
+        image: "/carrusel/carrusel6.jpg",
+        name: "Esmeralda de 405Kg",
+        des: "",
+        route: "/carrusel"
     },
 ];
 
@@ -75,7 +82,7 @@ export default function Carrusel() {
                             <div className="content">
                                 <div className="name">{slide.name}</div>
                                 <div className="des">{slide.des}</div>
-                                <button>See More</button>
+                                <button>Más minerales</button>
                             </div>
                         </div>
                     ))}
