@@ -5,12 +5,24 @@
     justify-content: center;
     height: 100vh;
     width: 100vw;
-    background-image: url('../assets/banner.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     margin: 0;
     padding: 0;
+
+    background: linear-gradient(
+            to bottom,
+            rgba(10, 10, 10, 0.4) 0%,
+            rgba(10, 10, 10, 0.7) 100%
+    ), url('../assets/banner.webp');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* El fixed a veces da problemas en iOS, scroll es más seguro para móviles */
+    background-attachment: scroll;
 }
 
 ul {
@@ -31,4 +43,11 @@ li::before {
     color: var(--accent-color); /* color personalizado */
     font-size: 1.2em;
     line-height: 1;
+}
+
+/* Media query para activar el efecto parallax SOLO en PC donde hay potencia */
+@media (min-width: 1024px) {
+    .hero-home {
+        background-attachment: fixed;
+    }
 }
