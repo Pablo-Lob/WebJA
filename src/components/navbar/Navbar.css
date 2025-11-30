@@ -1,4 +1,4 @@
-.navbar {
+.container {
     background: linear-gradient(
             to bottom,
             rgba(10, 10, 10, 0.25) 0%,
@@ -7,7 +7,6 @@
     border-radius: 10px;
     position: fixed;
     left: 50% !important;
-    right: auto !important;
     transform: translateX(-50%) !important;
     width: auto !important;
     margin-top: 10px;
@@ -16,6 +15,21 @@
     box-sizing: border-box;
     z-index: 9999;
 }
+
+.container2 {
+    background: linear-gradient(
+             to bottom,
+             rgba(10, 10, 10, 0.25) 0%,
+             rgba(10, 10, 10, 0.25) 100%
+    );
+    border-radius: 10px;
+    position: absolute;
+    left: 90%;
+    margin-top: 10px;
+    transform: translate(-50%, -50%); /* centra horizontal y verticalmente */
+    width: auto;
+    padding: 0.1rem;
+ }
 
 .navbar ul {
     display: flex;

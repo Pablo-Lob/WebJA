@@ -25,18 +25,20 @@
     background-attachment: scroll;
 }
 
-ul {
+.quien-es-esto ul, .b2b-benefits ul {
     list-style: none;
     padding: 0;
     margin: 0 auto;
     display: inline-block;
     text-align: left;
 }
-li {
+
+.quien-es-esto li, .b2b-benefits ul {
     position: relative;
     padding-left: 1.5em; /* espacio para simular el bullet */
 }
-li::before {
+
+.quien-es-esto li::before, .b2b-benefits li::before {
     content: "•";
     position: absolute;
     left: 0;

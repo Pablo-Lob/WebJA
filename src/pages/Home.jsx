@@ -22,7 +22,7 @@ function Home () {
             </section>
 
             {/* ¿Para quien es esto? */}
-            <section className="quien-es esto">
+            <section className="quien-es-esto">
                 <h3>Para quien es ITS-STONES?</h3>
                 <ul>
                     <li>Distribuidores e inversores en busca de piezas unicas y exclusivas.</li>
