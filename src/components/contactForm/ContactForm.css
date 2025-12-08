@@ -84,3 +84,25 @@
     transform: scale(0.98);
     border-radius: 20px;
 }
+
+@media (max-width: 768px) {
+    .form-card1 {
+        margin: 1.5em 1rem;
+        max-width: calc(100% - 2rem);
+    }
+
+    .form {
+        padding-inline: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-card1 {
+        margin: 1em 0.75rem;
+        max-width: calc(100% - 1.5rem);
+    }
+
+    .form {
+        padding-inline: 1em;
+    }
+}

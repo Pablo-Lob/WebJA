@@ -25,31 +25,195 @@
     background-attachment: scroll;
 }
 
-.quien-es-esto ul, .b2b-benefits ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 auto;
-    display: inline-block;
-    text-align: left;
+/* --- SECCIONES GENERALES (Modernas) --- */
+.info-section {
+    padding: 5rem 1.5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-.quien-es-esto li, .b2b-benefits ul {
-    position: relative;
-    padding-left: 1.5em; /* espacio para simular el bullet */
+.section-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto; /* centra el contenedor dentro de la sección */
+    padding: 0 1rem;
 }
 
-.quien-es-esto li::before, .b2b-benefits li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: var(--accent-color); /* color personalizado */
-    font-size: 1.2em;
-    line-height: 1;
+.section-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--primary-text-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Media query para activar el efecto parallax SOLO en PC donde hay potencia */
-@media (min-width: 1024px) {
+.highlight-text {
+    color: var(--accent-color);
+}
+
+/* --- SECCIÓN 1: TARJETAS GLASSMORPHISM ("Para quién es") --- */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.info-card {
+    background: rgba(42, 42, 42, 0.6); /* Semi-transparente */
+    backdrop-filter: blur(10px); /* Efecto cristal */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: var(--accent-color);
+}
+
+.icon-wrapper {
+    background: rgba(212, 175, 55, 0.1); /* Fondo dorado sutil */
+    color: var(--accent-color);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--accent-color);
+    transition: background 0.3s;
+}
+
+.info-card:hover .icon-wrapper {
+    background: var(--accent-color);
+    color: var(--background-color); /* Icono oscuro sobre fondo dorado */
+}
+
+.info-card h4 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-text-color);
+}
+
+.info-card p {
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* --- SECCIÓN 2: CARACTERÍSTICAS ("Por qué comprar") --- */
+.gradient-bg {
+    /* Degradado sutil de fondo */
+    background: linear-gradient(180deg, var(--background-color) 0%, #252525 100%);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-radius: 15px;
+    transition: background 0.3s ease;
+}
+
+.feature-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.feature-icon {
+    min-width: 40px;
+    height: 40px;
+    color: var(--accent-color);
+    margin-right: 1.5rem;
+    margin-top: 0.25rem; /* Alinear visualmente con el título */
+}
+
+.feature-text h4 {
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--primary-text-color);
+}
+
+.feature-text p {
+    margin: 0;
+    color: #bbb;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
     .hero-home {
-        background-attachment: fixed;
+        height: 100svh; /* mejor para móviles */
+        padding: 1rem;
+    }
+
+    .hero-home h1 {
+        font-size: 2rem;
+    }
+
+    .hero-home h2 {
+        font-size: 1.2rem;
+    }
+
+    .hero-home p {
+        font-size: 0.9rem;
+        padding: 0 1rem;
+    }
+
+    .info-section {
+        padding: 3rem 1rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .info-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .feature-item {
+        padding: 1rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .feature-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+
+    .productos-destacados {
+        padding: 2rem 1rem;
+    }
+
+    .productos-destacados h3 {
+        font-size: 1.8rem;
     }
 }
