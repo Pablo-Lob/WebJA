@@ -1,7 +1,7 @@
 // File: src/pages/admin/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
+import './styles/Login.css';
 import {auth} from '../../firebase/firebase-config.js';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 

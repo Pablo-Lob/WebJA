@@ -1,65 +1,106 @@
-// File: src/pages/admin/ManageContent.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { db, storage } from '../../firebase/firebase-config'; // Importamos storage
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Funciones de Storage
 import './ManageContent.css';
 
 const ManageContent = () => {
     const [activeTab, setActiveTab] = useState('colors');
+    const [loading, setLoading] = useState(false);
+    const [uploadingImg, setUploadingImg] = useState(null);
 
-    // Estados para cada sección
-    const [colors, setColors] = useState({
-        primary: '#667eea',
-        secondary: '#764ba2',
-        accent: '#f6ad55'
-    });
-
-    const [banner, setBanner] = useState({
-        title: 'Minerales de Alta Calidad',
-        description: 'Los mejores minerales para tu industria',
-        image: ''
-    });
-
-    const [b2bContent, setB2bContent] = useState({
-        title: 'Soluciones B2B',
-        features: [
-            'Pedidos personalizados',
-            'Asesoría técnica especializada',
-            'Logística optimizada',
-            'Certificaciones internacionales'
-        ]
-    });
-
-    const [targetAudience, setTargetAudience] = useState([
-        {
-            title: 'Industrias',
-            description: 'Soluciones para manufactura y producción',
-            icon: '🏭'
+    const [config, setConfig] = useState({
+        colors: {
+            goldPrimary: '#d4af37',
+            goldSecondary: '#f7e695',
+            goldAccent: '#ecd26b',
+            goldHover: '#b8860b',
+            goldDim: 'rgba(212, 175, 55, 0.2)',
+            bgBlack: '#000000',
+            bgDark: '#0f0f0f',
+            bgSecondary: '#1a1a1a',
+            bgCard: 'rgba(255, 255, 255, 0.05)',
+            bgInput: '#ffffff',
+            textWhite: '#ffffff',
+            textGray: '#a0a0a0',
+            textLightGray: '#cccccc',
+            textDark: '#333333',
+            textButton: '#F5F5F5'
         },
-        {
-            title: 'Constructoras',
-            description: 'Materiales de construcción certificados',
-            icon: '🏗️'
+        images: {
+            logo: '',
+            banner: '',
+            aboutUs: '',
+            ourMission: ''
         },
-        {
-            title: 'Laboratorios',
-            description: 'Minerales para investigación y análisis',
-            icon: '🔬'
+    });
+
+    // Cargar configuración existente
+    useEffect(() => {
+        const fetchData = async () => {
+            const docRef = doc(db, "siteContent", "generalConfig");
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setConfig(prev => ({ ...prev, ...docSnap.data() }));
+            }
+        };
+        fetchData();
+    }, []);
+
+    const handleSave = async () => {
+        setLoading(true);
+        try {
+            await setDoc(doc(db, "siteContent", "generalConfig"), config);
+            alert("¡Configuración guardada correctamente!");
+        } catch (error) {
+            console.error(error);
+            alert("Error al guardar");
         }
-    ]);
-
-    const handleColorChange = (colorType, value) => {
-        setColors({...colors, [colorType]: value});
+        setLoading(false);
     };
 
-    const handleSave = (section) => {
-        // Implementar guardado en backend
-        alert(`Guardando cambios en ${section}...`);
+    // --- Lógica de Subida de Imágenes ---
+    const handleImageUpload = async (e, imageKey) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploadingImg(imageKey);
+        try {
+            // 1. Crear referencia (ej: site-assets/logo.png)
+            const storageRef = ref(storage, `site-assets/${imageKey}`);
+
+            // 2. Subir archivo
+            await uploadBytes(storageRef, file);
+
+            // 3. Obtener URL pública
+            const url = await getDownloadURL(storageRef);
+
+            // 4. Actualizar estado local
+            setConfig(prev => ({
+                ...prev,
+                images: {
+                    ...prev.images,
+                    [imageKey]: url
+                }
+            }));
+        } catch (error) {
+            console.error("Error subiendo imagen:", error);
+            alert("Error al subir la imagen. Verifica tu conexión.");
+        } finally {
+            setUploadingImg(null);
+        }
+    };
+
+    const handleColorChange = (key, value) => {
+        setConfig(prev => ({
+            ...prev,
+            colors: { ...prev.colors, [key]: value }
+        }));
     };
 
     const tabs = [
         { id: 'colors', label: 'Colores', icon: '🎨' },
-        { id: 'banner', label: 'Banner', icon: '🖼️' },
-        { id: 'b2b', label: 'B2B', icon: '🤝' },
-        { id: 'target', label: 'Para Quién', icon: '👥' }
+        { id: 'images', label: 'Imágenes', icon: '🖼️' },
     ];
 
     return (
@@ -83,220 +124,75 @@ const ManageContent = () => {
             </div>
 
             <div className="manage-content">
-                {/* Sección de Colores */}
+
+                {/* Pestaña de Colores */}
                 {activeTab === 'colors' && (
                     <div className="content-section">
                         <h2>Personalizar Colores</h2>
-
                         <div className="color-grid">
-                            <div className="color-item">
-                                <label>Color Primario</label>
-                                <div className="color-input-group">
-                                    <input
-                                        type="color"
-                                        value={colors.primary}
-                                        onChange={(e) => handleColorChange('primary', e.target.value)}
-                                    />
-                                    <input
-                                        type="text"
-                                        value={colors.primary}
-                                        onChange={(e) => handleColorChange('primary', e.target.value)}
-                                        placeholder="#667eea"
-                                    />
+                            {Object.entries(config.colors).map(([key, value]) => (
+                                <div key={key} className="color-item">
+                                    <label>{key}</label>
+                                    <div className="color-input-group">
+                                        <input
+                                            type="color"
+                                            value={value}
+                                            onChange={(e) => handleColorChange(key, e.target.value)}
+                                        />
+                                        <input
+                                            type="text"
+                                            value={value}
+                                            onChange={(e) => handleColorChange(key, e.target.value)}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div className="color-item">
-                                <label>Color Secundario</label>
-                                <div className="color-input-group">
-                                    <input
-                                        type="color"
-                                        value={colors.secondary}
-                                        onChange={(e) => handleColorChange('secondary', e.target.value)}
-                                    />
-                                    <input
-                                        type="text"
-                                        value={colors.secondary}
-                                        onChange={(e) => handleColorChange('secondary', e.target.value)}
-                                        placeholder="#764ba2"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="color-item">
-                                <label>Color de Acento</label>
-                                <div className="color-input-group">
-                                    <input
-                                        type="color"
-                                        value={colors.accent}
-                                        onChange={(e) => handleColorChange('accent', e.target.value)}
-                                    />
-                                    <input
-                                        type="text"
-                                        value={colors.accent}
-                                        onChange={(e) => handleColorChange('accent', e.target.value)}
-                                        placeholder="#f6ad55"
-                                    />
-                                </div>
-                            </div>
+                            ))}
                         </div>
-
-                        <div className="color-preview">
-                            <h3>Vista Previa</h3>
-                            <div
-                                className="preview-box"
-                                style={{
-                                    background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
-                                }}
-                            >
-                                <button style={{background: colors.accent}}>
-                                    Botón de Ejemplo
-                                </button>
-                            </div>
-                        </div>
-
-                        <button className="save-button" onClick={() => handleSave('colors')}>
-                            Guardar Colores
+                        <button className="save-button" onClick={handleSave} disabled={loading}>
+                            {loading ? 'Guardando...' : 'Guardar Colores'}
                         </button>
                     </div>
                 )}
 
-                {/* Sección de Banner */}
-                {activeTab === 'banner' && (
+                {/* Pestaña de Imágenes */}
+                {activeTab === 'images' && (
                     <div className="content-section">
-                        <h2>Editar Banner Principal</h2>
+                        <h2>Imágenes Globales</h2>
+                        <p style={{marginBottom: '20px', color: '#aaa'}}>Estas imágenes se actualizan en tiempo real en la web al subir una nueva.</p>
 
-                        <div className="form-group">
-                            <label>Título del Banner</label>
-                            <input
-                                type="text"
-                                value={banner.title}
-                                onChange={(e) => setBanner({...banner, title: e.target.value})}
-                                placeholder="Título principal"
-                            />
-                        </div>
+                        <div className="images-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                            {['logo', 'banner', 'aboutUs', 'ourMission'].map((key) => (
+                                <div key={key} className="image-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '10px' }}>
+                                    <label style={{ textTransform: 'capitalize', display: 'block', marginBottom: '10px', color: 'var(--gold)' }}>
+                                        {key}
+                                    </label>
 
-                        <div className="form-group">
-                            <label>Descripción</label>
-                            <textarea
-                                value={banner.description}
-                                onChange={(e) => setBanner({...banner, description: e.target.value})}
-                                placeholder="Descripción del banner"
-                                rows="3"
-                            />
-                        </div>
+                                    <div className="img-preview" style={{ height: '150px', background: '#000', marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #444' }}>
+                                        {config.images?.[key] ? (
+                                            <img src={config.images[key]} alt={key} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                                        ) : (
+                                            <span style={{ color: '#666' }}>Sin imagen</span>
+                                        )}
+                                    </div>
 
-                        <div className="form-group">
-                            <label>Imagen de Fondo</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => {
-                                    const file = e.target.files[0];
-                                    if (file) {
-                                        setBanner({...banner, image: URL.createObjectURL(file)});
-                                    }
-                                }}
-                            />
-                            {banner.image && (
-                                <div className="image-preview">
-                                    <img src={banner.image} alt="Preview" />
+                                    <input
+                                        type="file"
+                                        onChange={(e) => handleImageUpload(e, key)}
+                                        accept="image/*"
+                                        disabled={uploadingImg === key}
+                                        style={{ width: '100%', color: '#ccc', fontSize: '0.9rem' }}
+                                    />
+                                    {uploadingImg === key && <p style={{color: 'var(--gold)', marginTop: '5px'}}>Subiendo...</p>}
                                 </div>
-                            )}
+                            ))}
                         </div>
 
-                        <button className="save-button" onClick={() => handleSave('banner')}>
-                            Guardar Banner
+                        <button className="save-button" onClick={handleSave} disabled={loading}>
+                            {loading ? 'Guardando...' : 'Confirmar Cambios'}
                         </button>
                     </div>
                 )}
 
-                {/* Sección B2B */}
-                {activeTab === 'b2b' && (
-                    <div className="content-section">
-                        <h2>Contenido B2B</h2>
-
-                        <div className="form-group">
-                            <label>Título de la Sección</label>
-                            <input
-                                type="text"
-                                value={b2bContent.title}
-                                onChange={(e) => setB2bContent({...b2bContent, title: e.target.value})}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label>Características (una por línea)</label>
-                            <textarea
-                                value={b2bContent.features.join('\n')}
-                                onChange={(e) => setB2bContent({
-                                    ...b2bContent,
-                                    features: e.target.value.split('\n')
-                                })}
-                                rows="6"
-                            />
-                        </div>
-
-                        <button className="save-button" onClick={() => handleSave('b2b')}>
-                            Guardar B2B
-                        </button>
-                    </div>
-                )}
-
-                {/* Sección Para Quién */}
-                {activeTab === 'target' && (
-                    <div className="content-section">
-                        <h2>¿Para Quién Es Esto?</h2>
-
-                        {targetAudience.map((item, index) => (
-                            <div key={index} className="target-card-edit">
-                                <div className="form-group">
-                                    <label>Emoji/Icono</label>
-                                    <input
-                                        type="text"
-                                        value={item.icon}
-                                        onChange={(e) => {
-                                            const newTarget = [...targetAudience];
-                                            newTarget[index].icon = e.target.value;
-                                            setTargetAudience(newTarget);
-                                        }}
-                                        maxLength="2"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Título</label>
-                                    <input
-                                        type="text"
-                                        value={item.title}
-                                        onChange={(e) => {
-                                            const newTarget = [...targetAudience];
-                                            newTarget[index].title = e.target.value;
-                                            setTargetAudience(newTarget);
-                                        }}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Descripción</label>
-                                    <input
-                                        type="text"
-                                        value={item.description}
-                                        onChange={(e) => {
-                                            const newTarget = [...targetAudience];
-                                            newTarget[index].description = e.target.value;
-                                            setTargetAudience(newTarget);
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        ))}
-
-                        <button className="save-button" onClick={() => handleSave('target')}>
-                            Guardar Audiencia
-                        </button>
-                    </div>
-                )}
             </div>
         </div>
     );

@@ -2,12 +2,15 @@ import React, {useState, useEffect, useRef} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Navbar.css';
 import logo from '../../assets/logo.webp';
+import { useConfig } from '../../context/ConfigContext.jsx';
 
 function Navbar() {
     const [visible, setVisible] = useState(true);
     const [activeLink, setActiveLink] = useState('Home');
 
     const lastScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
+
+    const { config } = useConfig();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -38,7 +41,7 @@ function Navbar() {
                 {/* Logo */}
                 <div className="nav-logo">
                     <a className="navbar-brand m-0" href="../../pages/Home.jsx">
-                        <img src={logo} alt="Logo" />
+                        <img src={config.images?.logo || logo} alt="Logo" />
                     </a>
                 </div>
 

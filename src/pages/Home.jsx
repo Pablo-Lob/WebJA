@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Home.css';
+import './styles/Home.css';
 import ShineButton from '../components/shineButton/ShineButton.jsx';
 import ContactForm from "../components/contactForm/ContactForm.jsx";
 import banner from '../assets/banner.webp';
@@ -7,14 +7,16 @@ import Branches from "../components/branches/Branches.jsx";
 import About from "../components/about/About.jsx";
 import Services from "../components/services/Services.jsx";
 import Mission from "../components/mission/Mission.jsx";
+import {useConfig} from "../context/ConfigContext.jsx";
 
 function Home () {
+    const {config} = useConfig();
     return (
         <>
             {/* Hero Section */}
             <section className="hero-home">
                 <div className="hero-image">
-                    <img src={banner} alt="ITS-STONES Banner" />
+                    <img src={config.images?.banner || banner} alt="ITS-STONES Banner" />
                 </div>
                 <div className="hero-content">
                     <h1>ITS-STONES</h1>
