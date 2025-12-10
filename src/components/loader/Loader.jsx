@@ -1,16 +1,20 @@
 import React from 'react';
 import './Loader.css';
-import logo from '../../assets/logo.png';
-import {useConfig} from '../../context/ConfigContext.jsx';
+import defaultLogo from '../../assets/logo.webp'; // Asegúrate que sea .webp
+import { useConfig } from '../../context/ConfigContext';
 
 const Loader = () => {
+    const { config } = useConfig();
+
     return (
         <div className="loader-container">
             <div className="loader-content">
-                {/* Logo girando */}
-                <img src={logo} alt="Cargando..." className="loader-logo" />
+                <img
+                    src={config.images?.logo || defaultLogo}
+                    alt="Cargando..."
+                    className="loader-logo"
+                />
 
-                {/* Barra de progreso */}
                 <div className="loader-bar-container">
                     <div className="loader-bar-fill"></div>
                 </div>

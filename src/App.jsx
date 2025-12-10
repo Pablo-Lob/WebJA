@@ -10,8 +10,8 @@ import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import Login from './pages/admin/Login.jsx';
-import {db} from './firebase/firebase-config.js';
-import {doc, getDoc} from "firebase/firestore";
+import Loader from './components/loader/Loader.jsx';
+import {useConfig} from './context/ConfigContext.jsx';
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -43,49 +43,12 @@ const PublicLayout = () => {
 };
 
 function App () {
-    useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                // Documento de la base de datos donde esta el CMS
-                const docRef = doc(db, "siteContent", "generalConfig");
-                const docSnap = await getDoc(docRef);
+    const { loading } = useConfig();
 
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const root = document.documentElement;
+    if (loading) {
+        return <Loader />;
+    }
 
-                    // Si hay unos colores definidos en la base de datos de firebase se aplican.
-                    if (data.colors) {
-                        const c = data.colors; // Abreviamos para escribir menos
-
-                        // Dorados
-                        if (c.goldPrimary) root.style.setProperty('--gold-primary', c.goldPrimary);
-                        if (c.goldSecondary) root.style.setProperty('--gold-secondary', c.goldSecondary);
-                        if (c.goldAccent) root.style.setProperty('--gold-accent', c.goldAccent);
-                        if (c.goldHover) root.style.setProperty('--gold-hover', c.goldHover);
-                        if (c.goldDim) root.style.setProperty('--gold-dim', c.goldDim);
-
-                        // Fondos
-                        if (c.bgBlack) root.style.setProperty('--bg-black', c.bgBlack);
-                        if (c.bgDark) root.style.setProperty('--bg-dark', c.bgDark);
-                        if (c.bgSecondary) root.style.setProperty('--bg-secondary', c.bgSecondary);
-                        if (c.bgCard) root.style.setProperty('--bg-card', c.bgCard);
-                        if (c.bgInput) root.style.setProperty('--bg-input', c.bgInput);
-
-                        // Textos
-                        if (c.textWhite) root.style.setProperty('--text-white', c.textWhite);
-                        if (c.textGray) root.style.setProperty('--text-gray', c.textGray);
-                        if (c.textLightGray) root.style.setProperty('--text-light-gray', c.textLightGray);
-                        if (c.textDark) root.style.setProperty('--text-dark', c.textDark);
-                        if (c.textButton) root.style.setProperty('--text-button', c.textButton);
-                    }
-                }
-            } catch (error) {
-                console.error("Error al cargar la configuracion:", error);
-            }
-        };
-            fetchConfig();
-    }, []);
     return (
         <Router>
             <div className="App">
