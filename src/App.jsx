@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dashboard from "./pages/admin/Dashboard.jsx";
 import ManageContent from "./pages/admin/ManageContent.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Login from './pages/admin/Login.jsx';
 import Loader from './components/loader/Loader.jsx';
@@ -27,7 +27,7 @@ function KeyboardShortcuts() {
         return () => window.removeEventListener('keydown', handleKeyPress);
     }, [navigate]);
 
-    return null; // No renderiza nada
+    return null;
 }
 
 const PublicLayout = () => {
@@ -45,43 +45,53 @@ const PublicLayout = () => {
 function App () {
     const { loading } = useConfig();
 
-    if (loading) {
-        return <Loader />;
-    }
+    const [showLoader, setShowLoader] = useState(true);
+    const [fadeOut, setFadeOut] = useState(false);
+
+    useEffect(() => {
+        if (!loading) {
+            setFadeOut(true);
+
+            const timer = setTimeout(() => {
+                setShowLoader(false);
+            }, 800);
+
+            return () => clearTimeout(timer);
+        }
+    }, [loading]);
 
     return (
-        <Router>
-            <div className="App">
-                <KeyboardShortcuts />
-                <Routes>
+        <>
+            {/* El Loader se renderiza encima de todo. Si showLoader es false, se elimina del DOM */}
+            {showLoader && <Loader fadeOut={fadeOut} />}
 
-                    {/* --- Rutas con navbar y footer --- */}
-                    <Route element={<PublicLayout />}>
-                        <Route path="/" element={<Home />} />
-                        {/* Para en un futuro poner otras publicaciones */}
-                    </Route>
+            <Router>
+                <div className="App">
+                    <KeyboardShortcuts />
+                    <Routes>
+                        <Route element={<PublicLayout />}>
+                            <Route path="/" element={<Home />} />
+                        </Route>
 
-                    {/* --- Rutas sin navbar ni footer --- */}
-                    {/* Rutas de administración */}
-                    <Route path="/admin/login" element={<Login />} />
+                        <Route path="/admin/login" element={<Login />} />
 
-                    <Route path="/admin/dashboard" element={
-                        <ProtectedRoute>
-                            <Dashboard />
-                        </ProtectedRoute>
-                    } />
+                        <Route path="/admin/dashboard" element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        } />
 
-                    <Route path="/admin/content" element={
-                        <ProtectedRoute>
-                            <ManageContent />
-                        </ProtectedRoute>
-                    } />
+                        <Route path="/admin/content" element={
+                            <ProtectedRoute>
+                                <ManageContent />
+                            </ProtectedRoute>
+                        } />
 
-                    {/* Ruta 404 */}
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </div>
-        </Router>
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </div>
+            </Router>
+        </>
     );
 }
 

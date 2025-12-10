@@ -22,6 +22,20 @@ export const ConfigProvider = ({ children }) => {
                 const data = docSnap.data();
                 setConfig(data);
 
+                // Actualización del logo favicon dinamica
+                if (data.images?.logo) {
+                    const link = document.querySelector("link[rel~='icon']");
+                    if (link) {
+                        link.href = data.images.logo;
+                    } else {
+                        // Si no existe, lo creamos (seguridad)
+                        const newLink = document.createElement('link');
+                        newLink.rel = 'icon';
+                        newLink.href = data.images.logo;
+                        document.head.appendChild(newLink);
+                    }
+                }
+
                 // Aplicar colores al CSS automáticamente
                 const root = document.documentElement;
                 if (data.colors) {

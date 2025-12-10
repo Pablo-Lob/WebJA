@@ -1,13 +1,13 @@
 import React from 'react';
 import './Loader.css';
-import defaultLogo from '../../assets/logo.webp'; // Asegúrate que sea .webp
+import defaultLogo from '../../assets/logo.webp';
 import { useConfig } from '../../context/ConfigContext';
 
-const Loader = () => {
+const Loader = ({ fadeOut }) => {
     const { config } = useConfig();
 
     return (
-        <div className="loader-container">
+        <div className={`loader-container ${fadeOut ? 'loader-hidden' : ''}`}>
             <div className="loader-content">
                 <img
                     src={config.images?.logo || defaultLogo}
