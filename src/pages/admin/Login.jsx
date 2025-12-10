@@ -2,9 +2,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import {auth} from '../../firebase/firebase-config.js';
+import {signInWithEmailAndPassword} from 'firebase/auth';
 
 const Login = () => {
-    const [credentials, setCredentials] = useState({ username: '', password: '' });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -14,16 +17,22 @@ const Login = () => {
         setError('');
         setLoading(true);
 
-        // Simular autenticación (implementar con backend real)
-        setTimeout(() => {
-            if (credentials.username === 'admin' && credentials.password === 'admin123') {
-                localStorage.setItem('adminToken', 'fake-token-123');
-                navigate('/admin/dashboard');
-            } else {
-                setError('Credenciales incorrectas');
-            }
+        try {
+            // Autenticación con Firebase
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Guardamos un token en localStorage
+            // Firebase gestiona la sesión, manteniendo la lógica de rutas
+            localStorage.setItem('adminToken', user.accessToken);
+
+            navigate('/admin/dashboard');
+        } catch (error) {
+            console.error("Error login:", error);
+            setError('Credenciales incorrectas');
+        } finally {
             setLoading(false);
-        }, 1000);
+        }
     };
 
     return (
@@ -42,9 +51,9 @@ const Login = () => {
                         <input
                             type="text"
                             id="username"
-                            value={credentials.username}
-                            onChange={(e) => setCredentials({...credentials, username: e.target.value})}
-                            placeholder="Ingresa tu usuario"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="admin@email.com"
                             required
                         />
                     </div>
@@ -54,8 +63,8 @@ const Login = () => {
                         <input
                             type="password"
                             id="password"
-                            value={credentials.password}
-                            onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             placeholder="Ingresa tu contraseña"
                             required
                         />

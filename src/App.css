@@ -1,30 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
 :root {
-    /* --- PALETA DE COLORES GLOBAL --- */
+    /* --- PALETA MAESTRA --- */
+    /* Estos valores se sobreescriben por Firebase al cargar */
 
     /* Dorados */
-    --gold-primary: #d4af37;       /* Dorado principal (Texto, iconos, bordes) */
-    --gold-light: #f7e695;         /* Amarillo pálido (Fondo Hero, texto Navbar) */
-    --gold-dim: rgba(212, 175, 55, 0.2); /* Dorado transparente (Bordes sutiles) */
-    --gold-hover: #b8860b;         /* Dorado oscuro para hover */
+    --gold-primary: #d4af37;
+    --gold-secondary: #f7e695;
+    --gold-accent: #ecd26b;
+    --gold-hover: #b8860b;
+    --gold-dim: rgba(212, 175, 55, 0.2);
 
-    /* Oscuros */
-    --bg-black: #000000;           /* Negro puro */
-    --bg-dark: #0f0f0f;            /* Negro principal (Secciones) */
-    --bg-secondary: #1a1a1a;       /* Gris muy oscuro (Navbar, Footer, Tarjetas) */
+    /* Fondos Oscuros */
+    --bg-black: #000000;
+    --bg-dark: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --bg-input: #ffffff;
 
     /* Textos */
     --text-white: #ffffff;
     --text-gray: #a0a0a0;
-    --text-dark: #1a1a1a;          /* Para escribir sobre el amarillo */
+    --text-light-gray: #cccccc;
+    --text-dark: #333333;
+    --text-button: #F5F5F5;
 
-    /* UI Elements */
-    --card-bg: rgba(255, 255, 255, 0.05); /* Cristal */
-    --input-bg: #ffffff;
+    /* --- VARIABLES DE CONTROL (Apuntan a las de arriba) --- */
+    /* Títulos */
+    --section-title-color: var(--gold-primary);
 
-    /* Tamaños */
-    --hero-heading-size: 3.5rem;   /* Reducido de 4rem para evitar que se rompa */
+    /* Cuerpo de Texto */
+    --section-text-color: var(--text-gray);
+
+    /* Enlaces */
+    --link-color: var(--gold-secondary);
+    --link-hover: var(--gold-primary);
 }
 
 /* Reset básico para evitar scroll horizontal fantasma */

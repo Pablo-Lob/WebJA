@@ -1,7 +1,7 @@
 :root {
-    --button-text-color: #F5F5F5;
+    --button-text-color: var(--text-button);
     --button-color: #2E2E2E;
-    --button-hover-color: #D4AF37;
+    --button-hover-color: var(--gold-primary);
 }
 
 .shine-btn {

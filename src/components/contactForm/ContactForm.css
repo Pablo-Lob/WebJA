@@ -1,9 +1,8 @@
-/* Heredamos variables del root (Navbar/Footer) para consistencia */
 :root {
-    --form-bg-color: #000000;      /* Fondo negro puro como en la imagen */
-    --input-bg-color: #ffffff;     /* Inputs blancos */
-    --accent-color: #ecd26b;       /* Dorado */
-    --text-color: #333333;         /* Texto oscuro dentro de inputs */
+    --form-bg-color: var(--bg-black);
+    --input-bg-color: var(--bg-input);
+    --accent-color: var(--gold-accent);
+    --text-color: var(--text-dark);
 }
 
 .contact-container {

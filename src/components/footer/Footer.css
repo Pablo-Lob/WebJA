@@ -1,7 +1,7 @@
 :root {
-    --footer-bg-color: #1a1a1a;
-    --footer-text-color: #ffffff;
-    --footer-accent-color: #ecd26b;
+    --footer-bg-color: var(--bg-secondary);
+    --footer-text-color: var(--text-white);
+    --footer-accent-color: var(--gold-accent);
 }
 
 /* Footer principal */

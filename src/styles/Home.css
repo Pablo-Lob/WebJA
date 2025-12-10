@@ -1,7 +1,7 @@
 :root {
-    --background-color-1: #f7e695; /* El amarillo de tu imagen */
-    --text-color-1: #000000;       /* Texto negro */
-    --hero-heading-size: 4rem;     /* Tamaño grande para el título */
+    --background-color-1: var(--gold-secondary);
+    --text-color-1: var(--bg-black);
+    --hero-heading-size: 4rem;
 }
 
 /* Contenedor Principal del Hero */

@@ -1,11 +1,11 @@
 :root {
-    /* Paleta de colores "Luxury" */
-    --primary-gold: #d4af37;       /* Dorado principal */
-    --primary-gold-dim: rgba(212, 175, 55, 0.2); /* Dorado transparente para bordes */
-    --bg-dark: #0f0f0f;            /* Fondo casi negro */
-    --text-main: #ffffff;          /* Blanco */
-    --text-secondary: #a0a0a0;     /* Gris suave */
-    --card-bg: rgba(255, 255, 255, 0.05); /* Cristal oscuro */
+    /* Usamos las globales */
+    --primary-gold: var(--gold-primary);
+    --primary-gold-dim: var(--gold-dim);
+    --bg-dark: var(--bg-dark);
+    --text-main: var(--text-white);
+    --text-secondary: var(--section-text-color); /* Control global de párrafos */
+    --card-bg: var(--bg-card);
     --card-shadow: rgba(0, 0, 0, 0.5);
 }
 

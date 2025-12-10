@@ -1,5 +1,5 @@
 .about-section {
-    background-color: #0f0f0f;
+    background-color: var(--bg-dark);
     color: white;
     padding: 100px 20px;
     display: flex;
@@ -15,7 +15,7 @@
 }
 
 .section-title {
-    color: #d4af37; /* Gold */
+    color: var(--section-title-color);
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 3px;
@@ -47,7 +47,7 @@
 }
 
 .about-content p {
-    color: #a0a0a0;
+    color: var(--section-text-color);
     line-height: 1.7;
 }
 

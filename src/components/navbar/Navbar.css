@@ -1,8 +1,7 @@
 :root {
-    /* Paleta de colores extraída de la imagen */
-    --nav-bg-color: #1a1a1a;      /* Negro suave/gris muy oscuro */
-    --nav-text-color: #f7e695;    /* Blanco */
-    --nav-accent-color: #f7e695;  /* Dorado/Amarillo pálido (según imagen) */
+    --nav-bg-color: var(--bg-secondary);
+    --nav-text-color: var(--gold-secondary);
+    --nav-accent-color: var(--gold-secondary);
     --nav-font-size: 1.1rem;
 }
 

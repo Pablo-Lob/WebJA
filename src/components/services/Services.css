@@ -1,7 +1,5 @@
 .services-section {
-    background-color: #000;
-    /* Si tienes la foto del avión, úsala de fondo con oscuridad */
-    /* background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../../assets/plane-bg.jpg'); */
+    background-color: var(--bg-black);
     background-size: cover;
     padding: 100px 20px;
     color: white;
@@ -14,7 +12,7 @@
 }
 
 .services-container h2 {
-    color: #d4af37;
+    color: var(--section-title-color);
     font-size: 2.5rem;
     margin-bottom: 20px;
 }
@@ -22,12 +20,12 @@
 .gold-divider-center {
     width: 80px;
     height: 3px;
-    background: #d4af37;
+    background: var(--gold-primary);
     margin: 0 auto 40px;
 }
 
 .services-text-block p {
-    color: #cccccc;
+    color: var(--text-light-gray);
     font-size: 1.1rem;
     line-height: 1.8;
     margin-bottom: 30px;
@@ -36,6 +34,6 @@
 }
 
 .services-text-block strong {
-    color: #fff;
+    color: var(--text-light-gray);
     font-weight: 600;
 }

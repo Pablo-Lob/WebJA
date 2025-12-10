@@ -1,10 +1,11 @@
 :root {
-    --gold: #d4af37;
-    --dark-bg: #0f0f0f;
-    --card-bg: rgba(255, 255, 255, 0.05);
-    --input-bg: rgba(0, 0, 0, 0.3);
-    --text-white: #ffffff;
-    --text-gray: #a0a0a0;
+    --gold: var(--gold-primary);
+    --dark-bg: var(--bg-dark);
+    --card-bg: var(--bg-card);
+    --text-white: var(--text-white);
+    --text-gray: var(--text-gray);
+    /* Para ManageContent.css añade: */
+    --input-bg: rgba(0, 0, 0, 0.3); /* O var(--bg-secondary) */
 }
 
 .manage-container {

@@ -1,8 +1,8 @@
 :root {
-    --nf-gold: #d4af37;       /* Dorado Luxury */
-    --nf-bg-dark: #0f0f0f;    /* Negro fondo */
-    --nf-text-white: #ffffff; /* Blanco texto */
-    --nf-text-gray: #a0a0a0;  /* Gris suave */
+    --nf-gold: var(--gold-primary);
+    --nf-bg-dark: var(--bg-dark);
+    --nf-text-white: var(--text-white);
+    --nf-text-gray: var(--text-gray);
 }
 
 .not-found {
