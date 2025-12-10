@@ -1,28 +1,54 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --background-color: #1E1E1E;
-    --primary-text-color: #F5F5F5;
-    --accent-color: #D4AF37;
-    --button-color: #2E2E2E;
-    --button-text-color: #F5F5F5;
-    --button-hover-color: #D4AF37;
-    --link-color: #A0C1B8;
-    --card-background: #2A2A2A;
+    /* --- PALETA DE COLORES GLOBAL --- */
 
+    /* Dorados */
+    --gold-primary: #d4af37;       /* Dorado principal (Texto, iconos, bordes) */
+    --gold-light: #f7e695;         /* Amarillo pálido (Fondo Hero, texto Navbar) */
+    --gold-dim: rgba(212, 175, 55, 0.2); /* Dorado transparente (Bordes sutiles) */
+    --gold-hover: #b8860b;         /* Dorado oscuro para hover */
+
+    /* Oscuros */
+    --bg-black: #000000;           /* Negro puro */
+    --bg-dark: #0f0f0f;            /* Negro principal (Secciones) */
+    --bg-secondary: #1a1a1a;       /* Gris muy oscuro (Navbar, Footer, Tarjetas) */
+
+    /* Textos */
+    --text-white: #ffffff;
+    --text-gray: #a0a0a0;
+    --text-dark: #1a1a1a;          /* Para escribir sobre el amarillo */
+
+    /* UI Elements */
+    --card-bg: rgba(255, 255, 255, 0.05); /* Cristal */
+    --input-bg: #ffffff;
+
+    /* Tamaños */
+    --hero-heading-size: 3.5rem;   /* Reducido de 4rem para evitar que se rompa */
+}
+
+/* Reset básico para evitar scroll horizontal fantasma */
+* {
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--background-color);
-    color: var(--primary-text-color);
-    font-family: 'Radjhani', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: 'Rajdhani', sans-serif;
     overflow-x: hidden;
     margin: 0;
-    /* Center the content */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    width: 100%;
+}
 
-
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-black);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--gold-primary);
+    border-radius: 5px;
 }

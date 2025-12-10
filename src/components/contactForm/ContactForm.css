@@ -1,108 +1,122 @@
-.form {
+/* Heredamos variables del root (Navbar/Footer) para consistencia */
+:root {
+    --form-bg-color: #000000;      /* Fondo negro puro como en la imagen */
+    --input-bg-color: #ffffff;     /* Inputs blancos */
+    --accent-color: #ecd26b;       /* Dorado */
+    --text-color: #333333;         /* Texto oscuro dentro de inputs */
+}
+
+.contact-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 1rem;
+    background-color: var(--form-bg-color);
+    width: 100%;
+}
+
+.form-grid {
     display: flex;
     flex-direction: column;
-    align-self: center;
-    font-family: inherit;
-    gap: 10px;
-    padding-inline: 2em;
-    padding-bottom: 0.4em;
-    background-color: var(--background-color);
-    border-radius: 20px;
+    width: 100%;
+    max-width: 800px; /* Ancho máximo para que se vea bien en escritorio */
+    gap: 1.5rem;
 }
 
 .form-heading {
     text-align: center;
-    margin: 2em;
+    margin-bottom: 1rem;
     color: var(--accent-color);
-    font-size: 1.2em;
-    background-color: transparent;
-    align-self: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
-.form-field {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    border-radius: 10px;
-    padding: 0.6em;
-    border: none;
-    outline: none;
-    color: var(--primary-text-color);
-    background-color: var(--background-color);
-    box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
+/* Filas del formulario (para poner inputs lado a lado) */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    gap: 1.5rem;
+}
+
+/* Clase para elementos que ocupan todo el ancho (mensaje) */
+.form-row.full-width {
+    grid-template-columns: 1fr;
 }
 
 .input-field {
-    background: none;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px; /* Bordes redondeados suaves */
     border: none;
     outline: none;
-    width: 100%;
-    color: var(--primary-text-color);
-    padding-inline: 1em;
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: box-shadow 0.3s ease;
+}
+
+.input-field::placeholder {
+    color: #9ca3af; /* Gris suave para el placeholder */
+}
+
+.input-field:focus {
+    box-shadow: 0 0 0 3px rgba(236, 210, 107, 0.3); /* Resplandor dorado al escribir */
+}
+
+/* Ajuste específico para el textarea */
+.textarea-field {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Botón */
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
 }
 
 .sendMessage-btn {
     cursor: pointer;
-    margin-bottom: 3em;
-    padding: 1em;
-    border-radius: 10px;
-    border: none;
+    padding: 0.8rem 3rem;
+    border-radius: 4px;
+    border: 1px solid #333;
     outline: none;
-    background-color: var(--button-color);
-    color: var(--button-text-color);
-    font-weight: bold;
-    outline: 1px solid var(--accent-color);
-    transition: all ease-in-out 0.3s;
+    background-color: #1a1a1a; /* Botón oscuro */
+    color: var(--accent-color); /* Texto dorado */
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .sendMessage-btn:hover {
-    background-color: var(--button-hover-color);
-    color: var(--background-color);
-    box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
+    background-color: var(--accent-color);
+    color: #000; /* Invertir colores al pasar el mouse */
+    border-color: var(--accent-color);
 }
 
-.form-card1 {
-    background-image: linear-gradient(163deg, var(--accent-color) 0%, var(--accent-color) 100%);
-    border-radius: 20px;
-    transition: all 0.3s;
-    margin: 2em auto;
-    max-width: 450px;
+.sendMessage-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
-.form-card1:hover {
-    box-shadow: 0px 0px 30px 1px rgba(212, 175, 55, 0.3);
+/* Feedback messages */
+.feedback-message {
+    text-align: center;
+    min-height: 24px;
+    font-size: 0.9rem;
 }
 
-.form-card2 {
-    border-radius: 20px;
-    transition: all 0.2s;
-    background: var(--card-background);
-}
-
-.form-card2:hover {
-    transform: scale(0.98);
-    border-radius: 20px;
-}
-
+/* Responsive: En móvil pasamos a una sola columna */
 @media (max-width: 768px) {
-    .form-card1 {
-        margin: 1.5em 1rem;
-        max-width: calc(100% - 2rem);
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
-    .form {
-        padding-inline: 1.5em;
-    }
-}
-
-@media (max-width: 480px) {
-    .form-card1 {
-        margin: 1em 0.75rem;
-        max-width: calc(100% - 1.5rem);
-    }
-
-    .form {
-        padding-inline: 1em;
+    .form-heading {
+        font-size: 2rem;
     }
 }

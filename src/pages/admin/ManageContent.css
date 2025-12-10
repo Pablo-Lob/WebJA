@@ -1,38 +1,61 @@
-/* File: src/pages/admin/ManageContent.css */
+:root {
+    --gold: #d4af37;
+    --dark-bg: #0f0f0f;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --input-bg: rgba(0, 0, 0, 0.3);
+    --text-white: #ffffff;
+    --text-gray: #a0a0a0;
+}
+
 .manage-container {
     min-height: 100vh;
-    background: #f7fafc;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
     padding: 2rem;
+    color: var(--text-white);
 }
 
 .manage-header {
     max-width: 1200px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1.5rem;
 }
 
 .manage-header h1 {
     font-size: 2rem;
-    color: #2d3748;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .back-link {
-    color: #667eea;
+    color: var(--text-gray);
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
+.back-link:hover {
+    color: var(--gold);
+}
+
+/* Tabs (Pestañas) */
 .manage-tabs {
     max-width: 1200px;
     margin: 0 auto 2rem;
     display: flex;
     gap: 1rem;
-    background: white;
-    padding: 1rem;
+    background: var(--card-bg); /* Cristal */
+    backdrop-filter: blur(10px);
+    padding: 0.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tab-button {
@@ -48,15 +71,20 @@
     justify-content: center;
     gap: 0.5rem;
     font-size: 1rem;
+    color: var(--text-gray);
+    font-weight: 500;
+}
+
+.tab-button:hover {
+    color: var(--text-white);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .tab-button.active {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-}
-
-.tab-icon {
-    font-size: 1.5rem;
+    background: var(--gold); /* Fondo dorado */
+    color: #000; /* Texto negro */
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .manage-content {
@@ -64,18 +92,84 @@
     margin: 0 auto;
 }
 
+/* Sección de contenido (Tarjeta grande) */
 .content-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    padding: 3rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .content-section h2 {
     margin-bottom: 2rem;
-    color: #2d3748;
+    color: var(--text-white);
+    font-weight: 300;
+    border-left: 4px solid var(--gold);
+    padding-left: 1rem;
 }
 
+/* Inputs y Formularios */
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    color: var(--gold);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    background: var(--input-bg); /* Fondo oscuro para inputs */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: white; /* Texto blanco al escribir */
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Botón Guardar */
+.save-button {
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    color: #000;
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    width: 100%;
+}
+
+.save-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+    filter: brightness(1.1);
+}
+
+/* Grid de colores (si lo usas) */
 .color-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -83,123 +177,10 @@
     margin-bottom: 2rem;
 }
 
-.color-item label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #2d3748;
-}
-
-.color-input-group {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.color-input-group input[type="color"] {
-    width: 60px;
-    height: 50px;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
 .color-input-group input[type="text"] {
-    flex: 1;
-    padding: 0.75rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
-}
-
-.color-preview {
-    margin: 2rem 0;
-}
-
-.color-preview h3 {
-    margin-bottom: 1rem;
-    color: #2d3748;
-}
-
-.preview-box {
-    padding: 3rem;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.preview-box button {
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 8px;
+    background: var(--input-bg);
     color: white;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #2d3748;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-family: inherit;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
-.image-preview {
-    margin-top: 1rem;
-    border-radius: 8px;
-    overflow: hidden;
-    max-width: 400px;
-}
-
-.image-preview img {
-    width: 100%;
-    height: auto;
-}
-
-.target-card-edit {
-    background: #f7fafc;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-.save-button {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 2rem;
-}
-
-.save-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
 @media (max-width: 768px) {
@@ -211,9 +192,17 @@
 
     .manage-tabs {
         flex-direction: column;
+        background: transparent;
+        border: none;
+        padding: 0;
     }
 
-    .color-grid {
-        grid-template-columns: 1fr;
+    .tab-button {
+        background: rgba(255,255,255,0.1);
+        margin-bottom: 10px;
+    }
+
+    .content-section {
+        padding: 1.5rem;
     }
 }

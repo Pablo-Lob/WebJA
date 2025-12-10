@@ -1,219 +1,101 @@
+:root {
+    --background-color-1: #f7e695; /* El amarillo de tu imagen */
+    --text-color-1: #000000;       /* Texto negro */
+    --hero-heading-size: 4rem;     /* Tamaño grande para el título */
+}
+
+/* Contenedor Principal del Hero */
 .hero-home {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: flex; /* Flexbox para poner elementos lado a lado */
+    flex-direction: row; /* Dirección horizontal */
+    align-items: stretch ; /* Estira los hijos para que ocupen todo el alto */
     height: 100vh;
-    width: 100vw;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    width: 100%;
     margin: 0;
     padding: 0;
-
-    background: linear-gradient(
-            to bottom,
-            rgba(10, 10, 10, 0.4) 0%,
-            rgba(10, 10, 10, 0.7) 100%
-    ), url('../assets/banner.webp');
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    /* El fixed a veces da problemas en iOS, scroll es más seguro para móviles */
-    background-attachment: scroll;
+    background-color: var(--background-color-1); /* Color de fondo derecho */
+    overflow: hidden; /* Evita scrolls indeseados */
 }
 
-/* --- SECCIONES GENERALES (Modernas) --- */
-.info-section {
-    padding: 5rem 1.5rem;
+/* 1. Columna Izquierda (Imagen) */
+.hero-image {
+    flex: 1; /* Ocupa el 50% del espacio disponible */
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-image img {
     width: 100%;
-    display: flex;
-    justify-content: center;
+    height: 100%;
+    object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformarse */
+    object-position: center;
 }
 
-.section-container {
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto; /* centra el contenedor dentro de la sección */
-    padding: 0 1rem;
-}
-
-.section-title {
-    font-size: 2.5rem;
-    text-align: center;
-    margin-bottom: 3rem;
-    color: var(--primary-text-color);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.highlight-text {
-    color: var(--accent-color);
-}
-
-/* --- SECCIÓN 1: TARJETAS GLASSMORPHISM ("Para quién es") --- */
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-.info-card {
-    background: rgba(42, 42, 42, 0.6); /* Semi-transparente */
-    backdrop-filter: blur(10px); /* Efecto cristal */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 2.5rem 2rem;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+/* 2. Columna Derecha (Texto) */
+.hero-content {
+    flex: 1; /* Ocupa el otro 50% */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    height: 100%;
+    justify-content: center; /* Centra el contenido verticalmente */
+    align-items: center; /* Alinea el texto a la izquierda DENTRO de su columna */
+    padding: 4rem 6rem; /* Espaciado interno generoso */
+    color: var(--text-color-1);
+    z-index: 10;
 }
 
-.info-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    border-color: var(--accent-color);
-}
-
-.icon-wrapper {
-    background: rgba(212, 175, 55, 0.1); /* Fondo dorado sutil */
-    color: var(--accent-color);
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--accent-color);
-    transition: background 0.3s;
-}
-
-.info-card:hover .icon-wrapper {
-    background: var(--accent-color);
-    color: var(--background-color); /* Icono oscuro sobre fondo dorado */
-}
-
-.info-card h4 {
+/* Tipografía del Hero */
+.hero-content h1 {
     font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 2px;
     margin-bottom: 1rem;
-    color: var(--primary-text-color);
+    color: #333; /* Un gris oscuro para el subtítulo pequeño "ITS-STONES" */
+    text-transform: uppercase;
 }
 
-.info-card p {
-    color: #ccc;
-    font-size: 1rem;
+.hero-content h2 {
+    font-size: var(--hero-heading-size);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a; /* Negro casi puro */
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 2.5rem;
     line-height: 1.6;
+    max-width: 500px; /* Evita que el texto sea demasiado ancho para leer */
 }
 
-/* --- SECCIÓN 2: CARACTERÍSTICAS ("Por qué comprar") --- */
-.gradient-bg {
-    /* Degradado sutil de fondo */
-    background: linear-gradient(180deg, var(--background-color) 0%, #252525 100%);
+.hero-cta {
+    margin-top: 1rem;
 }
 
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-}
-
-.feature-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 1.5rem;
-    border-radius: 15px;
-    transition: background 0.3s ease;
-}
-
-.feature-item:hover {
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.feature-icon {
-    min-width: 40px;
-    height: 40px;
-    color: var(--accent-color);
-    margin-right: 1.5rem;
-    margin-top: 0.25rem; /* Alinear visualmente con el título */
-}
-
-.feature-text h4 {
-    font-size: 1.3rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--primary-text-color);
-}
-
-.feature-text p {
-    margin: 0;
-    color: #bbb;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-@media (max-width: 768px) {
+/* --- Responsive Design (Móvil) --- */
+@media (max-width: 991px) {
     .hero-home {
-        height: 100svh; /* mejor para móviles */
-        padding: 1rem;
+        flex-direction: column; /* Cambia a vertical en pantallas pequeñas */
+        height: auto; /* Altura automática */
+        min-height: 100vh;
     }
 
-    .hero-home h1 {
-        font-size: 2rem;
+    .hero-image {
+        flex: none; /* Desactiva el flex 1 */
+        width: 100%;
+        height: 50vh; /* La imagen ocupa la mitad de la pantalla */
     }
 
-    .hero-home h2 {
-        font-size: 1.2rem;
-    }
-
-    .hero-home p {
-        font-size: 0.9rem;
-        padding: 0 1rem;
-    }
-
-    .info-section {
-        padding: 3rem 1rem;
-    }
-
-    .section-title {
-        font-size: 1.8rem;
-        margin-bottom: 2rem;
-    }
-
-    .cards-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .info-card {
-        padding: 2rem 1.5rem;
-    }
-
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .feature-item {
-        padding: 1rem;
-        flex-direction: column;
+    .hero-content {
+        flex: none;
+        width: 100%;
+        padding: 3rem 2rem;
+        align-items: center; /* Centra el texto en móvil */
         text-align: center;
     }
 
-    .feature-icon {
-        margin-right: 0;
-        margin-bottom: 1rem;
-    }
-
-    .productos-destacados {
-        padding: 2rem 1rem;
-    }
-
-    .productos-destacados h3 {
-        font-size: 1.8rem;
+    .hero-content h2 {
+        font-size: 2.5rem;
     }
 }

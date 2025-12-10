@@ -5,6 +5,8 @@ import logo from '../../assets/logo.webp';
 
 function Navbar() {
     const [visible, setVisible] = useState(true);
+    const [activeLink, setActiveLink] = useState('Home');
+
     const lastScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
 
     useEffect(() => {
@@ -24,34 +26,89 @@ function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Función para actualizar el estado del link activo
+    const onUpdateActiveLink = (value) => {
+        setActiveLink(value);
+    }
+
     return (
         <nav className={`navbar navbar-expand-lg fixed-top custom-navbar-wrapper ${visible ? 'nav-visible' : 'nav-hidden'}`}>
-            {/* Menú items */}
-            <div className="nav-menu">
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
-                <ul className="navbar-nav">
-                    <li className="nav-item">
-                    <a className="nav-link" href="/public">Home</a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link" href="/about">Sobre Nosotros</a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link" href="/minerals">Minerales</a>
-                    </li>
-                </ul>
-                </div>
-            </div>
+            <div className="container-fluid d-flex flex-column">
 
-            {/* Logo */}
-            <div className="nav-logo">
-                <a className="navbar-brand" href="../../pages/Home.jsx">
-                    <img src={logo} alt="Logo"></img>
-                </a>
+                {/* Logo */}
+                <div className="nav-logo">
+                    <a className="navbar-brand m-0" href="../../pages/Home.jsx">
+                        <img src={logo} alt="Logo" />
+                    </a>
+                </div>
+
+                {/* Menú items */}
+                <div className="nav-menu w-100">
+                    <button className="navbar-toggler mx-auto mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+                        <ul className="navbar-nav">
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link ${activeLink === 'Home' ? 'active' : ''}`}
+                                    href="/"
+                                    onClick={() => onUpdateActiveLink('Home')}
+                                >
+                                    Home
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link ${activeLink === 'About us' ? 'active' : ''}`}
+                                    href="/#about-us"
+                                    onClick={() => onUpdateActiveLink('About-us')}
+                                >
+                                    About Us
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link ${activeLink === 'mission' ? 'active' : ''}`}
+                                    href="/#mission"
+                                    onClick={() => onUpdateActiveLink('Mission')}
+                                >
+                                    Mission
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link ${activeLink === 'brances' ? 'active' : ''}`}
+                                    href="/#branches"
+                                    onClick={() => onUpdateActiveLink('Branches')}
+                                >
+                                    Branches
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link ${activeLink === 'Services' ? 'active' : ''}`}
+                                    href="/#services"
+                                    onClick={() => onUpdateActiveLink('Services')}
+                                >
+                                    Services
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link ${activeLink === 'Contact us' ? 'active' : ''}`}
+                                    href="/#contact"
+                                    onClick={() => onUpdateActiveLink('Contact-us')}
+                                >
+                                    Contact Us
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </nav>
     );

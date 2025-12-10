@@ -1,0 +1,28 @@
+import React from 'react';
+import './Services.css';
+
+const Services = () => {
+    return (
+        <section id="services" className="services-section">
+            <div className="services-container">
+                <h2>Excellence in Gold & Germs in Importation</h2>
+                <div className="gold-divider-center"></div>
+
+                <div className="services-text-block">
+                    <p>
+                        We view ourselves not merely as importers, but as <strong>custodians of value</strong>,
+                        committed to delivering assets that embody both timeless beauty and tangible
+                        investment quality for our distinguished clientele.
+                    </p>
+                    <p>
+                        Beyond acquisition, our service excellence is defined by a seamless and secure
+                        logistical framework tailored to the unique needs of the international market.
+                        We navigate the complexities of global trade with absolute precision.
+                    </p>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default Services;

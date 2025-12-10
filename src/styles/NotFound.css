@@ -1,0 +1,60 @@
+:root {
+    --nf-gold: #d4af37;       /* Dorado Luxury */
+    --nf-bg-dark: #0f0f0f;    /* Negro fondo */
+    --nf-text-white: #ffffff; /* Blanco texto */
+    --nf-text-gray: #a0a0a0;  /* Gris suave */
+}
+
+.not-found {
+    height: 80vh; /* Ocupa gran parte de la pantalla */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* Fondo oscuro con degradado sutil */
+    background: radial-gradient(circle at center, #1a1a1a 0%, var(--nf-bg-dark) 100%);
+    color: var(--nf-text-white);
+    text-align: center;
+    padding: 2rem;
+}
+
+.not-found h1 {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--nf-gold); /* Usamos la variable dorada */
+    margin: 0;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.not-found p {
+    font-size: 1.2rem;
+    color: var(--nf-text-gray); /* Usamos la variable gris */
+    max-width: 500px;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.not-found a {
+    padding: 1rem 2.5rem;
+    background: transparent;
+    border: 1px solid var(--nf-gold);
+    color: var(--nf-gold);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.not-found a:hover {
+    background: var(--nf-gold);
+    color: #000000;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}

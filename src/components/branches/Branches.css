@@ -1,0 +1,131 @@
+:root {
+    /* Paleta de colores "Luxury" */
+    --primary-gold: #d4af37;       /* Dorado principal */
+    --primary-gold-dim: rgba(212, 175, 55, 0.2); /* Dorado transparente para bordes */
+    --bg-dark: #0f0f0f;            /* Fondo casi negro */
+    --text-main: #ffffff;          /* Blanco */
+    --text-secondary: #a0a0a0;     /* Gris suave */
+    --card-bg: rgba(255, 255, 255, 0.05); /* Cristal oscuro */
+    --card-shadow: rgba(0, 0, 0, 0.5);
+}
+
+.branches-section {
+    background-color: var(--bg-dark);
+    padding: 80px 20px;
+    color: var(--text-main);
+    position: relative;
+    /* Opcional: Si quieres un degradado sutil para darle profundidad */
+    background: linear-gradient(180deg, var(--bg-dark) 0%, #1a1a1a 100%);
+}
+
+.branches-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Cabecera --- */
+.branches-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.branches-header h2 {
+    font-size: 2.5rem;
+    color: var(--primary-gold);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+.gold-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--primary-gold);
+    margin: 0 auto 20px;
+    border-radius: 2px;
+}
+
+.branches-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+/* --- Grid --- */
+.branches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    padding: 0 10px;
+}
+
+/* --- Tarjetas --- */
+.branch-card {
+    background: var(--card-bg);
+    border: 1px solid var(--primary-gold-dim);
+    border-radius: 16px;
+    padding: 40px 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px); /* Efecto difuminado detrás del cristal */
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.branch-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-gold);
+    box-shadow: 0 15px 40px var(--card-shadow);
+}
+
+/* --- Iconos --- */
+.icon-wrapper {
+    background-color: rgba(212, 175, 55, 0.1); /* Usando el dorado con opacidad fija para el fondo del icono */
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    color: var(--primary-gold);
+    transition: transform 0.3s ease;
+}
+
+.branch-card:hover .icon-wrapper {
+    transform: scale(1.1); /* El icono crece un poco al pasar el ratón */
+}
+
+/* --- Tipografía interna --- */
+.branch-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.branch-card h4 {
+    color: var(--primary-gold);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.branch-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .branches-header h2 {
+        font-size: 2rem;
+    }
+
+    .branches-section {
+        padding: 50px 20px;
+    }
+}

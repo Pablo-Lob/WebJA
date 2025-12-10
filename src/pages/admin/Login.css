@@ -1,35 +1,51 @@
-/* File: src/pages/admin/Login.css */
+:root {
+    --gold: #d4af37;
+    --dark-bg: #0f0f0f;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text-white: #ffffff;
+    --text-gray: #a0a0a0;
+}
+
 .login-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Fondo oscuro con un degradado sutil */
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
     padding: 2rem;
 }
 
 .login-card {
-    background: white;
+    /* Efecto Glassmorphism oscuro */
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.2); /* Borde dorado sutil */
+
     border-radius: 20px;
     padding: 3rem;
     max-width: 450px;
     width: 100%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .login-header h1 {
     font-size: 2rem;
-    color: #2d3748;
+    color: var(--gold); /* Título dorado */
     margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .login-header p {
-    color: #718096;
+    color: var(--text-gray);
+    font-weight: 300;
 }
 
 .login-form {
@@ -39,11 +55,13 @@
 }
 
 .login-error {
-    background: #fed7d7;
-    color: #c53030;
+    background: rgba(197, 48, 48, 0.2);
+    color: #fc8181;
+    border: 1px solid #c53030;
     padding: 0.75rem;
     border-radius: 8px;
     font-size: 0.9rem;
+    text-align: center;
 }
 
 .form-group {
@@ -53,43 +71,55 @@
 }
 
 .form-group label {
-    font-weight: 600;
-    color: #2d3748;
+    font-weight: 500;
+    color: var(--text-white);
+    font-size: 0.9rem;
+    margin-left: 4px;
 }
 
 .form-group input {
-    padding: 0.75rem 1rem;
-    border: 2px solid #e2e8f0;
+    padding: 0.9rem 1rem;
+    background: rgba(0, 0, 0, 0.3); /* Input oscuro */
+    border: 1px solid #333;
     border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    color: white;
+    transition: all 0.3s ease;
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: var(--gold); /* Borde dorado al escribir */
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
 }
 
+/* Botón dorado */
 .login-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    color: #000; /* Texto negro para contraste con el dorado */
     padding: 1rem;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
 }
 
 .login-button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+    filter: brightness(1.1);
 }
 
 .login-button:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+    filter: grayscale(100%);
 }
 
 .login-footer {
@@ -98,17 +128,20 @@
 }
 
 .login-footer a {
-    color: #667eea;
+    color: var(--gold);
     text-decoration: none;
-    font-weight: 500;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.login-footer a:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
     .login-card {
         padding: 2rem;
-    }
-
-    .login-header h1 {
-        font-size: 1.75rem;
     }
 }

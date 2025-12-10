@@ -85,23 +85,7 @@ const Footer = () => {
 
                     {/* Copyright */}
                     <div className="footer-copyright">
-                        © 2025 ITS-Stones Integral Trade Services Stones. Todos los derechos reservados.
-                    </div>
-
-                    {/* Social Media */}
-                    <div className="social-media">
-                        <a href="#" className="social-link">
-                            <Facebook className="social-icon" />
-                        </a>
-                        <a href="#" className="social-link">
-                            <Instagram className="social-icon" />
-                        </a>
-                        <a href="#" className="social-link">
-                            <Twitter className="social-icon" />
-                        </a>
-                        <a href="#" className="social-link">
-                            <Youtube className="social-icon" />
-                        </a>
+                        © 2025 ITS-Stones Integrated Stone Trading Services. All rights reserved.
                     </div>
 
                     {/* Additional Links */}

@@ -1,25 +1,39 @@
-/* File: src/pages/admin/Dashboard.css */
+:root {
+    --gold: #d4af37;
+    --gold-hover: #b8860b;
+    --dark-bg: #0f0f0f;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text-white: #ffffff;
+    --text-gray: #a0a0a0;
+}
+
 .dashboard-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Fondo oscuro coherente con el Login */
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
     padding: 2rem;
+    color: var(--text-white);
 }
 
 .dashboard-header {
     text-align: center;
-    color: white;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
+    padding-top: 2rem;
 }
 
 .dashboard-header h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
     font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
 }
 
 .dashboard-header p {
     font-size: 1.1rem;
-    opacity: 0.9;
+    color: var(--text-gray);
+    font-weight: 300;
 }
 
 .dashboard-grid {
@@ -27,92 +41,111 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    gap: 2.5rem;
     padding: 2rem 0;
 }
 
+/* Tarjetas con efecto cristal */
 .dashboard-card {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.2); /* Borde dorado sutil */
+    border-radius: 20px;
+    padding: 2.5rem;
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
 }
 
-.dashboard-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
+/* Efecto Hover */
 .dashboard-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
-.dashboard-card:hover::before {
-    opacity: 1;
+    transform: translateY(-10px);
+    border-color: var(--gold);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
 .card-icon {
     font-size: 3rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    color: var(--gold); /* Iconos dorados */
 }
 
 .dashboard-card h3 {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
-    color: #2d3748;
+    color: var(--text-white);
+    font-weight: 600;
 }
 
 .dashboard-card p {
-    color: #718096;
+    color: var(--text-gray);
     line-height: 1.6;
     margin-bottom: 1rem;
+    font-size: 0.95rem;
 }
 
 .card-arrow {
     position: absolute;
-    bottom: 1.5rem;
-    right: 1.5rem;
+    bottom: 2rem;
+    right: 2rem;
     font-size: 1.5rem;
-    color: #667eea;
+    color: var(--gold);
     transition: transform 0.3s ease;
+    opacity: 0.7;
 }
 
 .dashboard-card:hover .card-arrow {
-    transform: translateX(5px);
+    transform: translateX(8px);
+    opacity: 1;
 }
 
 .dashboard-footer {
     text-align: center;
-    margin-top: 3rem;
+    margin-top: 4rem;
 }
 
+/* Botón de volver al sitio */
 .back-to-site {
-    color: white;
+    color: var(--text-white);
     text-decoration: none;
-    font-size: 1.1rem;
-    padding: 0.75rem 1.5rem;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px; /* Redondeado */
     transition: all 0.3s ease;
     display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .back-to-site:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateX(-5px);
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #000; /* Texto negro para contraste */
+}
+
+/* Botón de Logout */
+.logout-button {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    color: var(--text-gray);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    border-color: #c53030;
+    color: #c53030; /* Rojo suave al hacer hover para indicar salir */
+    background: rgba(197, 48, 48, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -120,38 +153,10 @@
         font-size: 2rem;
     }
 
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .dashboard-card {
-        padding: 1.5rem;
-    }
-}
-
-.logout-button {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid white;
-    padding: 0.5rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.logout-button:hover {
-    background: white;
-    color: #667eea;
-}
-
-@media (max-width: 768px) {
     .logout-button {
         position: static;
-        margin-top: 1rem;
+        display: block;
+        margin: 0 auto 2rem;
+        width: fit-content;
     }
 }
