@@ -1,6 +1,8 @@
 import React from 'react';
 import './Mission.css';
 import ourMissionImg from '../../assets/ourMission.webp';
+import {useConfig} from '../../context/ConfigContext.jsx';
+import config from "bootstrap/js/src/util/config.js";
 
 const Mission = () => {
     return (
@@ -17,7 +19,7 @@ const Mission = () => {
                     {/* REEMPLAZA la URL en 'src' por tu variable de imagen importada */}
                     <div className="our-mission-image-container">
                         <img
-                            src={ourMissionImg}
+                            src={config.images?.ourMission || ourMissionImg}
                             alt="Gente de negocios mirando un holograma del globo terráqueo"
                             className="our-mission-image"
                         />

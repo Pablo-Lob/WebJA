@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db, storage } from '../../firebase/firebase-config'; // Importamos storage
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Funciones de Storage
-import './ManageContent.css';
+import './styles/ManageContent.css';
 
 const ManageContent = () => {
     const [activeTab, setActiveTab] = useState('colors');
