@@ -1,7 +1,7 @@
-// File: src/pages/admin/Dashboard.jsx
 import React from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './styles/Dashboard.css';
+import { Palette, Image, FileText, LogOut, LayoutDashboard } from 'lucide-react';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -11,74 +11,57 @@ const Dashboard = () => {
         navigate('/admin/login');
     };
 
+    // Función para navegar a la pestaña específica
+    const goToTab = (tabName) => {
+        navigate('/admin/content', { state: { initialTab: tabName } });
+    };
+
     const sections = [
         {
-            title: 'Colores y Tema',
-            description: 'Personaliza los colores principales de la web',
-            icon: '🎨',
-            link: '/admin/colors'
+            id: 'colors',
+            title: 'Identidad & Colores',
+            description: 'Gestiona la paleta de colores global de la marca.',
+            icon: <Palette size={40} />,
+            tabTarget: 'colors'
         },
         {
-            title: 'Banner Principal',
-            description: 'Modifica la imagen y texto del banner',
-            icon: '🖼️',
-            link: '/admin/banner'
+            id: 'images',
+            title: 'Gestor de Imágenes',
+            description: 'Actualiza logos, banners y fotos de secciones principales.',
+            icon: <Image size={40} />,
+            tabTarget: 'images'
         },
-        {
-            title: 'Productos Destacados',
-            description: 'Gestiona los productos del carrusel principal',
-            icon: '⭐',
-            link: '/admin/featured'
-        },
-        {
-            title: 'Catálogo de Minerales',
-            description: 'Agregar, editar o eliminar minerales',
-            icon: '💎',
-            link: '/admin/minerals'
-        },
-        {
-            title: 'Sección B2B',
-            description: 'Edita el contenido de la sección B2B',
-            icon: '🤝',
-            link: '/admin/b2b'
-        },
-        {
-            title: '¿Para Quién?',
-            description: 'Modifica las tarjetas informativas',
-            icon: '👥',
-            link: '/admin/target'
-        }
     ];
 
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
-                <h1>Panel de Administración</h1>
-                <p>Gestiona todo el contenido de tu sitio web</p>
+                <h1>Panel de Control</h1>
+                <p>Bienvenido al sistema de gestión de ITS-Stones</p>
                 <button onClick={handleLogout} className="logout-button">
-                    Cerrar Sesión
+                    <LogOut size={18} style={{marginRight: '8px'}}/> Cerrar Sesión
                 </button>
             </div>
 
             <div className="dashboard-grid">
-                {sections.map((section, index) => (
-                    <Link
-                        to={section.link}
-                        key={index}
+                {sections.map((section) => (
+                    <div
+                        key={section.id}
                         className="dashboard-card"
+                        onClick={() => goToTab(section.tabTarget)}
                     >
                         <div className="card-icon">{section.icon}</div>
                         <h3>{section.title}</h3>
                         <p>{section.description}</p>
-                        <span className="card-arrow">→</span>
-                    </Link>
+                        <span className="card-arrow">Gestionar →</span>
+                    </div>
                 ))}
             </div>
 
             <div className="dashboard-footer">
-                <Link to="/" className="back-to-site">
-                    ← Volver al sitio
-                </Link>
+                <a href="/" className="back-to-site">
+                    Ir al Sitio Web
+                </a>
             </div>
         </div>
     );

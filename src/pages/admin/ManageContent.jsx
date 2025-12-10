@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { db, storage } from '../../firebase/firebase-config'; // Importamos storage
+import { useLocation, useNavigate } from 'react-router-dom';
+import { db, storage } from '../../firebase/firebase-config';
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Funciones de Storage
-import './styles/ManageContent.css';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import './styles/ManageContent.css'; // Asegúrate de que esta ruta apunte a tu CSS nuevo
 
 const ManageContent = () => {
-    const [activeTab, setActiveTab] = useState('colors');
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    // Recuperamos la pestaña inicial del estado de navegación (si existe), o usamos 'colors' por defecto
+    const [activeTab, setActiveTab] = useState(location.state?.initialTab || 'colors');
+
     const [loading, setLoading] = useState(false);
     const [uploadingImg, setUploadingImg] = useState(null);
 
+    // Estado unificado de la configuración (Colores e Imágenes)
     const [config, setConfig] = useState({
         colors: {
             goldPrimary: '#d4af37',
@@ -32,50 +39,57 @@ const ManageContent = () => {
             banner: '',
             aboutUs: '',
             ourMission: ''
-        },
+        }
     });
 
-    // Cargar configuración existente
+    // Cargar datos de Firebase al montar el componente
     useEffect(() => {
         const fetchData = async () => {
-            const docRef = doc(db, "siteContent", "generalConfig");
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                setConfig(prev => ({ ...prev, ...docSnap.data() }));
+            try {
+                const docRef = doc(db, "siteContent", "generalConfig");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    // Fusionamos los datos para asegurar que no se pierda estructura si faltan campos
+                    setConfig(prev => ({ ...prev, ...docSnap.data() }));
+                }
+            } catch (error) {
+                console.error("Error cargando datos:", error);
             }
         };
         fetchData();
     }, []);
 
+    // Método para guardar cambios en Firestore
     const handleSave = async () => {
         setLoading(true);
         try {
             await setDoc(doc(db, "siteContent", "generalConfig"), config);
-            alert("¡Configuración guardada correctamente!");
+            alert("¡Configuración guardada y publicada correctamente!");
         } catch (error) {
-            console.error(error);
-            alert("Error al guardar");
+            console.error("Error al guardar:", error);
+            alert("Hubo un error al guardar los cambios.");
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
-    // --- Lógica de Subida de Imágenes ---
+    // Lógica de Subida de Imágenes a Storage firebase
     const handleImageUpload = async (e, imageKey) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        setUploadingImg(imageKey);
+        setUploadingImg(imageKey); // Activar spinner para esta imagen
         try {
-            // 1. Crear referencia (ej: site-assets/logo.png)
+            // Referencia en el bucket: site-assets/nombre-imagen
             const storageRef = ref(storage, `site-assets/${imageKey}`);
 
-            // 2. Subir archivo
+            // Subir archivo
             await uploadBytes(storageRef, file);
 
-            // 3. Obtener URL pública
+            // Obtener URL pública
             const url = await getDownloadURL(storageRef);
 
-            // 4. Actualizar estado local
+            // Actualizar estado local
             setConfig(prev => ({
                 ...prev,
                 images: {
@@ -91,6 +105,7 @@ const ManageContent = () => {
         }
     };
 
+    // Gestor de cambios de color
     const handleColorChange = (key, value) => {
         setConfig(prev => ({
             ...prev,
@@ -98,6 +113,7 @@ const ManageContent = () => {
         }));
     };
 
+    // Definición de pestañas
     const tabs = [
         { id: 'colors', label: 'Colores', icon: '🎨' },
         { id: 'images', label: 'Imágenes', icon: '🖼️' },
@@ -105,11 +121,17 @@ const ManageContent = () => {
 
     return (
         <div className="manage-container">
+            {/* Header con botón de volver */}
             <div className="manage-header">
-                <h1>Gestión de Contenido</h1>
-                <a href="/admin/dashboard" className="back-link">← Volver al panel</a>
+                <div style={{display:'flex', alignItems:'center', gap:'15px'}}>
+                    <button onClick={() => navigate('/admin/dashboard')} className="back-btn-simple">
+                        ← Panel
+                    </button>
+                    <h1>Editor de Contenido</h1>
+                </div>
             </div>
 
+            {/* Barra de Pestañas */}
             <div className="manage-tabs">
                 {tabs.map(tab => (
                     <button
@@ -125,14 +147,18 @@ const ManageContent = () => {
 
             <div className="manage-content">
 
-                {/* Pestaña de Colores */}
+                {/* --- SECCIÓN DE COLORES --- */}
                 {activeTab === 'colors' && (
                     <div className="content-section">
-                        <h2>Personalizar Colores</h2>
+                        <h2>Personalizar Paleta</h2>
+                        <p style={{color: '#aaa', marginBottom: '2rem'}}>Define los colores globales de tu marca.</p>
+
                         <div className="color-grid">
                             {Object.entries(config.colors).map(([key, value]) => (
                                 <div key={key} className="color-item">
-                                    <label>{key}</label>
+                                    <label style={{color:'var(--admin-gold)', display:'block', marginBottom:'5px', fontSize:'0.85rem', textTransform:'uppercase'}}>
+                                        {key}
+                                    </label>
                                     <div className="color-input-group">
                                         <input
                                             type="color"
@@ -149,40 +175,47 @@ const ManageContent = () => {
                             ))}
                         </div>
                         <button className="save-button" onClick={handleSave} disabled={loading}>
-                            {loading ? 'Guardando...' : 'Guardar Colores'}
+                            {loading ? 'Publicando...' : 'Guardar y Publicar Colores'}
                         </button>
                     </div>
                 )}
 
-                {/* Pestaña de Imágenes */}
+                {/* --- SECCIÓN DE IMÁGENES --- */}
                 {activeTab === 'images' && (
                     <div className="content-section">
-                        <h2>Imágenes Globales</h2>
-                        <p style={{marginBottom: '20px', color: '#aaa'}}>Estas imágenes se actualizan en tiempo real en la web al subir una nueva.</p>
+                        <h2>Gestor de Recursos Visuales</h2>
+                        <p style={{marginBottom: '20px', color: '#aaa'}}>Sube nuevas imágenes para actualizar la web al instante.</p>
 
-                        <div className="images-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                        <div className="images-grid">
                             {['logo', 'banner', 'aboutUs', 'ourMission'].map((key) => (
-                                <div key={key} className="image-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '10px' }}>
-                                    <label style={{ textTransform: 'capitalize', display: 'block', marginBottom: '10px', color: 'var(--gold)' }}>
+                                <div key={key} className="image-card">
+                                    <label>
                                         {key}
                                     </label>
 
-                                    <div className="img-preview" style={{ height: '150px', background: '#000', marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #444' }}>
+                                    {/* Previsualización */}
+                                    <div className="img-preview">
                                         {config.images?.[key] ? (
-                                            <img src={config.images[key]} alt={key} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                                            <img src={config.images[key]} alt={key} />
                                         ) : (
-                                            <span style={{ color: '#666' }}>Sin imagen</span>
+                                            <span style={{ color: '#666', fontSize: '0.9rem' }}>Sin imagen asignada</span>
                                         )}
                                     </div>
 
+                                    {/* Input de archivo */}
                                     <input
                                         type="file"
                                         onChange={(e) => handleImageUpload(e, key)}
                                         accept="image/*"
                                         disabled={uploadingImg === key}
-                                        style={{ width: '100%', color: '#ccc', fontSize: '0.9rem' }}
                                     />
-                                    {uploadingImg === key && <p style={{color: 'var(--gold)', marginTop: '5px'}}>Subiendo...</p>}
+
+                                    {/* Estado de carga */}
+                                    {uploadingImg === key && (
+                                        <p style={{color: 'var(--admin-gold)', marginTop: '8px', fontSize: '0.85rem', fontWeight: 'bold'}}>
+                                            ⏳ Subiendo a la nube...
+                                        </p>
+                                    )}
                                 </div>
                             ))}
                         </div>

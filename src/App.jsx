@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Outlet} from 'react-router-dom';
 import Home from './pages/Home.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Navbar from './components/navbar/Navbar.jsx';
@@ -29,6 +29,18 @@ function KeyboardShortcuts() {
 
     return null; // No renderiza nada
 }
+
+const PublicLayout = () => {
+    return (
+        <>
+            <Navbar />
+            <main>
+                <Outlet/>
+            </main>
+            <Footer/>
+        </>
+    );
+};
 
 function App () {
     useEffect(() => {
@@ -78,10 +90,16 @@ function App () {
         <Router>
             <div className="App">
                 <KeyboardShortcuts />
-                <Navbar />
                 <Routes>
-                    <Route path="/" element={<Home />} />
 
+                    {/* --- Rutas con navbar y footer --- */}
+                    <Route element={<PublicLayout />}>
+                        <Route path="/" element={<Home />} />
+                        {/* Para en un futuro poner otras publicaciones */}
+                    </Route>
+
+                    {/* --- Rutas sin navbar ni footer --- */}
+                    {/* Rutas de administración */}
                     <Route path="/admin/login" element={<Login />} />
 
                     <Route path="/admin/dashboard" element={
@@ -99,7 +117,6 @@ function App () {
                     {/* Ruta 404 */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
-                <Footer />
             </div>
         </Router>
     );
