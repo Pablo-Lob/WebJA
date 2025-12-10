@@ -1,5 +1,7 @@
 import React from 'react';
 import './Loader.css';
+import logo from '../../assets/logo.png';
+import {useConfig} from '../../context/ConfigContext.jsx';
 
 const Loader = () => {
     return (
