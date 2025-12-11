@@ -12,6 +12,9 @@ import {useNavigate} from "react-router-dom";
 import Login from './pages/admin/Login.jsx';
 import Loader from './components/loader/Loader.jsx';
 import {useConfig} from './context/ConfigContext.jsx';
+import CookieConsent from "react-cookie-consent";
+import {Link} from "react-router-dom";
+import LegalPage from "./pages/LegalPage.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -87,8 +90,46 @@ function App () {
                             </ProtectedRoute>
                         } />
 
+                        <Route path="/legalpage" element = {<LegalPage />} />
                         <Route path="*" element={<NotFound />} />
+
                     </Routes>
+
+                    <CookieConsent
+                        location="bottom"
+                        buttonText="Aceptar"
+                        enableDeclineButton
+                        declineButtonText="Rechazar"
+                        cookieName="its-stones-consent"
+                        style={{
+                            background: "#0f0f0f",
+                            borderTop: "1px solid #d4af37",
+                            alignItems: "center",
+                            zIndex: 9990 /* Alto, pero por debajo del Loader (9999) */
+                        }}
+                        buttonStyle={{
+                            background: "#d4af37",
+                            color: "#000",
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                            borderRadius: "4px",
+                            padding: "10px 20px"
+                        }}
+                        declineButtonStyle={{
+                            background: "transparent",
+                            border: "1px solid #d4af37",
+                            color: "#d4af37",
+                            fontSize: "14px",
+                            borderRadius: "4px",
+                            padding: "10px 20px"
+                        }}
+                        expires={150}
+                    >
+                        Valoramos su privacidad. Usamos cookies para mejorar su experiencia y analizar el tráfico conforme a la normativa internacional.{" "}
+                        <Link to="/cookies-policy" style={{ color: "#f7e695", textDecoration: "underline", marginLeft: "5px" }}>
+                            Leer Política de Cookies
+                        </Link>
+                    </CookieConsent>
                 </div>
             </Router>
         </>
