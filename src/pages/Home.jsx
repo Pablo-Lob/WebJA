@@ -24,7 +24,7 @@ function Home () {
                     <p>
                         Discover the difference of trading with integrity and excellence.
                     </p>
-                    <ShineButton>
+                    <ShineButton href="/#contact">
                         Contact us
                     </ShineButton>
                 </div>
