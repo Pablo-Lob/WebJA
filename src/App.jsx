@@ -65,7 +65,6 @@ function App () {
 
     return (
         <>
-            {/* El Loader se renderiza encima de todo. Si showLoader es false, se elimina del DOM */}
             {showLoader && <Loader fadeOut={fadeOut} />}
 
             <Router>
@@ -74,6 +73,19 @@ function App () {
                     <Routes>
                         <Route element={<PublicLayout />}>
                             <Route path="/" element={<Home />} />
+
+                            <Route
+                                path="/privacy-policy"
+                                element={<LegalPage id="privacy" title="Política de Privacidad" />}
+                            />
+                            <Route
+                                path="/terms-policy"
+                                element={<LegalPage id="terms" title="Términos y Condiciones" />}
+                            />
+                            <Route
+                                path="/cookie-policy"
+                                element={<LegalPage id="cookies" title="Política de Cookies" />}
+                            />
                         </Route>
 
                         <Route path="/admin/login" element={<Login />} />
@@ -90,7 +102,6 @@ function App () {
                             </ProtectedRoute>
                         } />
 
-                        <Route path="/legalpage" element = {<LegalPage />} />
                         <Route path="*" element={<NotFound />} />
 
                     </Routes>
@@ -126,7 +137,7 @@ function App () {
                         expires={150}
                     >
                         Valoramos su privacidad. Usamos cookies para mejorar su experiencia y analizar el tráfico conforme a la normativa internacional.{" "}
-                        <Link to="/cookies-policy" style={{ color: "#f7e695", textDecoration: "underline", marginLeft: "5px" }}>
+                        <Link to="/cookie-policy" style={{ color: "#f7e695", textDecoration: "underline", marginLeft: "5px" }}>
                             Leer Política de Cookies
                         </Link>
                     </CookieConsent>
