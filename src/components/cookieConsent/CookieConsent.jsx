@@ -6,10 +6,9 @@ const CookieConsent = () => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        // Comprobamos si ya existe la marca en el navegador
         const consent = localStorage.getItem('its-stones-consent');
+        // Si no existe la cookie (es null), mostramos el banner
         if (!consent) {
-            // Si no existe, mostramos el banner
             setIsVisible(true);
         }
     }, []);
