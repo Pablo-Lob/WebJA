@@ -1,0 +1,90 @@
+/* src/components/cookieConsent/CookieConsent.css */
+
+.cookie-consent-container {
+    background-color: #0f0f0f !important;
+    border-top: 1px solid var(--gold-primary) !important;
+    display: flex !important;
+    flex-wrap: wrap !important; /* Permite que baje de línea si no cabe */
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 15px 20px !important;
+    z-index: 9990 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.cookie-content-text {
+    flex: 1 1 auto !important; /* Ocupa el espacio disponible */
+    margin-right: 20px !important;
+    font-size: 0.9rem !important;
+    color: #ffffff !important;
+    line-height: 1.4 !important;
+}
+
+.cookie-link {
+    color: var(--gold-primary) !important;
+    text-decoration: underline;
+    margin-left: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Contenedor de botones para que no se separen */
+.cookie-buttons-wrapper {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0; /* Evita que los botones se aplasten */
+}
+
+/* Botón Aceptar */
+.cookie-btn-accept {
+    background-color: var(--gold-primary) !important;
+    color: #000000 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
+    padding: 8px 24px !important;
+    text-transform: uppercase;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease;
+}
+
+.cookie-btn-accept:hover {
+    background-color: #fff !important; /* Efecto hover */
+    transform: translateY(-2px);
+}
+
+/* Botón Rechazar */
+.cookie-btn-decline {
+    background-color: transparent !important;
+    border: 1px solid var(--gold-primary) !important;
+    color: var(--gold-primary) !important;
+    font-size: 13px !important;
+    border-radius: 4px !important;
+    padding: 8px 16px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease;
+}
+
+.cookie-btn-decline:hover {
+    background-color: rgba(212, 175, 55, 0.1) !important;
+}
+
+/* Móvil */
+@media (max-width: 768px) {
+    .cookie-consent-container {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 15px;
+    }
+    .cookie-content-text {
+        margin-right: 0 !important;
+    }
+    .cookie-buttons-wrapper {
+        width: 100%;
+        justify-content: center;
+    }
+}

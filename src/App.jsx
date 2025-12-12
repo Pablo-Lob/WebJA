@@ -12,8 +12,7 @@ import {useNavigate} from "react-router-dom";
 import Login from './pages/admin/Login.jsx';
 import Loader from './components/loader/Loader.jsx';
 import {useConfig} from './context/ConfigContext.jsx';
-import CookieConsent from "react-cookie-consent";
-import {Link} from "react-router-dom";
+import CookieConsent from './components/cookieConsent/CookieConsent.jsx';
 import LegalPage from "./pages/LegalPage.jsx";
 
 function KeyboardShortcuts() {
@@ -74,6 +73,7 @@ function App () {
                         <Route element={<PublicLayout />}>
                             <Route path="/" element={<Home />} />
 
+                            {/* Páginas Legales */}
                             <Route
                                 path="/privacy-policy"
                                 element={<LegalPage id="privacy" title="Política de Privacidad" />}
@@ -105,42 +105,7 @@ function App () {
                         <Route path="*" element={<NotFound />} />
 
                     </Routes>
-
-                    <CookieConsent
-                        location="bottom"
-                        buttonText="Aceptar"
-                        enableDeclineButton
-                        declineButtonText="Rechazar"
-                        cookieName="its-stones-consent"
-                        style={{
-                            background: "#0f0f0f",
-                            borderTop: "1px solid #d4af37",
-                            alignItems: "center",
-                            zIndex: 9990 /* Alto, pero por debajo del Loader (9999) */
-                        }}
-                        buttonStyle={{
-                            background: "#d4af37",
-                            color: "#000",
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            borderRadius: "4px",
-                            padding: "10px 20px"
-                        }}
-                        declineButtonStyle={{
-                            background: "transparent",
-                            border: "1px solid #d4af37",
-                            color: "#d4af37",
-                            fontSize: "14px",
-                            borderRadius: "4px",
-                            padding: "10px 20px"
-                        }}
-                        expires={150}
-                    >
-                        Valoramos su privacidad. Usamos cookies para mejorar su experiencia y analizar el tráfico conforme a la normativa internacional.{" "}
-                        <Link to="/cookie-policy" style={{ color: "#f7e695", textDecoration: "underline", marginLeft: "5px" }}>
-                            Leer Política de Cookies
-                        </Link>
-                    </CookieConsent>
+                    <CookieConsent/>
                 </div>
             </Router>
         </>
