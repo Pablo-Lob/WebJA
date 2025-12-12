@@ -2,9 +2,10 @@ import React from 'react';
 import './Mission.css';
 import ourMissionImg from '../../assets/ourMission.webp';
 import {useConfig} from '../../context/ConfigContext.jsx';
-import config from "bootstrap/js/src/util/config.js";
 
 const Mission = () => {
+    const { config } = useConfig();
+
     return (
         <section className="our-mission-section">
             <div className="our-mission-container">

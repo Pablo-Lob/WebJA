@@ -1,46 +1,50 @@
-// src/components/cookieConsent/CookieConsent.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './CookieConsent.css';
 
 const CookieConsent = () => {
-    // Inicializamos en false para evitar parpadeos, luego comprobamos en useEffect
+    // 1. Inicializamos en 'false' para que no parpadee
     const [isVisible, setIsVisible] = useState(false);
 
+    // 2. Usamos useEffect para comprobar el localStorage SOLO UNA VEZ al montar
     useEffect(() => {
         const consent = localStorage.getItem('its-stones-consent');
-        // Solo mostramos si NO hay nada guardado en localStorage
-        if (consent === null) {
+
+        // Solo mostramos el banner si NO existe la cookie
+        if (!consent) {
             setIsVisible(true);
         }
-    }, []);
+    }, []); // <--- El array vacío [] es vital, asegura que solo corra una vez
 
-    const handleAccept = () => {
+    const handleAccept = (e) => {
+        // Prevenir cualquier comportamiento por defecto
+        e.preventDefault();
         localStorage.setItem('its-stones-consent', 'true');
         setIsVisible(false);
     };
 
-    const handleDecline = () => {
+    const handleDecline = (e) => {
+        e.preventDefault();
         localStorage.setItem('its-stones-consent', 'false');
         setIsVisible(false);
     };
 
-    // Si no es visible, no renderizamos nada (return null desmonta el componente)
+    // Si no es visible, devolvemos null para desmontarlo del DOM
     if (!isVisible) return null;
 
     return (
         <div className="cookie-consent-container">
             <div className="cookie-content-text">
-                <p style={{ margin: 0, display: 'inline' }}>
-                    Valoramos su privacidad. Usamos cookies para mejorar su experiencia.
-                </p>
-                {/* Asegúrate de que esta ruta coincida con App.jsx */}
+                <span>
+                    Valoramos su privacidad. Usamos cookies para mejorar su experiencia y analizar el tráfico conforme a la normativa internacional.
+                </span>
+                {/* Enlace corregido usando Link para no recargar la página */}
                 <Link to="/cookie-policy" className="cookie-link">
                     Leer Política de Cookies
                 </Link>
             </div>
             <div className="cookie-buttons-wrapper">
-                {/* type="button" previene comportamientos raros de submit si estuviera en un form */}
+                {/* IMPORTANTE: type="button" evita que actúen como submit si hubiera un form cerca */}
                 <button type="button" onClick={handleDecline} className="cookie-btn-decline">
                     Rechazar
                 </button>
