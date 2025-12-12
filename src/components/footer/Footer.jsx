@@ -90,9 +90,9 @@ const Footer = () => {
 
                     {/* Additional Links */}
                     <div className="footer-legal-links">
-                        <a href="#" className="legal-link">Términos</a>
-                        <a href="#" className="legal-link">Privacidad</a>
-                        <a href="#" className="legal-link">Cookies</a>
+                        <a href="/privacy-policy" className="legal-link">Términos</a>
+                        <a href="/privacy-policy" className="legal-link">Privacidad</a>
+                        <a href="/cookies-policy" className="legal-link">Cookies</a>
                     </div>
                 </div>
             </div>
