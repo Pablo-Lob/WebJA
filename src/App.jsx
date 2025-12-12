@@ -12,8 +12,10 @@ import {useNavigate} from "react-router-dom";
 import Login from './pages/admin/Login.jsx';
 import Loader from './components/loader/Loader.jsx';
 import {useConfig} from './context/ConfigContext.jsx';
-import CookieConsent from './components/cookieConsent/CookieConsent.jsx';
 import LegalPage from "./pages/LegalPage.jsx";
+
+// --- CAMBIO CLAVE 1: Importamos TU archivo, NO la librería ---
+import CookieConsent from './components/cookieConsent/CookieConsent.jsx';
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -35,7 +37,7 @@ function KeyboardShortcuts() {
 const PublicLayout = () => {
     return (
         <>
-            <Navbar />
+            <Navbar/>
             <main>
                 <Outlet/>
             </main>
@@ -73,7 +75,6 @@ function App () {
                         <Route element={<PublicLayout />}>
                             <Route path="/" element={<Home />} />
 
-                            {/* Páginas Legales */}
                             <Route
                                 path="/privacy-policy"
                                 element={<LegalPage id="privacy" title="Política de Privacidad" />}
@@ -105,7 +106,11 @@ function App () {
                         <Route path="*" element={<NotFound />} />
 
                     </Routes>
-                    <CookieConsent/>
+
+                    {/* --- CAMBIO CLAVE 2: Usamos el componente limpio --- */}
+                    {/* Ya no pasamos props ni texto aquí, todo está en tu archivo CookieConsent.jsx */}
+                    <CookieConsent />
+
                 </div>
             </Router>
         </>
