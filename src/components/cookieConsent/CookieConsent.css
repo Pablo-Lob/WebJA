@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px;
-    z-index: 10000;
+    z-index: 9998;
     pointer-events: none;
     position: fixed;
     bottom: 0;
