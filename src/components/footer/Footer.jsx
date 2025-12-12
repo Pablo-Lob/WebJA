@@ -1,6 +1,7 @@
 import React from 'react';
-import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube, Gem } from 'lucide-react';
+import { Mail, Phone, MapPin} from 'lucide-react';
 import './Footer.css';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -90,9 +91,9 @@ const Footer = () => {
 
                     {/* Additional Links */}
                     <div className="footer-legal-links">
-                        <a href="/privacy-policy" className="legal-link">Términos</a>
-                        <a href="/privacy-policy" className="legal-link">Privacidad</a>
-                        <a href="/cookies-policy" className="legal-link">Cookies</a>
+                        <Link to="/terms-policy" className="legal-link">Terms</Link>
+                        <Link to="/privacy-policy" className="legal-link">Privacy</Link>
+                        <Link to="/cookie-policy" className="legal-link">Cookies</Link>
                     </div>
                 </div>
             </div>
