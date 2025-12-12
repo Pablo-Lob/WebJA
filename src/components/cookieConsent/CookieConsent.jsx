@@ -1,50 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef } from 'react'; // Eliminamos useState para evitar bucles
 import { Link } from 'react-router-dom';
 import './CookieConsent.css';
 
 const CookieConsent = () => {
-    const [isVisible, setIsVisible] = useState(false);
+    // Usamos useRef para acceder directamente al elemento HTML
+    const bannerRef = useRef(null);
 
-    useEffect(() => {
-        // Comprobación inicial segura
-        const consent = localStorage.getItem('its-stones-consent');
-        if (!consent) {
-            setIsVisible(true);
+    // Comprobación inicial síncrona (se ejecuta antes de pintar nada)
+    const hasConsent = localStorage.getItem('its-stones-consent');
+
+    // Si ya hay consentimiento, no renderizamos nada directamente
+    if (hasConsent) return null;
+
+    const hideBanner = () => {
+        if (bannerRef.current) {
+            bannerRef.current.style.display = 'none';
         }
-    }, []);
+    };
 
     const handleAccept = () => {
-        // 1. Guardar decisión
         localStorage.setItem('its-stones-consent', 'true');
-        // 2. Ocultar INMEDIATAMENTE (React priorizará esto)
-        setIsVisible(false);
+        hideBanner();
     };
 
     const handleDecline = () => {
         localStorage.setItem('its-stones-consent', 'false');
-        setIsVisible(false);
+        hideBanner();
     };
 
-    // Si no es visible, limpiamos el DOM
-    if (!isVisible) return null;
-
     return (
-        <div className="cookie-consent-container">
+        <div
+            ref={bannerRef}
+            className="cookie-consent-container"
+            style={{ display: 'flex' }}
+        >
             <div className="cookie-content-text">
                 <span>
-                    Valoramos su privacidad. Usamos cookies para mejorar su experiencia y analizar el tráfico conforme a la normativa internacional.
+                    We value your privacy. We use cookies to improve your experience and analyze traffic in accordance with international regulations.
                 </span>
-                {/* Usamos Link para navegación interna rápida */}
                 <Link to="/cookie-policy" className="cookie-link">
                     Leer Política de Cookies
                 </Link>
             </div>
             <div className="cookie-buttons-wrapper">
                 <button type="button" onClick={handleDecline} className="cookie-btn-decline">
-                    Rechazar
+                    Decline
                 </button>
                 <button type="button" onClick={handleAccept} className="cookie-btn-accept">
-                    Aceptar
+                    Accept
                 </button>
             </div>
         </div>

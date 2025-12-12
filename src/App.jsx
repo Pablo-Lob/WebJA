@@ -13,8 +13,6 @@ import Login from './pages/admin/Login.jsx';
 import Loader from './components/loader/Loader.jsx';
 import {useConfig} from './context/ConfigContext.jsx';
 import LegalPage from "./pages/LegalPage.jsx";
-
-// --- CAMBIO CLAVE 1: Importamos TU archivo, NO la librería ---
 import CookieConsent from './components/cookieConsent/CookieConsent.jsx';
 
 function KeyboardShortcuts() {
@@ -107,8 +105,6 @@ function App () {
 
                     </Routes>
 
-                    {/* --- CAMBIO CLAVE 2: Usamos el componente limpio --- */}
-                    {/* Ya no pasamos props ni texto aquí, todo está en tu archivo CookieConsent.jsx */}
                     <CookieConsent />
 
                 </div>

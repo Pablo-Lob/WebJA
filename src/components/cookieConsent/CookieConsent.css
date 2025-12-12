@@ -6,13 +6,20 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px;
-    z-index: 9990; /* Debajo del loader (9999) */
+    z-index: 10000;
+    pointer-events: none;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.8);
     animation: slideUp 0.5s ease-out;
+}
+
+.cookie-consent-container .cookie-btn-accept,
+.cookie-consent-container .cookie-btn-decline,
+.cookie-consent-container .cookie-link {
+    pointer-events: auto;
 }
 
 @keyframes slideUp {
