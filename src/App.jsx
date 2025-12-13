@@ -14,6 +14,7 @@ import Loader from './components/loader/Loader.jsx';
 import {useConfig} from './context/ConfigContext.jsx';
 import LegalPage from "./pages/LegalPage.jsx";
 import CookieConsent from './components/cookieConsent/CookieConsent.jsx';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop.jsx';
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -67,6 +68,7 @@ function App () {
             {showLoader && <Loader fadeOut={fadeOut} />}
 
             <Router>
+                <ScrollToTop/>
                 <div className="App">
                     <KeyboardShortcuts />
                     <Routes>
