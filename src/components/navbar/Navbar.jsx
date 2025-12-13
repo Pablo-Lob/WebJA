@@ -3,14 +3,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Navbar.css';
 import logo from '../../assets/logo.webp';
 import { useConfig } from '../../context/ConfigContext.jsx';
+import { Link, useLocation } from 'react-router-dom';
 
 function Navbar() {
     const [visible, setVisible] = useState(true);
     const [activeLink, setActiveLink] = useState('Home');
-
     const lastScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
-
     const { config } = useConfig();
+    const location = useLocation();
+
+    // Efecto para detectar en qué sección estamos y actualizar el menú activo automáticamente
+    useEffect(() => {
+        if (location.hash) {
+            const sectionId = location.hash.replace('#', '');
+            if (sectionId === 'about-us') setActiveLink('About-us');
+            else if (sectionId === 'mission') setActiveLink('Mission');
+            else if (sectionId === 'branches') setActiveLink('Branches');
+            else if (sectionId === 'services') setActiveLink('Services');
+            else if (sectionId === 'contact') setActiveLink('Contact-us');
+        } else if (location.pathname === '/') {
+            setActiveLink('Home');
+        }
+    }, [location]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -40,9 +54,10 @@ function Navbar() {
 
                 {/* Logo */}
                 <div className="nav-logo">
-                    <a className="navbar-brand m-0" href="../../pages/Home.jsx">
+                    {/* Corregido: Usamos Link to="/" en lugar de href a un archivo */}
+                    <Link className="navbar-brand m-0" to="/" onClick={() => onUpdateActiveLink('Home')}>
                         <img src={config.images?.logo || logo} alt="Logo" />
-                    </a>
+                    </Link>
                 </div>
 
                 {/* Menú items */}
@@ -55,58 +70,58 @@ function Navbar() {
                     <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <a
+                                <Link
                                     className={`nav-link ${activeLink === 'Home' ? 'active' : ''}`}
-                                    href="/"
+                                    to="/"
                                     onClick={() => onUpdateActiveLink('Home')}
                                 >
                                     Home
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'About us' ? 'active' : ''}`}
-                                    href="/#about-us"
+                                <Link
+                                    className={`nav-link ${activeLink === 'About-us' ? 'active' : ''}`}
+                                    to="/#about-us"
                                     onClick={() => onUpdateActiveLink('About-us')}
                                 >
                                     About Us
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'mission' ? 'active' : ''}`}
-                                    href="/#mission"
+                                <Link
+                                    className={`nav-link ${activeLink === 'Mission' ? 'active' : ''}`}
+                                    to="/#mission"
                                     onClick={() => onUpdateActiveLink('Mission')}
                                 >
                                     Mission
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'brances' ? 'active' : ''}`}
-                                    href="/#branches"
+                                <Link
+                                    className={`nav-link ${activeLink === 'Branches' ? 'active' : ''}`}
+                                    to="/#branches"
                                     onClick={() => onUpdateActiveLink('Branches')}
                                 >
                                     Branches
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a
+                                <Link
                                     className={`nav-link ${activeLink === 'Services' ? 'active' : ''}`}
-                                    href="/#services"
+                                    to="/#services"
                                     onClick={() => onUpdateActiveLink('Services')}
                                 >
                                     Services
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'Contact us' ? 'active' : ''}`}
-                                    href="/#contact"
+                                <Link
+                                    className={`nav-link ${activeLink === 'Contact-us' ? 'active' : ''}`}
+                                    to="/#contact"
                                     onClick={() => onUpdateActiveLink('Contact-us')}
                                 >
                                     Contact Us
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>

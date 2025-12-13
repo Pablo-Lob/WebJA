@@ -2,18 +2,25 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const ScrollToTop = () => {
-    // Extraemos tanto la ruta (pathname) como el hash (#seccion)
     const { pathname, hash } = useLocation();
 
     useEffect(() => {
-        // Si tiene # como seguramente sea un componente no hace scroll
+        // CASO 1: Navegación a una sección (ej: /#contact)
         if (hash) {
-            return
+            // Esperamos un "tick" para asegurar que la página nueva se ha renderizado
+            setTimeout(() => {
+                const id = hash.replace('#', '');
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100); // 100ms es suficiente para esperar al renderizado sin que el usuario lo note
         }
-        else { // Si no tiene hash, hacemos scroll al top
+        // CASO 2: Navegación normal (ej: ir a Política de Cookies)
+        else {
             window.scrollTo(0, 0);
         }
-    }, [pathname, hash]); // Se ejecuta cuando cambia la ruta O el hash
+    }, [pathname, hash]);
 
     return null;
 };
