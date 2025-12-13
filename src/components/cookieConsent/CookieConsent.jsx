@@ -1,57 +1,45 @@
-import React, { useRef } from 'react'; // Eliminamos useState para evitar bucles
+import React from 'react';
+import CookieConsentLib from 'react-cookie-consent';
 import { Link } from 'react-router-dom';
-import './CookieConsent.css';
 
-const CookieConsent = () => {
-    // Usamos useRef para acceder directamente al elemento HTML
-    const bannerRef = useRef(null);
-
-    // Comprobación inicial síncrona (se ejecuta antes de pintar nada)
-    const hasConsent = localStorage.getItem('its-stones-consent');
-
-    // Si ya hay consentimiento, no renderizamos nada directamente
-    if (hasConsent) return null;
-
-    const hideBanner = () => {
-        if (bannerRef.current) {
-            bannerRef.current.style.display = 'none';
-        }
-    };
-
-    const handleAccept = () => {
-        localStorage.setItem('its-stones-consent', 'true');
-        hideBanner();
-    };
-
-    const handleDecline = () => {
-        localStorage.setItem('its-stones-consent', 'false');
-        hideBanner();
-    };
-
+function CookieConsent() {
     return (
-        <div
-            ref={bannerRef}
-            className="cookie-consent-container"
-            style={{ display: 'flex' }}
+        <CookieConsentLib
+            location="bottom"
+            buttonText="Aceptar"
+            declineButtonText="Rechazar"
+            enableDeclineButton
+            cookieName="userCookieConsent"
+            style={{
+                background: "rgba(0, 0, 0, 0.95)",
+                padding: "20px",
+                alignItems: "center",
+                zIndex: 9999
+            }}
+            buttonStyle={{
+                background: "#c9a227",
+                color:  "#000",
+                fontSize: "14px",
+                borderRadius: "5px",
+                padding:  "10px 20px",
+                fontWeight: "bold"
+            }}
+            declineButtonStyle={{
+                background: "transparent",
+                border: "1px solid #c9a227",
+                color: "#c9a227",
+                fontSize: "14px",
+                borderRadius: "5px",
+                padding: "10px 20px"
+            }}
+            expires={365}
         >
-            <div className="cookie-content-text">
-                <span>
-                    We value your privacy. We use cookies to improve your experience and analyze traffic in accordance with international regulations.
-                </span>
-                <Link to="/cookie-policy" className="cookie-link">
-                    Leer Política de Cookies
-                </Link>
-            </div>
-            <div className="cookie-buttons-wrapper">
-                <button type="button" onClick={handleDecline} className="cookie-btn-decline">
-                    Decline
-                </button>
-                <button type="button" onClick={handleAccept} className="cookie-btn-accept">
-                    Accept
-                </button>
-            </div>
-        </div>
+            Utilizamos cookies para mejorar tu experiencia. Al continuar navegando, aceptas nuestra{" "}
+            <Link to="/cookie-policy" style={{ color: "#c9a227" }}>
+                Politica de Cookies
+            </Link>
+        </CookieConsentLib>
     );
-};
+}
 
 export default CookieConsent;
