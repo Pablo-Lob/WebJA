@@ -1,26 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const ScrollToTop = () => {
-    const { pathname, hash } = useLocation();
+    const { pathname } = useLocation();
+    const prevPathname = useRef(pathname);
 
     useEffect(() => {
-        // CASO 1: Navegación a una sección (ej: /#contact)
-        if (hash) {
-            // Esperamos un "tick" para asegurar que la página nueva se ha renderizado
-            setTimeout(() => {
-                const id = hash.replace('#', '');
-                const element = document.getElementById(id);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 100); // 100ms es suficiente para esperar al renderizado sin que el usuario lo note
-        }
-        // CASO 2: Navegación normal (ej: ir a Política de Cookies)
-        else {
+        // Solo scroll to top cuando cambia el pathname (no el hash)
+        if (prevPathname.current !== pathname) {
             window.scrollTo(0, 0);
+            prevPathname.current = pathname;
         }
-    }, [pathname, hash]);
+    }, [pathname]);
 
     return null;
 };
