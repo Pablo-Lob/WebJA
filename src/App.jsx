@@ -15,6 +15,7 @@ import {useConfig} from './context/ConfigContext.jsx';
 import LegalPage from './pages/LegalPage.jsx';
 import Catalog from "./pages/Catalog.jsx";
 import ManageCatalog from "./pages/admin/ManageCatalog.jsx";
+import ManageBranches from "./pages/admin/ManageBranches.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
