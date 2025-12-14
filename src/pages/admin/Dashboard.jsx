@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Dashboard.css';
-import { Palette, Image, FileText, LogOut, LayoutDashboard } from 'lucide-react';
+// 1. AÑADIMOS 'Globe' y 'Gem' A LOS IMPORTS
+import { Palette, Image, LogOut, Globe, Gem } from 'lucide-react';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Dashboard = () => {
     };
 
     const sections = [
-        {
+        {/*{
             id: 'colors',
             title: 'Identidad & Colores',
             description: 'Gestiona la paleta de colores global de la marca.',
@@ -30,13 +31,14 @@ const Dashboard = () => {
             description: 'Actualiza logos, banners y fotos de secciones principales.',
             icon: <Image size={40} />,
             tabTarget: 'images'
-        },
+        },*/},
         {
             id: 'minerals',
             title: 'Gestor de Minerales',
-            description: 'Actualiza el catalogo de minerales.',
-            icon: <Image size={40} />,
-            tabTarget: 'images'
+            description: 'Actualiza el catálogo de minerales.',
+            icon: <Gem size={40} />,
+            isDirectLink: true,
+            path: '/admin/catalog'
         },
         {
             id: 'branches',
@@ -63,7 +65,14 @@ const Dashboard = () => {
                     <div
                         key={section.id}
                         className="dashboard-card"
-                        onClick={() => goToTab(section.tabTarget)}
+                        // 3. CORREGIDO: LÓGICA PARA DECIDIR SI ES TAB O RUTA DIRECTA
+                        onClick={() => {
+                            if (section.isDirectLink) {
+                                navigate(section.path);
+                            } else {
+                                goToTab(section.tabTarget);
+                            }
+                        }}
                     >
                         <div className="card-icon">{section.icon}</div>
                         <h3>{section.title}</h3>
