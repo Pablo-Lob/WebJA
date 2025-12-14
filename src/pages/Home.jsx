@@ -14,7 +14,7 @@ function Home () {
     return (
         <>
             {/* Hero Section */}
-            <section className="hero-home">
+            <section id="home" className="hero-home">
                 <div className="hero-image">
                     <img src={config.images?.banner || banner} alt="ITS-STONES Banner" />
                 </div>
