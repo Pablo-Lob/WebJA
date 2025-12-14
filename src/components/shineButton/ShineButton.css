@@ -17,6 +17,10 @@
     overflow: hidden;
     cursor: pointer;
     border-radius: 10px;
+
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
 }
 
 .shine-btn::after {
@@ -41,4 +45,14 @@
 .shine-btn:hover::after {
     background-color: var(--button-hover-color);
     left: 120%;
+}
+
+/* Añade esto al final de tu archivo ShineButton.css */
+
+.shine-btn:hover,
+.shine-btn:focus, /* Para cuando se selecciona con teclado */
+.shine-btn:active { /* Para cuando se está haciendo clic */
+    color: white !important;    /* Fuerza que el texto siga blanco */
+    text-decoration: none;       /* Asegura que no aparezca el subrayado */
+    outline: none;              /* Quita el borde azul de enfoque en algunos navegadores */
 }

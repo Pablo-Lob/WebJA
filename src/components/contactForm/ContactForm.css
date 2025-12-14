@@ -119,3 +119,59 @@
         font-size: 2rem;
     }
 }
+
+/* Estilos para el contenedor del teléfono */
+.phone-input-wrapper {
+    width: 100%;
+}
+
+/* El input de texto del teléfono */
+.react-tel-input .input-field.phone-custom-input {
+    width: 100%;
+    height: 100%; /* Asegura altura igual al email */
+    padding-left: 48px; /* Espacio para la bandera */
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+/* El botón de la bandera */
+.react-tel-input .phone-custom-button {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 8px 0 0 8px !important;
+}
+
+.react-tel-input .phone-custom-button .selected-flag:hover,
+.react-tel-input .phone-custom-button.open .selected-flag {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* El menú desplegable de países */
+.react-tel-input .phone-custom-dropdown {
+    background-color: #1a1a1a !important; /* Fondo oscuro menú */
+    color: white !important;
+    border: 1px solid #333 !important;
+}
+
+/* Opción del menú al pasar el ratón */
+.react-tel-input .phone-custom-dropdown .country:hover {
+    background-color: var(--accent-color) !important; /* Dorado al pasar mouse */
+    color: #000 !important;
+}
+
+/* Opción activa */
+.react-tel-input .phone-custom-dropdown .country.highlight {
+    background-color: var(--accent-color) !important;
+    color: #000 !important;
+}
+
+/* Ajuste responsive para la fila del teléfono */
+@media (max-width: 768px) {
+    .phone-input-wrapper {
+        margin-bottom: 0;
+    }
+}
