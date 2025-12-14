@@ -70,8 +70,65 @@
     border-radius: 15px;
 }
 
-@media (max-width: 768px) {
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 991px) {
+    .about-section {
+        padding:  80px 20px;
+    }
+
     .about-container {
-        grid-template-columns: 1fr;
+        grid-template-columns:  1fr;
+        gap: 40px;
+    }
+
+    .section-subtitle {
+        font-size: 2rem;
+    }
+
+    .visual-card {
+        height: 350px;
+    }
+}
+
+@media (max-width:  768px) {
+    .about-section {
+        padding:  60px 15px;
+    }
+
+    . about-container {
+        gap: 30px;
+    }
+
+    .section-subtitle {
+        font-size: 1.75rem;
+    }
+
+    . highlight-text {
+        font-size: 1rem;
+        padding-left: 15px;
+    }
+
+    . visual-card {
+        height: 300px;
+    }
+}
+
+@media (max-width:  576px) {
+    .about-section {
+        padding: 50px 10px;
+    }
+
+    .section-subtitle {
+        font-size: 1.5rem;
+    }
+
+    .visual-card {
+        height: 250px;
+        border-radius: 15px;
+    }
+
+    .visual-card .about-image {
+        border-radius: 15px;
     }
 }

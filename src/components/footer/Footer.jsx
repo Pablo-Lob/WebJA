@@ -12,7 +12,7 @@ const Footer = () => {
 
                     {/* Productos */}
                     <div className="footer-column">
-                        <h3 className="footer-heading">Productos</h3>
+                        <h3 className="footer-heading">Products</h3>
                         <ul className="footer-links">
                             <li><a href="#" className="footer-link">Precious Metals</a></li>
                             <li><a href="#" className="footer-link">Gemstones</a></li>
@@ -21,22 +21,12 @@ const Footer = () => {
 
                     {/* Servicios */}
                     <div className="footer-column">
-                        <h3 className="footer-heading">Servicios</h3>
+                        <h3 className="footer-heading">Service</h3>
                         <ul className="footer-links">
                             <li><a href="#" className="footer-link">Global Sourcing & Importation</a></li>
                             <li><a href="#" className="footer-link">Quality Assurance & Certification</a></li>
                             <li><a href="#" className="footer-link">Secure Logistics</a></li>
                             <li><a href="#" className="footer-link">Consultation & Market Insight</a></li>
-                        </ul>
-                    </div>
-
-                    {/* Ayuda */}
-                    <div className="footer-column">
-                        <h3 className="footer-heading">Ayuda</h3>
-                        <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Contacto</a></li>
-                            <li><a href="#" className="footer-link">Preguntas Frecuentes</a></li>
-                            <li><a href="#" className="footer-link">Garantías</a></li>
                         </ul>
                     </div>
 
@@ -52,7 +42,7 @@ const Footer = () => {
 
                     {/* Contacto */}
                     <div className="footer-column">
-                        <h3 className="footer-heading">Contacto</h3>
+                        <h3 className="footer-heading">Contact</h3>
                         <div className="contact-info">
                             <div className="contact-item">
                                 <MapPin className="contact-icon" />

@@ -1,10 +1,11 @@
 import React from 'react';
 import './About.css';
 import aboutUs from '../../assets/aboutUs.webp';
-import {useConfig} from '../../context/ConfigContext.jsx';
-import config from "bootstrap/js/src/util/config.js";
+import {useConfig} from '../../context/ConfigContext';
 
 const About = () => {
+    const {config} = useConfig();
+
     return (
         <section id="about-us" className="about-section">
             <div className="about-container">
@@ -20,7 +21,7 @@ const About = () => {
                     </p>
 
                     <p>
-                        We are the dedicated intermediary ensuring that Earth’s inherent riches
+                        We are the dedicated intermediary ensuring that Earth's inherent riches
                         are delivered to the international market with uncompromising ethical
                         standards and logistical mastery.
                     </p>
@@ -28,7 +29,7 @@ const About = () => {
 
                 <div className="about-visual">
                     <div className="visual-card">
-                        <img src={config.images?.aboutUs || aboutUs}  alt="Manos sosteniendo piedras preciosas y metales preciosos"  className="about-image"/>
+                        <img src={config?. images?. aboutUs || aboutUs} alt="Manos sosteniendo piedras preciosas y metales preciosos" className="about-image"/>
                     </div>
                 </div>
             </div>
