@@ -13,6 +13,8 @@ import Login from './pages/admin/Login.jsx';
 import Loader from './components/loader/Loader.jsx';
 import {useConfig} from './context/ConfigContext.jsx';
 import LegalPage from './pages/LegalPage.jsx';
+import Catalog from "./pages/Catalog.jsx";
+import ManageCatalog from "./pages/admin/ManageCatalog.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -76,6 +78,9 @@ function App () {
                             <Route path="/privacy-policy" element={<LegalPage id="privacy" title="Politica de Privacidad" />} />
                             <Route path="/terms-policy" element={<LegalPage id="terms" title="Terminos y Condiciones" />} />
                             <Route path="/cookie-policy" element={<LegalPage id="cookies" title="Politica de Cookies" />} />
+
+                            {/* Catalogo */}
+                            <Route path="/catalog" element={<Catalog />} />
                         </Route>
 
                         <Route path="/admin/login" element={<Login />} />
@@ -89,6 +94,12 @@ function App () {
                         <Route path="/admin/content" element={
                             <ProtectedRoute>
                                 <ManageContent />
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="/admin/catalog" element={
+                            <ProtectedRoute>
+                                <ManageCatalog />
                             </ProtectedRoute>
                         } />
 
