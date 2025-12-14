@@ -3,12 +3,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Navbar.css';
 import logo from '../../assets/logo.webp';
 import { useConfig } from '../../context/ConfigContext.jsx';
+import { HiMenu, HiX } from 'react-icons/hi';
 
 function Navbar() {
     const [visible, setVisible] = useState(true);
     const [activeLink, setActiveLink] = useState('Home');
     const [menuOpen, setMenuOpen] = useState(false);
-    const lastScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
+    const lastScrollY = useRef(typeof window !== 'undefined' ?  window.scrollY :  0);
     const { config } = useConfig();
 
     useEffect(() => {
@@ -30,7 +31,7 @@ function Navbar() {
         e.preventDefault();
         const element = document.getElementById(sectionId);
         if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+            element.scrollIntoView({ behavior:  'smooth' });
         }
         setActiveLink(linkName);
         setMenuOpen(false);
@@ -38,14 +39,14 @@ function Navbar() {
 
     const handleHomeClick = (e) => {
         e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top:  0, behavior:  'smooth' });
         setActiveLink('Home');
         setMenuOpen(false);
     };
 
     return (
         <nav className={`navbar navbar-expand-lg fixed-top custom-navbar-wrapper ${visible ? 'nav-visible' : 'nav-hidden'}`}>
-            <div className="container-fluid d-flex flex-column">
+            <div className="container-fluid">
 
                 <div className="nav-logo">
                     <a className="navbar-brand m-0" href="/" onClick={handleHomeClick}>
@@ -53,76 +54,72 @@ function Navbar() {
                     </a>
                 </div>
 
-                <div className="nav-menu w-100">
-                    <button
-                        className="navbar-toggler mx-auto mt-2"
-                        type="button"
-                        onClick={() => setMenuOpen(!menuOpen)}
-                        aria-controls="navbarNav"
-                        aria-expanded={menuOpen}
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
+                <button
+                    className="navbar-toggler d-lg-none"
+                    type="button"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label="Toggle navigation"
+                >
+                    {menuOpen ? <HiX size={28} color="#ffffff" /> :  <HiMenu size={28} color="#ffffff" />}
+                </button>
 
-                    <div className={`collapse navbar-collapse justify-content-center ${menuOpen ? 'show' : ''}`} id="navbarNav">
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'Home' ? 'active' : ''}`}
-                                    href="/"
-                                    onClick={handleHomeClick}
-                                >
-                                    Home
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'About-us' ? 'active' : ''}`}
-                                    href="#about-us"
-                                    onClick={(e) => handleNavClick(e, 'about-us', 'About-us')}
-                                >
-                                    About Us
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'Mission' ? 'active' : ''}`}
-                                    href="#mission"
-                                    onClick={(e) => handleNavClick(e, 'mission', 'Mission')}
-                                >
-                                    Mission
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'Branches' ? 'active' : ''}`}
-                                    href="#branches"
-                                    onClick={(e) => handleNavClick(e, 'branches', 'Branches')}
-                                >
-                                    Branches
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'Services' ? 'active' : ''}`}
-                                    href="#services"
-                                    onClick={(e) => handleNavClick(e, 'services', 'Services')}
-                                >
-                                    Services
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a
-                                    className={`nav-link ${activeLink === 'Contact-us' ? 'active' : ''}`}
-                                    href="#contact"
-                                    onClick={(e) => handleNavClick(e, 'contact', 'Contact-us')}
-                                >
-                                    Contact Us
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                <div className={`navbar-collapse ${menuOpen ? 'show' : ''}`}>
+                    <ul className="navbar-nav">
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Home' ? 'active' : ''}`}
+                                href="/"
+                                onClick={handleHomeClick}
+                            >
+                                Home
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'About-us' ? 'active' : ''}`}
+                                href="#about-us"
+                                onClick={(e) => handleNavClick(e, 'about-us', 'About-us')}
+                            >
+                                About Us
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Mission' ? 'active' : ''}`}
+                                href="#mission"
+                                onClick={(e) => handleNavClick(e, 'mission', 'Mission')}
+                            >
+                                Mission
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Branches' ?  'active' :  ''}`}
+                                href="#branches"
+                                onClick={(e) => handleNavClick(e, 'branches', 'Branches')}
+                            >
+                                Branches
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Services' ? 'active' : ''}`}
+                                href="#services"
+                                onClick={(e) => handleNavClick(e, 'services', 'Services')}
+                            >
+                                Services
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Contact-us' ? 'active' : ''}`}
+                                href="#contact"
+                                onClick={(e) => handleNavClick(e, 'contact', 'Contact-us')}
+                            >
+                                Contact Us
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
             </div>
