@@ -14,9 +14,8 @@ const Footer = () => {
                     <div className="footer-column">
                         <h3 className="footer-heading">Productos</h3>
                         <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Oro</a></li>
-                            <li><a href="#" className="footer-link">Plata</a></li>
-                            <li><a href="#" className="footer-link">Piedras Preciosas</a></li>
+                            <li><a href="#" className="footer-link">Precious Metals</a></li>
+                            <li><a href="#" className="footer-link">Gemstones</a></li>
                         </ul>
                     </div>
 
@@ -24,11 +23,10 @@ const Footer = () => {
                     <div className="footer-column">
                         <h3 className="footer-heading">Servicios</h3>
                         <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Identificación</a></li>
-                            <li><a href="#" className="footer-link">Tasación</a></li>
-                            <li><a href="#" className="footer-link">Asesoramiento</a></li>
-                            <li><a href="#" className="footer-link">Envíos Seguros</a></li>
-                            <li><a href="#" className="footer-link">Certificación</a></li>
+                            <li><a href="#" className="footer-link">Global Sourcing & Importation</a></li>
+                            <li><a href="#" className="footer-link">Quality Assurance & Certification</a></li>
+                            <li><a href="#" className="footer-link">Secure Logistics</a></li>
+                            <li><a href="#" className="footer-link">Consultation & Market Insight</a></li>
                         </ul>
                     </div>
 
@@ -46,10 +44,9 @@ const Footer = () => {
                     <div className="footer-column">
                         <h3 className="footer-heading">Legal</h3>
                         <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Política de Privacidad</a></li>
-                            <li><a href="#" className="footer-link">Términos de Uso</a></li>
-                            <li><a href="#" className="footer-link">Política de Cookies</a></li>
-                            <li><a href="#" className="footer-link">Aviso Legal</a></li>
+                            <li><a href="#" className="footer-link">Privacy Policy</a></li>
+                            <li><a href="#" className="footer-link">Cookie Policy</a></li>
+                            <li><a href="#" className="footer-link">Anti-Money Laundering (AML) / Know Your Customer (KYC) Policy</a></li>
                         </ul>
                     </div>
 
@@ -59,7 +56,7 @@ const Footer = () => {
                         <div className="contact-info">
                             <div className="contact-item">
                                 <MapPin className="contact-icon" />
-                                <span className="contact-text">Adress: 5WA 328-Third Floor-5 West A  Dubai U.A.E, C:N 284157</span>
+                                <a href="https://maps.app.goo.gl/J1PLLWMrtUt3n2Fe7" className="contact-text contact-link" target="_blank" rel="noopener noreferrer noreferrer">Address: Dubai Airport Free Zone</a>
                                 </div>
                                 <div className="contact-item">
                                 <Phone className="contact-icon" />
