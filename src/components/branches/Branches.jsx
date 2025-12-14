@@ -5,7 +5,7 @@ const Branches = () => {
     const [branchesData, setBranchesData] = useState([]);
 
     // URL API (Modo lectura)
-    const API_URL = 'https://itsstonesfzco.com/catalog-api.php?table=branches';
+    const API_URL = 'https://itsstonesfzco.com/api.php?table=branches';
 
     useEffect(() => {
         const fetchData = async () => {

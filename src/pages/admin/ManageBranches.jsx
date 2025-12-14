@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/ManageCatalog.css'; // Reutilizamos el CSS del catálogo, que ya es bonito
+import './styles/ManageCatalog.css'; // Reutilizamos el CSS del catálogo
 
 const ManageBranches = () => {
     const navigate = useNavigate();
@@ -15,13 +15,15 @@ const ManageBranches = () => {
     });
     const [imageFile, setImageFile] = useState(null);
 
-    // URL API (Añadimos ?table=branches)
-    const API_URL = 'https://itsstonesfzco.com/catalog-api.php?table=branches';
+    // --- CORRECCIÓN AQUÍ: Usamos api.php ---
+    const API_URL = 'https://itsstonesfzco.com/api.php?table=branches';
 
-    // 1. Cargar Branches
+    // 1. Cargar Branches (Con truco anti-caché)
     const fetchBranches = async () => {
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(`${API_URL}&t=${Date.now()}`);
+            if (!response.ok) throw new Error("Error del servidor: " + response.status);
+
             const data = await response.json();
             setBranches(Array.isArray(data) ? data : []);
         } catch (error) {
@@ -47,21 +49,28 @@ const ManageBranches = () => {
                 formData.append('image', imageFile);
             }
 
-            const response = await fetch(API_URL, { method: 'POST', body: formData });
+            // Nota: Al usar FormData no hace falta poner Content-Type manualmente
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: formData
+            });
+
             const result = await response.json();
 
             if (result.status === 'success') {
-                alert("Sede añadida correctamente");
+                alert("Sede guardada correctamente");
+                // Limpiar formulario
                 setNewBranch({ city: '', description: '', details: '' });
                 setImageFile(null);
                 document.getElementById('file-upload').value = "";
+                // Recargar lista
                 fetchBranches();
             } else {
-                alert("Error: " + result.error);
+                alert("Error del servidor: " + (result.error || "Desconocido"));
             }
         } catch (error) {
-            console.error(error);
-            alert("Error de conexión");
+            console.error("Error al subir:", error);
+            alert("Error de conexión o fallo en api.php");
         } finally {
             setLoading(false);
         }
@@ -69,9 +78,13 @@ const ManageBranches = () => {
 
     // 3. Borrar Branch
     const handleDelete = async (id) => {
-        if (window.confirm("¿Borrar esta sede?")) {
-            await fetch(`${API_URL}&id=${id}`, { method: 'DELETE' });
-            fetchBranches();
+        if (window.confirm("¿Seguro que quieres borrar esta sede?")) {
+            try {
+                await fetch(`${API_URL}&id=${id}`, { method: 'DELETE' });
+                fetchBranches();
+            } catch (error) {
+                console.error("Error borrando:", error);
+            }
         }
     };
 
@@ -81,7 +94,7 @@ const ManageBranches = () => {
                 <button onClick={() => navigate('/admin/dashboard')} className="back-btn-simple" style={{background:'none', border:'1px solid #666', color:'white', padding:'5px 15px', cursor:'pointer', borderRadius:'4px'}}>
                     ← Volver
                 </button>
-                <h1 style={{marginLeft:'20px'}}>Gestor de Sedes (Branches)</h1>
+                <h1 style={{marginLeft:'20px'}}>Gestor de Sedes</h1>
             </div>
 
             <div className="admin-grid">
@@ -98,7 +111,7 @@ const ManageBranches = () => {
                             required
                         />
                         <textarea
-                            placeholder="Descripción principal..."
+                            placeholder="Descripción..."
                             className="admin-textarea"
                             value={newBranch.description}
                             onChange={e => setNewBranch({...newBranch, description: e.target.value})}
@@ -106,7 +119,7 @@ const ManageBranches = () => {
                         />
                         <input
                             type="text"
-                            placeholder="Detalles / Dirección"
+                            placeholder="Detalles (Dirección...)"
                             className="admin-input"
                             value={newBranch.details}
                             onChange={e => setNewBranch({...newBranch, details: e.target.value})}
@@ -114,14 +127,13 @@ const ManageBranches = () => {
                         />
 
                         <div className="file-input-wrapper">
-                            <label style={{display:'block', marginBottom:'5px', color:'#aaa'}}>Imagen de fondo:</label>
+                            <label style={{display:'block', marginBottom:'5px', color:'#aaa'}}>Imagen:</label>
                             <input
                                 id="file-upload"
                                 type="file"
                                 accept="image/*"
                                 onChange={e => setImageFile(e.target.files[0])}
                                 className="file-input"
-                                required
                             />
                         </div>
 
@@ -135,12 +147,18 @@ const ManageBranches = () => {
                 <div className="list-section">
                     <h2>Sedes Activas</h2>
                     <div className="minerals-list">
+                        {branches.length === 0 && <p style={{color:'#666'}}>No hay sedes creadas.</p>}
+
                         {branches.map(branch => (
                             <div key={branch.id} className="mineral-item-admin">
-                                <img src={branch.image} alt={branch.city} />
+                                {branch.image ? (
+                                    <img src={branch.image} alt={branch.city} onError={(e)=>{e.target.style.display='none'}} />
+                                ) : (
+                                    <div style={{width:'60px', height:'60px', background:'#333', borderRadius:'4px'}}></div>
+                                )}
                                 <div className="mineral-info">
                                     <h3>{branch.city}</h3>
-                                    <p style={{fontSize:'0.8rem', color:'#aaa'}}>{branch.details}</p>
+                                    <p style={{fontSize:'0.8rem', color:'#aaa', margin:0}}>{branch.details}</p>
                                 </div>
                                 <button onClick={() => handleDelete(branch.id)} className="delete-btn">Eliminar</button>
                             </div>

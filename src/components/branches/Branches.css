@@ -1,131 +1,164 @@
-:root {
-    /* Usamos las globales */
-    --primary-gold: var(--gold-primary);
-    --primary-gold-dim: var(--gold-dim);
-    --bg-dark: var(--bg-dark);
-    --text-main: var(--text-white);
-    --text-secondary: var(--section-text-color); /* Control global de párrafos */
-    --card-bg: var(--bg-card);
-    --card-shadow: rgba(0, 0, 0, 0.5);
-}
-
-.branches-section {
-    background-color: var(--bg-dark);
-    padding: 80px 20px;
-    color: var(--text-main);
-    position: relative;
-    /* Opcional: Si quieres un degradado sutil para darle profundidad */
-    background: linear-gradient(180deg, var(--bg-dark) 0%, #1a1a1a 100%);
-}
-
 .branches-container {
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 60px 20px;
+    background-color: var(--bg-dark); /* Fondo oscuro */
+    color: white;
+    text-align: center;
 }
 
-/* --- Cabecera --- */
 .branches-header {
-    text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
 }
 
 .branches-header h2 {
+    color: var(--gold-primary);
     font-size: 2.5rem;
-    color: var(--primary-gold);
-    margin-bottom: 15px;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
 }
 
-.gold-divider {
-    width: 60px;
-    height: 3px;
-    background: var(--primary-gold);
-    margin: 0 auto 20px;
-    border-radius: 2px;
-}
-
-.branches-subtitle {
-    color: var(--text-secondary);
+.branches-header p {
+    color: var(--text-gray);
     font-size: 1.1rem;
     font-weight: 300;
 }
 
-/* --- Grid --- */
-.branches-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 40px;
-    padding: 0 10px;
+.gold-divider-small {
+    width: 60px;
+    height: 3px;
+    background: var(--gold-primary);
+    margin: 0 auto 20px;
 }
 
-/* --- Tarjetas --- */
+/* --- GRID / FLEX DE TARJETAS --- */
+.branches-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Esto centra las tarjetas si hay pocas (ej: 1 o 3) */
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- ESTILO DE LA CARTA --- */
 .branch-card {
-    background: var(--card-bg);
-    border: 1px solid var(--primary-gold-dim);
-    border-radius: 16px;
-    padding: 40px 30px;
-    text-align: center;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px); /* Efecto difuminado detrás del cristal */
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    position: relative;
+
+    /* CONTROL DE TAMAÑO */
+    width: 100%;
+    max-width: 380px; /* Ancho máximo para que no se estire demasiado */
+    flex: 1 1 300px;  /* Flexibilidad base */
 }
 
 .branch-card:hover {
     transform: translateY(-10px);
-    border-color: var(--primary-gold);
-    box-shadow: 0 15px 40px var(--card-shadow);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: var(--gold-dim);
 }
 
-/* --- Iconos --- */
-.icon-wrapper {
-    background-color: rgba(212, 175, 55, 0.1); /* Usando el dorado con opacidad fija para el fondo del icono */
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+/* --- IMAGEN (Aquí controlamos la altura) --- */
+.branch-image-wrapper {
+    width: 100%;
+    height: 250px; /* <--- ALTURA FIJA: Cambia esto si la quieres más alta o baja */
+    position: relative;
+    overflow: hidden;
+}
+
+.branch-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* IMPORTANTE: Recorta la imagen para llenar el hueco sin deformar */
+    object-position: center;
+    transition: transform 0.6s ease;
+}
+
+.branch-card:hover .branch-image-wrapper img {
+    transform: scale(1.1); /* Efecto zoom suave */
+}
+
+/* Sombra sobre la imagen */
+.branch-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+}
+
+/* --- CONTENIDO --- */
+.branch-content {
+    padding: 30px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 25px;
-    color: var(--primary-gold);
-    transition: transform 0.3s ease;
+    flex-direction: column;
+    flex-grow: 1; /* Hace que todas las cartas intenten tener la misma altura de contenido */
 }
 
-.branch-card:hover .icon-wrapper {
-    transform: scale(1.1); /* El icono crece un poco al pasar el ratón */
-}
-
-/* --- Tipografía interna --- */
-.branch-card h3 {
+.branch-content h3 {
+    color: var(--text-white);
     font-size: 1.5rem;
-    margin-bottom: 10px;
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-.branch-card h4 {
-    color: var(--primary-gold);
-    font-size: 0.9rem;
+    margin-bottom: 15px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+.branch-card:hover .branch-content h3 {
+    color: var(--gold-secondary);
+}
+
+.gold-line {
+    width: 40px;
+    height: 2px;
+    background: var(--gold-primary);
     margin-bottom: 20px;
-    font-weight: 700;
 }
 
-.branch-card p {
-    color: var(--text-secondary);
+.branch-desc {
+    color: var(--text-gray);
     line-height: 1.6;
+    margin-bottom: 30px;
     font-size: 0.95rem;
+    flex-grow: 1; /* Empuja el footer hacia abajo */
 }
 
-/* --- Responsive --- */
+/* Footer (Dirección) */
+.branch-footer {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.branch-details {
+    color: var(--gold-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-    .branches-header h2 {
-        font-size: 2rem;
+    .branches-grid {
+        /* En móvil aseguramos que se apilen */
+        flex-direction: column;
+        align-items: center;
     }
 
-    .branches-section {
-        padding: 50px 20px;
+    .branch-card {
+        max-width: 100%; /* Ocupar todo el ancho en pantallas pequeñas */
+        height: auto;
+    }
+
+    .branch-image-wrapper {
+        height: 220px; /* Un pelín más pequeño en móvil */
     }
 }

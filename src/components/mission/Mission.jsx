@@ -1,7 +1,6 @@
 import React from 'react';
 import './Mission.css';
 import ourMissionImg from '../../assets/ourMission.webp';
-import {useConfig} from '../../context/ConfigContext.jsx';
 import config from "bootstrap/js/src/util/config.js";
 
 const Mission = () => {
