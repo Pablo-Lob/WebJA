@@ -1,109 +1,149 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './Navbar.css';
 import logo from '../../assets/logo.webp';
-import ShineButton from '../shineButton/ShineButton.jsx';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
-import { useConfig } from "../../context/ConfigContext.jsx";
+import { useConfig } from '../../context/ConfigContext.jsx';
+import { HiMenu, HiX } from 'react-icons/hi';
 
-const Navbar = () => {
-    const [scrolled, setScrolled] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const location = useLocation();
-    const navigate = useNavigate();
+function Navbar() {
+    const [visible, setVisible] = useState(true);
+    const [activeLink, setActiveLink] = useState('Home');
+    const [menuOpen, setMenuOpen] = useState(false);
+    const lastScrollY = useRef(typeof window !== 'undefined' ?  window.scrollY :  0);
     const { config } = useConfig();
 
-    // Enlaces del menú (Asegúrate de que los href coinciden con los IDs en Home.jsx)
-    const navLinks = [
-        { title: 'Home', href: 'home' },         // Debe coincidir con id="home"
-        { title: 'About Us', href: 'about-us' },
-        { title: 'Services', href: 'services' },
-        { title: 'Mission', href: 'mission' },
-        { title: 'Contact', href: 'contact' } // Redirige al final
-    ];
+    // Hooks necesarios para la navegación entre páginas
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    // Detectar scroll para cambiar estilo del navbar
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
+            const currentY = window.scrollY;
+            if (currentY > lastScrollY.current && currentY > 50) {
+                setVisible(false);
+            } else {
+                setVisible(true);
+            }
+            lastScrollY.current = currentY;
         };
-        window.addEventListener('scroll', handleScroll);
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // FUNCIÓN CLAVE CORREGIDA
-    const handleNavClick = (e, targetId) => {
+    const handleNavClick = (e, sectionId, linkName) => {
         e.preventDefault();
-        setIsMenuOpen(false); // Cerrar menú móvil si está abierto
+        setMenuOpen(false);
+        setActiveLink(linkName);
 
-        // 1. Si NO estamos en la página de inicio (ej: estamos en Catalog o Legal)
-        if (location.pathname !== '/') {
-            navigate('/'); // Navegar a Home
-
-            // Esperar un poco a que cargue la Home y luego hacer scroll
-            setTimeout(() => {
-                // Si es "home", vamos arriba del todo
-                if (targetId === 'home') {
-                    window.scrollTo(0, 0);
-                } else {
-                    // Si es una sección, la buscamos
-                    const element = document.getElementById(targetId);
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }
-            }, 100); // 100ms de retraso para asegurar que la página cambió
-        }
-        // 2. Si YA estamos en la Home
-        else {
-            if (targetId === 'home') {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                const element = document.getElementById(targetId);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                }
+        // 1. Si estamos en la página de inicio ('/'), hacemos scroll normal
+        if (location.pathname === '/') {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
             }
+        }
+        // 2. Si NO estamos en inicio, navegamos a Home y pasamos el ID
+        else {
+            navigate('/', { state: { targetId: sectionId } });
+        }
+    };
+
+    const handleHomeClick = (e) => {
+        e.preventDefault();
+        setMenuOpen(false);
+        setActiveLink('Home');
+
+        // Misma lógica para el botón Home
+        if (location.pathname === '/') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            navigate('/', { state: { targetId: 'home' } });
         }
     };
 
     return (
-        <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-            <div className="navbar-container">
-                {/* Logo que también lleva al inicio */}
-                <div className="navbar-logo" onClick={(e) => handleNavClick(e, 'home')}>
-                    <img src={config.images?.logo || logo} alt="ITS Stones Logo" />
+        <nav className={`navbar navbar-expand-lg fixed-top custom-navbar-wrapper ${visible ? 'nav-visible' : 'nav-hidden'}`}>
+            <div className="container-fluid">
+
+                <div className="nav-logo">
+                    <a className="navbar-brand m-0" href="/" onClick={handleHomeClick}>
+                        <img src={config?.images?.logo || logo} alt="Logo" />
+                    </a>
                 </div>
 
-                {/* Icono Menú Móvil */}
-                <div className="menu-icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                    {isMenuOpen ? <X color="white" /> : <Menu color="white" />}
-                </div>
+                <button
+                    className="navbar-toggler d-lg-none"
+                    type="button"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label="Toggle navigation"
+                >
+                    {menuOpen ? <HiX size={28} color="#ffffff" /> :  <HiMenu size={28} color="#ffffff" />}
+                </button>
 
-                {/* Links de Navegación */}
-                <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
-                    {navLinks.map((link, index) => (
-                        <li key={index} className="nav-item">
+                <div className={`navbar-collapse ${menuOpen ? 'show' : ''}`}>
+                    <ul className="navbar-nav">
+                        <li className="nav-item">
                             <a
-                                href={`#${link.href}`}
-                                className="nav-links"
-                                onClick={(e) => handleNavClick(e, link.href)}
+                                className={`nav-link ${activeLink === 'Home' ? 'active' : ''}`}
+                                href="/"
+                                onClick={handleHomeClick}
                             >
-                                {link.title}
+                                Home
                             </a>
                         </li>
-                    ))}
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'About-us' ? 'active' : ''}`}
+                                href="#about-us"
+                                onClick={(e) => handleNavClick(e, 'about-us', 'About-us')}
+                            >
+                                About Us
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Mission' ? 'active' : ''}`}
+                                href="#mission"
+                                onClick={(e) => handleNavClick(e, 'mission', 'Mission')}
+                            >
+                                Mission
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Branches' ?  'active' :  ''}`}
+                                href="#branches"
+                                onClick={(e) => handleNavClick(e, 'branches', 'Branches')}
+                            >
+                                Branches
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Services' ? 'active' : ''}`}
+                                href="#services"
+                                onClick={(e) => handleNavClick(e, 'services', 'Services')}
+                            >
+                                Services
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeLink === 'Contact-us' ? 'active' : ''}`}
+                                href="#contact"
+                                onClick={(e) => handleNavClick(e, 'contact', 'Contact-us')}
+                            >
+                                Contact Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                    {/* Botón especial Contact Us en el menú */}
-                    <li className="nav-item-btn">
-                        <ShineButton onClick={(e) => handleNavClick(e, 'contact')}>
-                            Contact Us
-                        </ShineButton>
-                    </li>
-                </ul>
             </div>
         </nav>
     );
-};
+}
 
 export default Navbar;

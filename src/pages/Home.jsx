@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './styles/Home.css';
 import ShineButton from '../components/shineButton/ShineButton.jsx';
 import ContactForm from "../components/contactForm/ContactForm.jsx";
@@ -11,6 +12,24 @@ import {useConfig} from "../context/ConfigContext.jsx";
 
 function Home () {
     const {config} = useConfig();
+    const location = useLocation();
+
+    // Lógica para detectar si venimos de otra página y hacer scroll
+    useEffect(() => {
+        if (location.state && location.state.targetId) {
+            const targetId = location.state.targetId;
+
+            if (targetId === 'home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+    }, [location]);
+
     return (
         <>
             {/* Hero Section */}

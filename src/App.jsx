@@ -103,6 +103,12 @@ function App () {
                             </ProtectedRoute>
                         } />
 
+                        <Route path="/admin/branches" element={
+                            <ProtectedRoute>
+                                <ManageBranches />
+                            </ProtectedRoute>
+                        } />
+
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>

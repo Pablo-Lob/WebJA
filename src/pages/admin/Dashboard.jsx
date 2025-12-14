@@ -31,6 +31,21 @@ const Dashboard = () => {
             icon: <Image size={40} />,
             tabTarget: 'images'
         },
+        {
+            id: 'minerals',
+            title: 'Gestor de Minerales',
+            description: 'Actualiza el catalogo de minerales.',
+            icon: <Image size={40} />,
+            tabTarget: 'images'
+        },
+        {
+            id: 'branches',
+            title: 'Gestor de Sedes',
+            description: 'Añade o edita las sedes globales (Branches).',
+            icon: <Globe size={40} />,
+            isDirectLink: true,
+            path: '/admin/branches'
+        },
     ];
 
     return (

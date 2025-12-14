@@ -15,7 +15,7 @@ const ManageCatalog = () => {
     // Si estás en local (npm run dev), esto intentará buscar el PHP en localhost:5173, lo cual fallará
     // a menos que ya hayas subido el backend a Hostinger.
     // RECOMIENDO: Usa la URL real de tu dominio para las pruebas si ya subiste el PHP.
-    const API_URL = 'https://itsstonesfzco.com/catalog-api.php';
+    const API_URL = 'https://itsstonesfzco.com/api.php';
 
     // 1. Cargar minerales desde MySQL (vía PHP)
     const fetchMinerals = async () => {
@@ -73,7 +73,7 @@ const ManageCatalog = () => {
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("Error de conexión. Asegúrate de haber subido catalog-api.php a Hostinger.");
+            alert("Error de conexión con Hostinger.");
         } finally {
             setLoading(false);
         }
