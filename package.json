@@ -12,10 +12,8 @@
   "dependencies": {
     "bootstrap": "^5.3.7",
     "firebase": "^12.6.0",
-    "intl-tel-input": "^25.12.6",
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
-    "react-cookie-consent": "^9.0.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.10.1",
     "swiper": "^11.2.10"

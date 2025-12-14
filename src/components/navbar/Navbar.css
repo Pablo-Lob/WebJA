@@ -82,6 +82,7 @@
     width: 40px; /* Ancho fijo de la línea decorativa, como en la imagen */
 }
 
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 991px) {
     .custom-navbar-wrapper {

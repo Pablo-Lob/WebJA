@@ -8,8 +8,6 @@
 .mineral-footer {
     background-color: var(--footer-bg-color);
     color: var(--footer-text-color);
-    position: relative;
-    z-index: 10002;
 }
 
 /* Contenido principal del footer */

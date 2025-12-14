@@ -5,11 +5,6 @@
 }
 
 .shine-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-
     z-index: 1;
     position: relative;
     font-size: inherit;
@@ -22,10 +17,6 @@
     overflow: hidden;
     cursor: pointer;
     border-radius: 10px;
-    text-decoration: none;
-    line-height: 1;
-    -webkit-appearance: none;
-    appearance: none;
 }
 
 .shine-btn::after {
@@ -38,10 +29,10 @@
     width: 50%;
     height: 100%;
     background: linear-gradient(
-        120deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.4) 50%,
-        rgba(255,255,255,0) 100%
+            120deg,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,0.4) 50%,
+            rgba(255,255,255,0) 100%
     );
     transform: skewX(-20deg);
     transition: left 0.45s cubic-bezier(0.4,0,0.2,1);
@@ -50,36 +41,4 @@
 .shine-btn:hover::after {
     background-color: var(--button-hover-color);
     left: 120%;
-}
-
-a.shine-btn,
-a.shine-btn:link,
-a.shine-btn:visited,
-a.shine-btn:hover,
-a.shine-btn:active,
-a.shine-btn:focus {
-    color: var(--button-text-color) !important;
-    background-color: var(--button-color) !important;
-    text-decoration: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-appearance: none;
-    appearance: none;
-    -webkit-text-fill-color: currentColor !important; /* evita azul en iOS/Safari */
-}
-
-a.shine-btn {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-}
-
-.shine-btn {
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.shine-btn svg {
-    fill: currentColor;
 }

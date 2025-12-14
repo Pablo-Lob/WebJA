@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import './ContactForm.css';
 import { collection, addDoc} from "firebase/firestore";
 import {db} from "../../firebase/firebase-config.js";
-import 'intl-tel-input/build/css/intlTelInput.css';
-import IntlTelInput from 'intl-tel-input/reactWithUtils';
 
 function ContactForm () {
 
@@ -14,42 +12,20 @@ function ContactForm () {
         email: '',
         phone: '',
         message: '',
-        privacyAccepted: false
     });
 
     const [submitStatus, setSubmitStatus] = useState(null);
-    const [isPhoneValid, setIsPhoneValid] = useState(null);
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value } = e.target;
         setFormData(prevData => ({
             ...prevData,
-            [name]: type === 'checkbox' ? checked : value,
+            [name]: value,
         }));
     }
 
-    // Manejo del input internacional de teléfono
-    const handlePhoneChange = (number, isValid) => {
-        setFormData(prevData => ({
-            ...prevData,
-            phone: number
-        }));
-        setIsPhoneValid(isValid);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!formData.privacyAccepted) {
-            alert("Por favor, acepta la política de privacidad.");
-            return;
-        }
-
-        if (formData.phone && isPhoneValid === false) {
-            alert("Por favor, introduce un número de teléfono válido.");
-            return;
-        }
-
         setSubmitStatus('sending');
 
         try {
@@ -86,9 +62,7 @@ function ContactForm () {
                 email: '',
                 phone: '',
                 message: '',
-                privacyAccepted: false
             });
-            setIsPhoneValid(null);
         } catch (error) {
             console.log("Error añadiendo documento: ", error);
             setSubmitStatus('error');
@@ -131,24 +105,15 @@ function ContactForm () {
                         value={formData.email}
                         onChange={handleChange}
                     />
-
-                    {/* Componente de teléfono internacional */}
-                    <div className="phone-input-wrapper">
-                        <IntlTelInput
-                            onChangeNumber={handlePhoneChange}
-                            initOptions={{
-                                initialCountry: "ae",
-                                separateDialCode: true,
-                                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/utils.js",
-                            }}
-                            inputProps={{
-                                className: "input-field",
-                                name: "phone",
-                                required: true,
-                                placeholder: "Phone number*"
-                            }}
-                        />
-                    </div>
+                    <input
+                        required
+                        placeholder="Phone number*"
+                        className="input-field"
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                    />
                 </div>
 
                 <div className="form-row full-width">
@@ -161,21 +126,6 @@ function ContactForm () {
                         value={formData.message}
                         onChange={handleChange}
                     ></textarea>
-                </div>
-
-                <div className="form-row full-width checkbox-container" style={{display:'flex', gap:'10px', alignItems:'center', color:'white'}}>
-                    <input
-                        type="checkbox"
-                        name="privacyAccepted"
-                        id="privacyCheck"
-                        checked={formData.privacyAccepted}
-                        onChange={handleChange}
-                        required
-                        style={{width:'20px', height:'20px', cursor:'pointer', accentColor:'var(--gold-primary)'}}
-                    />
-                    <label htmlFor="privacyCheck" style={{fontSize:'0.9rem', cursor:'pointer'}}>
-                        I have read and accept the <a href="/privacy-policy" target="_blank" style={{color:'var(--gold-primary)'}}>Privacy Policy</a>.
-                    </label>
                 </div>
 
                 <div className="button-container">
