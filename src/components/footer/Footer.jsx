@@ -14,12 +14,9 @@ const Footer = () => {
                     <div className="footer-column">
                         <h3 className="footer-heading">Productos</h3>
                         <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Cuarzos</a></li>
-                            <li><a href="#" className="footer-link">Amatistas</a></li>
+                            <li><a href="#" className="footer-link">Oro</a></li>
+                            <li><a href="#" className="footer-link">Plata</a></li>
                             <li><a href="#" className="footer-link">Piedras Preciosas</a></li>
-                            <li><a href="#" className="footer-link">Minerales Raros</a></li>
-                            <li><a href="#" className="footer-link">Colecciones</a></li>
-                            <li><a href="#" className="footer-link">Joyería Mineral</a></li>
                         </ul>
                     </div>
 
@@ -41,8 +38,6 @@ const Footer = () => {
                         <ul className="footer-links">
                             <li><a href="#" className="footer-link">Contacto</a></li>
                             <li><a href="#" className="footer-link">Preguntas Frecuentes</a></li>
-                            <li><a href="#" className="footer-link">Guía de Cuidados</a></li>
-                            <li><a href="#" className="footer-link">Chat en Vivo</a></li>
                             <li><a href="#" className="footer-link">Garantías</a></li>
                         </ul>
                     </div>
@@ -53,7 +48,6 @@ const Footer = () => {
                         <ul className="footer-links">
                             <li><a href="#" className="footer-link">Política de Privacidad</a></li>
                             <li><a href="#" className="footer-link">Términos de Uso</a></li>
-                            <li><a href="#" className="footer-link">Política de Devoluciones</a></li>
                             <li><a href="#" className="footer-link">Política de Cookies</a></li>
                             <li><a href="#" className="footer-link">Aviso Legal</a></li>
                         </ul>
@@ -69,11 +63,11 @@ const Footer = () => {
                                 </div>
                                 <div className="contact-item">
                                 <Phone className="contact-icon" />
-                                <span className="contact-text">+971 504 272 232      </span>
+                                <span className="contact-text">+971501775203</span>
                             </div>
                             <div className="contact-item">
                                 <Mail className="contact-icon" />
-                                <span className="contact-text">info@its-stones.com</span>
+                                <span className="contact-text">info@itsstonesfzco.com</span>
                             </div>
                         </div>
                     </div>
