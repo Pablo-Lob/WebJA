@@ -1,5 +1,4 @@
-/* src/pages/styles/Catalog.css */
-
+/* --- CONFIGURACIÓN GENERAL DE LA PÁGINA --- */
 .catalog-page {
     background-color: var(--bg-black);
     min-height: 100vh;
@@ -8,7 +7,14 @@
     color: var(--text-white);
 }
 
-/* --- HERO DEL CATÁLOGO --- */
+/*Margin top solo en pc*/
+@media (hover: hover) {
+    .catalog-page {
+        margin-top: 100px;
+    }
+}
+
+/* --- HERO (CABECERA) --- */
 .catalog-hero {
     text-align: center;
     margin-bottom: 60px;
@@ -33,7 +39,7 @@
     letter-spacing: 2px;
 }
 
-/* Reutilizamos o definimos el divisor dorado */
+/* Divisor dorado */
 .gold-divider-center {
     width: 80px;
     height: 3px;
@@ -52,27 +58,31 @@
     padding: 0 40px;
 }
 
-/* Tarjeta individual */
+/* --- TARJETA INDIVIDUAL --- */
 .mineral-card {
     background: var(--bg-secondary);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27);
+    transition: all 0.4s ease-out;
     position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-.mineral-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    border-color: var(--gold-dim);
+/* Efecto de elevación al pasar el ratón (SOLO PC) */
+@media (hover: hover) {
+    .mineral-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        border-color: var(--gold-dim);
+    }
 }
 
-/* Contenedor de la imagen en la tarjeta */
+/* Contenedor de la imagen */
 .card-image-wrapper {
     width: 100%;
-    height: 350px; /* Altura fija para uniformidad */
+    height: 380px; /* Altura generosa para que luzca el mineral */
     position: relative;
     overflow: hidden;
 }
@@ -81,106 +91,140 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(1); /* Imagen siempre brillante y limpia */
 }
 
-.mineral-card:hover .card-image-wrapper img {
-    transform: scale(1.1);
+/* Zoom suave al pasar el ratón (SOLO PC) */
+@media (hover: hover) {
+    .mineral-card:hover .card-image-wrapper img {
+        transform: scale(1.1);
+    }
 }
 
-/* Capa oscura con texto "Ver Detalles" al pasar el ratón */
+/* --- BOTÓN FLOTANTE "VIEW DETAILS" --- */
 .card-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: transparent; /* TOTALMENTE TRANSPARENTE */
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: opacity 0.3s ease;
-    backdrop-filter: blur(2px);
+    z-index: 2;
 }
 
+/* Estilo del botón "Píldora" */
 .card-overlay span {
+    background-color: #1a1a1a; /* Fondo oscuro sólido */
     color: var(--gold-primary);
     border: 1px solid var(--gold-primary);
-    padding: 12px 25px;
-    text-transform: uppercase;
+    padding: 12px 28px;
+    border-radius: 50px; /* Bordes muy redondos */
     font-weight: 600;
-    letter-spacing: 2px;
-    background: rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+
+    transform: translateY(20px); /* Empieza un poco abajo */
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.mineral-card:hover .card-overlay {
-    opacity: 1;
+/* Animación de entrada del botón (SOLO PC) */
+@media (hover: hover) {
+    .mineral-card:hover .card-overlay {
+        opacity: 1;
+    }
+    .mineral-card:hover .card-overlay span {
+        transform: translateY(0); /* Sube a su sitio */
+    }
 }
 
-/* Pie de tarjeta (Título) */
+/* --- AJUSTES PARA MÓVIL (TÁCTIL) --- */
+@media (hover: none) {
+    .card-overlay {
+        display: none; /* Ocultamos el botón flotante en móvil */
+    }
+    .card-image-wrapper {
+        height: 300px; /* Un poco más pequeña en móvil */
+    }
+}
+
+/* --- PIE DE TARJETA (TÍTULO) --- */
 .card-footer {
     padding: 20px;
     text-align: center;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    background: var(--bg-secondary);
+    position: relative;
+    z-index: 3;
+    border-top: 1px solid rgba(255,255,255,0.05);
 }
 
 .card-footer h3 {
     color: var(--text-white);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     margin: 0;
     font-weight: 500;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    letter-spacing: 1px;
     transition: color 0.3s;
 }
 
-.mineral-card:hover .card-footer h3 {
-    color: var(--gold-secondary);
+@media (hover: hover) {
+    .mineral-card:hover .card-footer h3 {
+        color: var(--gold-secondary);
+    }
 }
 
-/* --- MODAL (POPUP) --- */
+/* =========================================
+   ESTILOS DEL MODAL (VENTANA EMERGENTE)
+   ========================================= */
+
 .modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 10000; /* Muy alto para estar encima de todo */
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px;
-    backdrop-filter: blur(10px);
+    padding: 20px;
+    backdrop-filter: blur(5px);
     animation: fadeIn 0.3s ease;
 }
 
+/* El Contenedor Principal (La caja del dibujo) */
 .modal-content {
-    background: #121212; /* Gris muy oscuro */
+    background: #121212;
     width: 100%;
-    max-width: 1200px;
-    height: 85vh;
+    max-width: 1100px; /* Ancho máximo en PC */
+    height: 80vh;      /* Altura fija en PC */
     border-radius: 20px;
     border: 1px solid var(--gold-dim);
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* IMPORTANTE: Evita que nada salga de la caja */
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 50px rgba(212, 175, 55, 0.15);
 }
 
+/* Botón Cerrar (X) */
 .close-modal-btn {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 15px;
+    right: 15px;
     background: rgba(0, 0, 0, 0.5);
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
     cursor: pointer;
-    z-index: 20;
+    z-index: 100; /* Siempre encima de todo */
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -193,23 +237,27 @@
 .close-modal-btn:hover {
     background: var(--gold-primary);
     color: black;
-    transform: rotate(90deg);
 }
 
+/* --- LAYOUT INTERNO (PC POR DEFECTO) --- */
+/* Esto hace que Imagen y Texto estén lado a lado */
 .modal-layout {
     display: flex;
+    flex-direction: row; /* Horizontal en PC */
     height: 100%;
     width: 100%;
 }
 
-/* Sección Izquierda: Carrusel */
+/* --- 1. SECCIÓN IZQUIERDA: CARRUSEL --- */
 .modal-slider {
-    flex: 1.8; /* Ocupa casi 2/3 del espacio */
+    flex: 1.5; /* Ocupa el 60% del ancho */
+    width: 0;  /* TRUCO CLAVE: Evita que Swiper empuje todo a la derecha */
+    min-width: 0; /* Asegura que Flexbox respete el tamaño */
     background: black;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
 }
 
 .mineral-swiper {
@@ -229,33 +277,89 @@
 .slide-image-container img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Ajusta la imagen sin recortarla */
+    object-fit: contain; /* La imagen se ve entera sin cortes */
 }
 
-/* Personalización de los botones de Swiper */
-.swiper-button-next, .swiper-button-prev {
-    color: var(--gold-primary) !important;
-}
-.swiper-pagination-bullet-active {
-    background: var(--gold-primary) !important;
-}
-
-/* Sección Derecha: Información */
+/* --- 2. SECCIÓN DERECHA: INFORMACIÓN --- */
 .modal-info {
-    flex: 1.2; /* Ocupa el resto */
-    padding: 50px;
+    flex: 1; /* Ocupa el 40% restante */
+    padding: 40px;
     display: flex;
     flex-direction: column;
     background-color: #1a1a1a;
     border-left: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-y: auto; /* Si el texto es muy largo, solo scrollea esta parte */
 }
 
 .modal-info h2 {
     color: var(--gold-primary);
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     margin-bottom: 20px;
-    line-height: 1.2;
+    line-height: 1.1;
     text-transform: uppercase;
+}
+
+.description-scroll {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding-right: 10px;
+}
+
+.description-scroll p {
+    color: var(--text-gray);
+    line-height: 1.6;
+    font-size: 1rem;
+    white-space: pre-wrap;
+}
+
+.inquire-btn {
+    background: var(--gold-primary);
+    color: black;
+    text-align: center;
+    padding: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-top: auto; /* Empuja el botón al final */
+}
+
+/* =========================================
+   MEDIA QUERY PARA MÓVIL (VERTICAL)
+   ========================================= */
+@media (max-width: 900px) {
+    .modal-content {
+        height: 90vh; /* Más alto en móvil */
+        max-width: 100%;
+        overflow-y: auto; /* Permitir scroll en toda la tarjeta si hace falta */
+        display: block; /* Cambiamos display para controlar mejor el stack */
+    }
+
+    .modal-layout {
+        flex-direction: column; /* Apilar verticalmente: Imagen arriba, Texto abajo */
+        height: auto; /* Altura automática según contenido */
+    }
+
+    /* Imagen arriba */
+    .modal-slider {
+        width: 100%;      /* Ancho completo */
+        height: 45vh;     /* La imagen ocupa casi la mitad de la pantalla */
+        flex: none;       /* Desactivar flex ratio */
+    }
+
+    /* Texto abajo */
+    .modal-info {
+        width: 100%;
+        height: auto;
+        padding: 25px;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-info h2 {
+        font-size: 1.8rem;
+    }
 }
 
 .gold-divider-left {
@@ -265,14 +369,15 @@
     margin-bottom: 30px;
 }
 
+/* Área de texto con scroll si es muy largo */
 .description-scroll {
     flex: 1;
     overflow-y: auto;
     margin-bottom: 30px;
-    padding-right: 15px; /* Espacio para scrollbar */
+    padding-right: 15px;
 }
 
-/* Scrollbar personalizada dentro del modal */
+/* Scrollbar fina para el modal */
 .description-scroll::-webkit-scrollbar {
     width: 6px;
 }
@@ -285,10 +390,10 @@
     color: var(--text-gray);
     line-height: 1.8;
     font-size: 1.1rem;
-    white-space: pre-wrap; /* Mantiene los saltos de línea de la DB */
+    white-space: pre-wrap;
 }
 
-/* Botón de Interés */
+/* Botón "Inquire Interest" */
 .inquire-btn {
     background: linear-gradient(45deg, var(--gold-primary), var(--gold-hover));
     color: #000;
@@ -309,25 +414,25 @@
     color: #000;
 }
 
-/* Animaciones */
+/* Animación de entrada */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-/* --- RESPONSIVE --- */
+/* --- RESPONSIVE MODAL --- */
 @media (max-width: 1024px) {
     .modal-layout {
-        flex-direction: column;
+        flex-direction: column; /* Apilar verticalmente en tablets/móviles */
     }
 
     .modal-content {
         height: 90vh;
-        overflow-y: auto; /* Permite scroll en todo el modal */
+        overflow-y: auto; /* Scroll general */
     }
 
     .modal-slider {
-        height: 50vh; /* La mitad de la pantalla para la foto */
+        height: 50vh; /* La imagen ocupa la mitad */
         flex: none;
     }
 
@@ -353,7 +458,7 @@
     }
 
     .card-image-wrapper {
-        height: 250px;
+        height: 300px;
     }
 
     .modal-backdrop {
