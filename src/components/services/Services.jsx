@@ -7,7 +7,7 @@ const Services = () => {
     return (
         <section id="services" className="services-section">
             <div className="services-container">
-                <h2>Excellence in Gold & Germs in Importation</h2>
+                <h2>Excellence in Gold & Gems in Importation</h2>
                 <div className="gold-divider-center"></div>
 
                 <div className="services-text-block">

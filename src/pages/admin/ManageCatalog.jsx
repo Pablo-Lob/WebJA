@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db, storage } from '../../firebase/firebase-config';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import './styles/ManageCatalog.css';
 
 const ManageCatalog = () => {
@@ -10,91 +7,115 @@ const ManageCatalog = () => {
     const [minerals, setMinerals] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Formulario
-    const [newItem, setNewItem] = useState({
-        name: '',
-        description: '',
-        images: [] // Guardará URLs
-    });
+    // Estado del formulario
+    const [newItem, setNewItem] = useState({ name: '', description: '' });
+    const [imageFiles, setImageFiles] = useState([]);
 
-    const [imageFiles, setImageFiles] = useState([]); // Archivos crudos para subir
+    // URL de tu backend en Hostinger (Asegúrate de que este archivo existe y funciona)
+    const API_URL = 'https://itsstonesfzco.com/api.php';
 
-    const mineralsCollection = collection(db, "minerals");
-
-    // 1. Cargar minerales existentes
+    // 1. Cargar minerales desde tu base de datos (vía PHP)
     const fetchMinerals = async () => {
-        const data = await getDocs(mineralsCollection);
-        setMinerals(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error("Error al conectar con el servidor PHP");
+
+            const data = await response.json();
+            // Aseguramos que sea un array para evitar errores si el PHP devuelve otra cosa
+            setMinerals(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Error cargando catálogo:", error);
+        }
     };
 
     useEffect(() => {
         fetchMinerals();
     }, []);
 
-    // 2. Manejar selección de imágenes
+    // Manejar la selección de archivos
     const handleImageChange = (e) => {
         if (e.target.files) {
-            // Convertimos FileList a Array
-            const filesArray = Array.from(e.target.files);
-            setImageFiles(prev => [...prev, ...filesArray]);
+            setImageFiles(Array.from(e.target.files));
         }
     };
 
-    // 3. Subir mineral
+    // 2. Subir mineral (POST a tu PHP)
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const imageUrls = [];
+            const formData = new FormData();
+            formData.append('name', newItem.name);
+            formData.append('description', newItem.description);
 
-            // Subir cada imagen a Storage
-            for (const file of imageFiles) {
-                const storageRef = ref(storage, `catalog/${Date.now()}_${file.name}`);
-                await uploadBytes(storageRef, file);
-                const url = await getDownloadURL(storageRef);
-                imageUrls.push(url);
-            }
-
-            // Guardar en Firestore
-            await addDoc(mineralsCollection, {
-                name: newItem.name,
-                description: newItem.description,
-                images: imageUrls,
-                createdAt: new Date()
+            // Añadir todas las imágenes al FormData
+            imageFiles.forEach((file) => {
+                formData.append('images[]', file);
             });
 
-            // Resetear form
-            setNewItem({ name: '', description: '', images: [] });
-            setImageFiles([]);
-            alert("Mineral añadido al catálogo");
-            fetchMinerals();
+            // Enviamos los datos al hosting
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: formData // Fetch detecta FormData y pone las cabeceras correctas automáticamente
+            });
 
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                alert("Mineral añadido correctamente a la base de datos.");
+
+                // Limpiar formulario
+                setNewItem({ name: '', description: '' });
+                setImageFiles([]);
+                document.getElementById('file-upload').value = ""; // Limpiar input visualmente
+
+                // Recargar la lista para ver el nuevo mineral
+                fetchMinerals();
+            } else {
+                alert("Error del servidor: " + (result.error || "Desconocido"));
+            }
         } catch (error) {
             console.error("Error:", error);
-            alert("Error al subir el mineral");
+            alert("Error de conexión. Verifica que api.php tenga los permisos CORS correctos.");
         } finally {
             setLoading(false);
         }
     };
 
-    // 4. Borrar mineral
+    // 3. Borrar mineral (DELETE a tu PHP)
     const handleDelete = async (id) => {
-        if (window.confirm("¿Estás seguro de borrar este mineral?")) {
-            await deleteDoc(doc(db, "minerals", id));
-            fetchMinerals();
+        if (window.confirm("¿Seguro que quieres eliminar este mineral?")) {
+            try {
+                // Enviamos el ID por parámetro URL para borrar
+                const response = await fetch(`${API_URL}?id=${id}`, {
+                    method: 'DELETE',
+                });
+                const result = await response.json();
+
+                if (result.status === 'success' || result.status === 'deleted') {
+                    fetchMinerals(); // Recargar lista
+                } else {
+                    alert("Error al eliminar: " + (result.error || "Desconocido"));
+                }
+            } catch (error) {
+                console.error("Error borrando:", error);
+                alert("Error de conexión al borrar.");
+            }
         }
     };
 
     return (
         <div className="manage-catalog-container">
             <div className="catalog-header">
-                <button onClick={() => navigate('/admin/dashboard')} className="back-btn">← Volver</button>
-                <h1>Gestor de Catálogo</h1>
+                <button onClick={() => navigate('/admin/dashboard')} className="back-btn-simple" style={{background:'none', border:'1px solid #666', color:'white', padding:'5px 15px', cursor:'pointer', borderRadius:'4px'}}>
+                    ← Volver al Panel
+                </button>
+                <h1 style={{marginLeft:'20px'}}>Gestor de Catálogo (PHP)</h1>
             </div>
 
             <div className="admin-grid">
-                {/* Formulario de Subida */}
+                {/* Formulario */}
                 <div className="upload-section">
                     <h2>Añadir Nuevo Mineral</h2>
                     <form onSubmit={handleSubmit}>
@@ -115,20 +136,22 @@ const ManageCatalog = () => {
                         />
 
                         <div className="file-input-wrapper">
-                            <label>Imágenes (puedes seleccionar varias):</label>
+                            <label style={{display:'block', marginBottom:'5px', color:'#aaa'}}>Imágenes (puedes seleccionar varias):</label>
                             <input
+                                id="file-upload"
                                 type="file"
                                 multiple
                                 accept="image/*"
                                 onChange={handleImageChange}
                                 className="file-input"
+                                required
                             />
                         </div>
 
-                        {/* Previsualización de nombres de archivos */}
+                        {/* Previsualización nombres de archivos */}
                         <div className="files-preview">
-                            {imageFiles.map((file, idx) => (
-                                <span key={idx} className="file-tag">{file.name}</span>
+                            {imageFiles.map((f, i) => (
+                                <span key={i} className="file-tag">{f.name}</span>
                             ))}
                         </div>
 
@@ -138,16 +161,26 @@ const ManageCatalog = () => {
                     </form>
                 </div>
 
-                {/* Lista de Minerales */}
+                {/* Lista */}
                 <div className="list-section">
                     <h2>Inventario Actual</h2>
                     <div className="minerals-list">
+                        {minerals.length === 0 && <p style={{color:'#666'}}>No hay minerales cargados desde el servidor.</p>}
+
                         {minerals.map(mineral => (
                             <div key={mineral.id} className="mineral-item-admin">
-                                <img src={mineral.images[0]} alt={mineral.name} />
+                                {/* Mostramos la primera imagen si existe */}
+                                {mineral.images && mineral.images.length > 0 ? (
+                                    <img src={mineral.images[0]} alt={mineral.name} onError={(e) => e.target.style.display = 'none'} />
+                                ) : (
+                                    <div style={{width:'60px', height:'60px', background:'#333', borderRadius:'4px'}}></div>
+                                )}
+
                                 <div className="mineral-info">
                                     <h3>{mineral.name}</h3>
-                                    <p>{mineral.images.length} imágenes</p>
+                                    <small style={{color:'#888'}}>
+                                        {mineral.images ? mineral.images.length : 0} imágenes
+                                    </small>
                                 </div>
                                 <button onClick={() => handleDelete(mineral.id)} className="delete-btn">Eliminar</button>
                             </div>

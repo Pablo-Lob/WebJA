@@ -12,7 +12,7 @@ const Catalog = () => {
     const [selectedMineral, setSelectedMineral] = useState(null);
 
     // URL de tu API
-    const API_URL = 'https://itsstonesfzco.com/catalog-api.php';
+    const API_URL = 'https://itsstonesfzco.com/api.php';
 
     useEffect(() => {
         const fetchMinerals = async () => {
