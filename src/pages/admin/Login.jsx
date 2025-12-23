@@ -1,9 +1,6 @@
-// File: src/pages/admin/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Login.css';
-import {auth} from '../../firebase/firebase-config.js';
-import {signInWithEmailAndPassword} from 'firebase/auth';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,24 +9,49 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Asegúrate de que esta URL sea correcta en producción
+    const LOGIN_URL = 'https://itsstonesfzco.com/login.php';
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
 
         try {
-            // Autenticación con Firebase
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
 
-            // Guardamos un token en localStorage
-            // Firebase gestiona la sesión, manteniendo la lógica de rutas
-            localStorage.setItem('adminToken', user.accessToken);
+            const response = await fetch(LOGIN_URL, {
+                method: 'POST',
+                body: formData
+            });
 
-            navigate('/admin/dashboard');
+            const result = await response.json();
+
+            // --- CORRECCIÓN AQUÍ ---
+            // Verificamos result.status === 'success' (como lo envía el PHP)
+            if (result.status === 'success') {
+
+                // Guardamos el token real
+                localStorage.setItem('adminToken', result.token);
+
+                // Guardamos el ID para posibles cambios de contraseña
+                localStorage.setItem('adminUserId', result.user.id);
+
+                // Verificamos si está obligado a cambiar contraseña
+                if (result.user.must_change_password) {
+                    navigate('/admin/change-password');
+                } else {
+                    navigate('/admin/dashboard');
+                }
+            } else {
+                // Si el PHP devuelve error (status: "error")
+                setError(result.message || 'Credenciales incorrectas');
+            }
         } catch (error) {
             console.error("Error login:", error);
-            setError('Credenciales incorrectas');
+            setError('Error de conexión con el servidor');
         } finally {
             setLoading(false);
         }
@@ -47,13 +69,13 @@ const Login = () => {
                     {error && <div className="login-error">{error}</div>}
 
                     <div className="form-group">
-                        <label htmlFor="username">Usuario</label>
+                        <label htmlFor="email">Email</label>
                         <input
-                            type="text"
-                            id="username"
+                            type="email"
+                            id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="admin@email.com"
+                            placeholder="admin@itsstones.com"
                             required
                         />
                     </div>
@@ -71,7 +93,7 @@ const Login = () => {
                     </div>
 
                     <button type="submit" className="login-button" disabled={loading}>
-                        {loading ? 'Accediendo...' : 'Iniciar Sesión'}
+                        {loading ? 'Verificando...' : 'Iniciar Sesión'}
                     </button>
                 </form>
 

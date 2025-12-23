@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Dashboard.css';
-// 1. AÑADIMOS 'Globe' y 'Gem' A LOS IMPORTS
-import { Palette, Image, LogOut, Globe, Gem, Briefcase} from 'lucide-react';
+import { Palette, Image, LogOut, Globe, Gem, Briefcase, Users} from 'lucide-react';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -41,6 +40,14 @@ const Dashboard = () => {
             icon: <Briefcase size={40} />,
             isDirectLink: true,
             path: '/admin/services'
+        },
+        {
+            id: 'users',
+            title: 'Gestor de Usuarios',
+            description: 'Añade administradores y gestiona roles.',
+            icon: <Users size={40} />,
+            isDirectLink: true,
+            path: '/admin/users'
         },
     ];
 

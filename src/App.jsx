@@ -17,6 +17,8 @@ import Catalog from "./pages/Catalog.jsx";
 import ManageCatalog from "./pages/admin/ManageCatalog.jsx";
 import ManageBranches from "./pages/admin/ManageBranches.jsx";
 import ManageServices from "./pages/admin/ManageServices.jsx";
+import ManageAdmins from "./pages/admin/ManageAdmins.jsx";
+import ChangePassword from "./pages/admin/ChangePassword.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -116,6 +118,19 @@ function App () {
                                 <ManageServices />
                             </ProtectedRoute>
                         } />
+
+                        <Route path="/admin/change-password" element={
+                            <ProtectedRoute>
+                                <ChangePassword />
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="/admin/users" element={
+                            <ProtectedRoute>
+                                <ManageAdmins/>
+                            </ProtectedRoute>
+                        } />
+
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
