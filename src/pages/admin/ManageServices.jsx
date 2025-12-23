@@ -1,48 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/ManageCatalog.css';
+import './styles/ManageCatalog.css'; // Reutilizamos CSS
 
-const ManageCatalog = () => {
+const ManageServices = () => {
     const navigate = useNavigate();
-    const [minerals, setMinerals] = useState([]);
+    const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    // Estado Edición
     const [editingId, setEditingId] = useState(null);
 
-    const [newItem, setNewItem] = useState({ name: '', description: '' });
-    const [imageFiles, setImageFiles] = useState([]);
+    // Campos específicos de Services: Title y Description
+    const [newService, setNewService] = useState({
+        title: '',
+        description: ''
+    });
+    const [imageFile, setImageFile] = useState(null);
 
-    const API_URL = 'https://itsstonesfzco.com/api.php?table=minerals';
+    const API_URL = 'https://itsstonesfzco.com/api.php?table=services';
 
-    const fetchMinerals = async () => {
+    const fetchServices = async () => {
         try {
             const response = await fetch(`${API_URL}&t=${Date.now()}`);
-            if (!response.ok) throw new Error("Error servidor");
+            if (!response.ok) throw new Error("Error API");
             const data = await response.json();
-            setMinerals(Array.isArray(data) ? data : []);
+            setServices(Array.isArray(data) ? data : []);
         } catch (error) {
-            console.error("Error cargando catálogo:", error);
+            console.error("Error cargando servicios:", error);
         }
     };
 
-    useEffect(() => { fetchMinerals(); }, []);
+    useEffect(() => {
+        fetchServices();
+    }, []);
 
-    const handleImageChange = (e) => {
-        if (e.target.files) setImageFiles(Array.from(e.target.files));
-    };
-
-    // Cargar datos en formulario
-    const handleEdit = (mineral) => {
-        setEditingId(mineral.id);
-        setNewItem({ name: mineral.name, description: mineral.description });
+    const handleEdit = (service) => {
+        setEditingId(service.id);
+        setNewService({
+            title: service.title,
+            description: service.description
+        });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const cancelEdit = () => {
         setEditingId(null);
-        setNewItem({ name: '', description: '' });
-        setImageFiles([]);
+        setNewService({ title: '', description: '' });
+        setImageFile(null);
         document.getElementById('file-upload').value = "";
     };
 
@@ -54,12 +56,10 @@ const ManageCatalog = () => {
             const formData = new FormData();
             if (editingId) formData.append('id', editingId);
 
-            formData.append('name', newItem.name);
-            formData.append('description', newItem.description);
+            formData.append('title', newService.title);
+            formData.append('description', newService.description);
 
-            imageFiles.forEach((file) => {
-                formData.append('images[]', file);
-            });
+            if (imageFile) formData.append('image', imageFile);
 
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -69,14 +69,14 @@ const ManageCatalog = () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                alert(editingId ? "Mineral actualizado" : "Mineral creado");
+                alert(editingId ? "Servicio actualizado" : "Servicio creado");
                 cancelEdit();
-                fetchMinerals();
+                fetchServices();
             } else {
                 alert("Error: " + (result.error || "Desconocido"));
             }
         } catch (error) {
-            console.error("Error:", error);
+            console.error(error);
             alert("Error de conexión");
         } finally {
             setLoading(false);
@@ -84,10 +84,10 @@ const ManageCatalog = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("¿Eliminar mineral?")) {
+        if (window.confirm("¿Eliminar este servicio?")) {
             try {
                 await fetch(`${API_URL}&id=${id}`, { method: 'DELETE' });
-                fetchMinerals();
+                fetchServices();
             } catch (error) { console.error(error); }
         }
     };
@@ -98,52 +98,42 @@ const ManageCatalog = () => {
                 <button onClick={() => navigate('/admin/dashboard')} className="back-btn-simple">
                     ← Volver
                 </button>
-                <h1>Gestor de Catálogo</h1>
+                <h1>Gestor de Servicios</h1>
             </div>
 
             <div className="admin-grid">
                 <div className="upload-section">
                     <div style={{display:'flex', justifyContent:'space-between'}}>
-                        <h2>{editingId ? 'Editar Mineral' : 'Añadir Mineral'}</h2>
+                        <h2>{editingId ? 'Editar Servicio' : 'Añadir Servicio'}</h2>
                         {editingId && <button onClick={cancelEdit} className="cancel-btn">Cancelar</button>}
                     </div>
 
                     <form onSubmit={handleSubmit}>
                         <input
                             type="text"
-                            placeholder="Nombre del Mineral"
+                            placeholder="Título del Servicio"
                             className="admin-input"
-                            value={newItem.name}
-                            onChange={e => setNewItem({...newItem, name: e.target.value})}
+                            value={newService.title}
+                            onChange={e => setNewService({...newService, title: e.target.value})}
                             required
                         />
                         <textarea
-                            placeholder="Descripción detallada..."
+                            placeholder="Descripción del servicio..."
                             className="admin-textarea"
-                            value={newItem.description}
-                            onChange={e => setNewItem({...newItem, description: e.target.value})}
+                            value={newService.description}
+                            onChange={e => setNewService({...newService, description: e.target.value})}
                             required
                         />
 
                         <div className="file-input-wrapper">
-                            <label style={{display:'block', marginBottom:'5px', color:'#aaa'}}>
-                                {editingId ? 'Añadir más imágenes (se sumarán):' : 'Imágenes:'}
-                            </label>
+                            <label style={{display:'block', marginBottom:'5px', color:'#aaa'}}>Imagen:</label>
                             <input
                                 id="file-upload"
                                 type="file"
-                                multiple
                                 accept="image/*"
-                                onChange={handleImageChange}
+                                onChange={e => setImageFile(e.target.files[0])}
                                 className="file-input"
-                                required={!editingId} // Solo requerido si es nuevo
                             />
-                        </div>
-
-                        <div className="files-preview">
-                            {imageFiles.map((f, i) => (
-                                <span key={i} className="file-tag">{f.name}</span>
-                            ))}
                         </div>
 
                         <button type="submit" className="save-btn" disabled={loading}>
@@ -153,22 +143,22 @@ const ManageCatalog = () => {
                 </div>
 
                 <div className="list-section">
-                    <h2>Inventario Actual</h2>
+                    <h2>Servicios Activos</h2>
                     <div className="minerals-list">
-                        {minerals.map(mineral => (
-                            <div key={mineral.id} className="mineral-item-admin">
-                                {mineral.images && mineral.images[0] ? (
-                                    <img src={mineral.images[0]} alt={mineral.name} onError={(e)=>e.target.style.display='none'}/>
+                        {services.map(service => (
+                            <div key={service.id} className="mineral-item-admin">
+                                {service.image ? (
+                                    <img src={service.image} alt={service.title} onError={(e)=>e.target.style.display='none'} />
                                 ) : (
                                     <div className="placeholder-img"></div>
                                 )}
                                 <div className="mineral-info">
-                                    <h3>{mineral.name}</h3>
-                                    <small>{mineral.images ? mineral.images.length : 0} imágenes</small>
+                                    <h3>{service.title}</h3>
+                                    <p className="small-text">{service.description.substring(0, 50)}...</p>
                                 </div>
                                 <div className="actions">
-                                    <button onClick={() => handleEdit(mineral)} className="edit-btn">Editar</button>
-                                    <button onClick={() => handleDelete(mineral.id)} className="delete-btn">Eliminar</button>
+                                    <button onClick={() => handleEdit(service)} className="edit-btn">Editar</button>
+                                    <button onClick={() => handleDelete(service.id)} className="delete-btn">Eliminar</button>
                                 </div>
                             </div>
                         ))}
@@ -179,4 +169,4 @@ const ManageCatalog = () => {
     );
 };
 
-export default ManageCatalog;
+export default ManageServices;

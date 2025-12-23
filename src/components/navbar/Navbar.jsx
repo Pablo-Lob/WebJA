@@ -104,6 +104,15 @@ function Navbar() {
                         </li>
                         <li className="nav-item">
                             <a
+                                className={`nav-link ${activeLink === 'Services' ? 'active' : ''}`}
+                                href="#services"
+                                onClick={(e) => handleNavClick(e, 'services', 'Services')}
+                            >
+                                Services
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
                                 className={`nav-link ${activeLink === 'Mission' ? 'active' : ''}`}
                                 href="#mission"
                                 onClick={(e) => handleNavClick(e, 'mission', 'Mission')}
@@ -118,15 +127,6 @@ function Navbar() {
                                 onClick={(e) => handleNavClick(e, 'branches', 'Branches')}
                             >
                                 Branches
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a
-                                className={`nav-link ${activeLink === 'Services' ? 'active' : ''}`}
-                                href="#services"
-                                onClick={(e) => handleNavClick(e, 'services', 'Services')}
-                            >
-                                Services
                             </a>
                         </li>
                         <li className="nav-item">

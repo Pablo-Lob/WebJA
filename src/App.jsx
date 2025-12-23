@@ -16,6 +16,7 @@ import LegalPage from './pages/LegalPage.jsx';
 import Catalog from "./pages/Catalog.jsx";
 import ManageCatalog from "./pages/admin/ManageCatalog.jsx";
 import ManageBranches from "./pages/admin/ManageBranches.jsx";
+import ManageServices from "./pages/admin/ManageServices.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -110,6 +111,11 @@ function App () {
                             </ProtectedRoute>
                         } />
 
+                        <Route path="/admin/services" element={
+                            <ProtectedRoute>
+                                <ManageServices />
+                            </ProtectedRoute>
+                        } />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>

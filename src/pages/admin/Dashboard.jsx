@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Dashboard.css';
 // 1. AÑADIMOS 'Globe' y 'Gem' A LOS IMPORTS
-import { Palette, Image, LogOut, Globe, Gem } from 'lucide-react';
+import { Palette, Image, LogOut, Globe, Gem, Briefcase} from 'lucide-react';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -18,20 +18,6 @@ const Dashboard = () => {
     };
 
     const sections = [
-        {/*{
-            id: 'colors',
-            title: 'Identidad & Colores',
-            description: 'Gestiona la paleta de colores global de la marca.',
-            icon: <Palette size={40} />,
-            tabTarget: 'colors'
-        },
-        {
-            id: 'images',
-            title: 'Gestor de Imágenes',
-            description: 'Actualiza logos, banners y fotos de secciones principales.',
-            icon: <Image size={40} />,
-            tabTarget: 'images'
-        },*/},
         {
             id: 'minerals',
             title: 'Gestor de Minerales',
@@ -47,6 +33,14 @@ const Dashboard = () => {
             icon: <Globe size={40} />,
             isDirectLink: true,
             path: '/admin/branches'
+        },
+        {
+            id: 'services',
+            title: 'Gestor de Servicios',
+            description: 'Edita los servicios ofrecidos (Importación/Logística).',
+            icon: <Briefcase size={40} />,
+            isDirectLink: true,
+            path: '/admin/services'
         },
     ];
 
