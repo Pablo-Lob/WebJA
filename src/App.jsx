@@ -19,6 +19,7 @@ import ManageBranches from "./pages/admin/ManageBranches.jsx";
 import ManageServices from "./pages/admin/ManageServices.jsx";
 import ManageAdmins from "./pages/admin/ManageAdmins.jsx";
 import ChangePassword from "./pages/admin/ChangePassword.jsx";
+import CookieConsent from "./components/cookieConsent/CookieConsent.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -45,6 +46,7 @@ const PublicLayout = () => {
                 <Outlet/>
             </main>
             <Footer/>
+            <CookieConsent/>
         </>
     );
 };
