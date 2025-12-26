@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $host = "localhost";
 $dbname = "u536355856_its_stones";
 $user = "u536355856_admin";
-$password = ""; // <--- ¡PON TU CONTRASEÑA AQUÍ!
+$password = "";
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $password);
