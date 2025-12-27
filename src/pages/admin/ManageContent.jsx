@@ -1,191 +1,180 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/ManageCatalog.css';
+import { Save, Home, BookOpen, Phone, FileText, ArrowLeft } from 'lucide-react';
+import './styles/ManageContent.css';
 
-const ManageCatalog = () => {
+const ManageContent = () => {
     const navigate = useNavigate();
-    const [minerals, setMinerals] = useState([]);
+    const [config, setConfig] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState('home');
 
-    // Estado del formulario
-    const [newItem, setNewItem] = useState({ name: '', description: '' });
-    const [imageFiles, setImageFiles] = useState([]);
+    // URL de tu API para la tabla de configuración
+    const API_URL = 'https://itsstonesfzco.com/api.php?table=siteConfig';
 
-    // IMPORTANTE: Esta URL debe apuntar a donde estará tu archivo PHP cuando subas la web
-    // Si estás en local (npm run dev), esto intentará buscar el PHP en localhost:5173, lo cual fallará
-    // a menos que ya hayas subido el backend a Hostinger.
-    // RECOMIENDO: Usa la URL real de tu dominio para las pruebas si ya subiste el PHP.
-    const API_URL = 'https://itsstonesfzco.com/api.php';
-
-    // 1. Cargar minerales desde MySQL (vía PHP)
-    const fetchMinerals = async () => {
-        try {
-            const response = await fetch(API_URL);
-            if (!response.ok) throw new Error("Error al conectar con el servidor");
-            const data = await response.json();
-            setMinerals(Array.isArray(data) ? data : []); // Asegurar que sea array
-        } catch (error) {
-            console.error("Error cargando catálogo:", error);
-        }
-    };
-
+    // 1. Cargar Configuración
     useEffect(() => {
-        fetchMinerals();
+        const fetchConfig = async () => {
+            try {
+                const response = await fetch(`${API_URL}&t=${Date.now()}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setConfig(Array.isArray(data) ? data : []);
+                }
+            } catch (error) {
+                console.error("Error cargando configuración:", error);
+            }
+        };
+        fetchConfig();
     }, []);
 
-    const handleImageChange = (e) => {
-        if (e.target.files) {
-            setImageFiles(Array.from(e.target.files));
-        }
+    // Helper: Obtener valor de una clave
+    const getValue = (key) => {
+        const item = config.find(c => c.key === key);
+        return item ? item.value : '';
     };
 
-    // 2. Subir mineral (POST a PHP)
-    const handleSubmit = async (e) => {
+    // Helper: Actualizar estado local
+    const handleChange = (key, value) => {
+        setConfig(prev => {
+            const exists = prev.find(item => item.key === key);
+            if (exists) {
+                return prev.map(item => item.key === key ? { ...item, value } : item);
+            }
+            return [...prev, { key, value }];
+        });
+    };
+
+    // 2. Guardar Todo
+    const handleSave = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const formData = new FormData();
-            formData.append('name', newItem.name);
-            formData.append('description', newItem.description);
-
-            // Añadir todas las imágenes al FormData
-            imageFiles.forEach((file) => {
-                formData.append('images[]', file);
-            });
+            // Filtramos valores vacíos o nulos para limpiar
+            const dataToSend = config.filter(item => item.value !== null);
 
             const response = await fetch(API_URL, {
                 method: 'POST',
-                body: formData // Fetch detecta FormData y pone el Content-Type correcto automáticamente
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSend)
             });
 
             const result = await response.json();
-
             if (result.status === 'success') {
-                alert("Mineral añadido correctamente");
-                setNewItem({ name: '', description: '' });
-                setImageFiles([]);
-                // Limpiar visualmente el input file (truco rápido)
-                document.getElementById('file-upload').value = "";
-                fetchMinerals(); // Recargar lista
+                alert("¡Contenido actualizado correctamente!");
             } else {
-                alert("Error del servidor: " + (result.error || "Desconocido"));
+                alert("Error al guardar: " + (result.error || "Desconocido"));
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("Error de conexión con Hostinger.");
+            console.error(error);
+            alert("Error de conexión");
         } finally {
             setLoading(false);
         }
     };
 
-    // 3. Borrar mineral (DELETE a PHP)
-    const handleDelete = async (id) => {
-        if (window.confirm("¿Seguro que quieres eliminar este mineral?")) {
-            try {
-                // Enviamos el ID por parámetro URL
-                const response = await fetch(`${API_URL}?id=${id}`, {
-                    method: 'DELETE',
-                });
-                const result = await response.json();
-
-                if (result.status === 'deleted') {
-                    fetchMinerals(); // Recargar lista
-                } else {
-                    alert("Error al eliminar: " + result.error);
-                }
-            } catch (error) {
-                console.error("Error borrando:", error);
-                alert("Error de conexión al borrar.");
-            }
-        }
-    };
+    // Renderizar inputs de forma limpia
+    const renderInput = (label, key, placeholder, isTextarea = false) => (
+        <div className="form-group">
+            <label>{label}</label>
+            {isTextarea ? (
+                <textarea
+                    rows={5}
+                    placeholder={placeholder}
+                    value={getValue(key)}
+                    onChange={(e) => handleChange(key, e.target.value)}
+                />
+            ) : (
+                <input
+                    type="text"
+                    placeholder={placeholder}
+                    value={getValue(key)}
+                    onChange={(e) => handleChange(key, e.target.value)}
+                />
+            )}
+        </div>
+    );
 
     return (
-        <div className="manage-catalog-container">
-            <div className="catalog-header">
-                <button onClick={() => navigate('/admin/dashboard')} className="back-btn-simple" style={{background:'none', border:'1px solid #666', color:'white', padding:'5px 15px', cursor:'pointer', borderRadius:'4px'}}>
-                    ← Volver al Panel
+        <div className="manage-container">
+            <div className="manage-header">
+                <div style={{display:'flex', alignItems:'center', gap:'15px'}}>
+                    <button onClick={() => navigate('/admin/dashboard')} className="back-link" style={{background:'none', border:'none', cursor:'pointer', fontSize:'1rem'}}>
+                        <ArrowLeft size={20}/> Volver
+                    </button>
+                    <h1>Editor de Contenidos</h1>
+                </div>
+                <button onClick={handleSave} className="save-button" style={{width:'auto', marginTop:0, display:'flex', alignItems:'center', gap:'10px'}} disabled={loading}>
+                    <Save size={20} /> {loading ? 'Guardando...' : 'Guardar Cambios'}
                 </button>
-                <h1 style={{marginLeft:'20px'}}>Gestor de Catálogo</h1>
             </div>
 
-            <div className="admin-grid">
-                {/* Formulario */}
-                <div className="upload-section">
-                    <h2>Añadir Nuevo Mineral</h2>
-                    <form onSubmit={handleSubmit}>
-                        <input
-                            type="text"
-                            placeholder="Nombre del Mineral"
-                            className="admin-input"
-                            value={newItem.name}
-                            onChange={e => setNewItem({...newItem, name: e.target.value})}
-                            required
-                        />
-                        <textarea
-                            placeholder="Descripción detallada..."
-                            className="admin-textarea"
-                            value={newItem.description}
-                            onChange={e => setNewItem({...newItem, description: e.target.value})}
-                            required
-                        />
+            {/* Pestañas de Navegación */}
+            <div className="manage-tabs">
+                <button className={`tab-button ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>
+                    <Home size={18} /> Inicio (Hero)
+                </button>
+                <button className={`tab-button ${activeTab === 'mission' ? 'active' : ''}`} onClick={() => setActiveTab('mission')}>
+                    <BookOpen size={18} /> Misión
+                </button>
+                <button className={`tab-button ${activeTab === 'contact' ? 'active' : ''}`} onClick={() => setActiveTab('contact')}>
+                    <Phone size={18} /> Contacto
+                </button>
+                <button className={`tab-button ${activeTab === 'legal' ? 'active' : ''}`} onClick={() => setActiveTab('legal')}>
+                    <FileText size={18} /> Legal
+                </button>
+            </div>
 
-                        <div className="file-input-wrapper">
-                            <label style={{display:'block', marginBottom:'5px', color:'#aaa'}}>Imágenes (puedes seleccionar varias):</label>
-                            <input
-                                id="file-upload"
-                                type="file"
-                                multiple
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="file-input"
-                                required
-                            />
-                        </div>
+            {/* Contenido del Formulario */}
+            <div className="manage-content">
+                <form onSubmit={handleSave} className="content-section">
 
-                        {/* Previsualización nombres de archivos */}
-                        <div className="files-preview">
-                            {imageFiles.map((f, i) => (
-                                <span key={i} className="file-tag">{f.name}</span>
-                            ))}
-                        </div>
+                    {activeTab === 'home' && (
+                        <>
+                            <h2>Sección Principal (Hero)</h2>
+                            {renderInput("Título Principal", "hero_title", "Ej: ITS-STONES")}
+                            {renderInput("Subtítulo", "hero_subtitle", "Ej: Precious Metals & Gems Import")}
+                            {renderInput("Texto Descriptivo", "hero_text", "Descripción corta del banner...")}
+                            {renderInput("Texto del Botón", "hero_cta_text", "Ej: Contact Us")}
+                            <p style={{fontSize:'0.9rem', color:'#aaa', marginTop:'10px'}}>* La imagen del banner se gestiona subiendo un archivo llamado 'banner.webp' en la carpeta assets o vía FTP por ahora.</p>
+                        </>
+                    )}
 
-                        <button type="submit" className="save-btn" disabled={loading}>
-                            {loading ? 'Subiendo datos e imágenes...' : 'Publicar en Catálogo'}
-                        </button>
-                    </form>
-                </div>
+                    {activeTab === 'mission' && (
+                        <>
+                            <h2>Nuestra Misión</h2>
+                            {renderInput("Título", "mission_title", "Ej: Our Mission")}
+                            {renderInput("Párrafo Superior", "mission_text_top", "Texto principal de la misión...", true)}
+                            {renderInput("Párrafo Inferior", "mission_text_bottom", "Texto secundario o visión...", true)}
+                        </>
+                    )}
 
-                {/* Lista */}
-                <div className="list-section">
-                    <h2>Inventario Actual</h2>
-                    <div className="minerals-list">
-                        {minerals.length === 0 && <p style={{color:'#666'}}>No hay minerales aún.</p>}
+                    {activeTab === 'contact' && (
+                        <>
+                            <h2>Datos de Contacto (Pie de página)</h2>
+                            {renderInput("Correo Electrónico", "contact_email", "info@itsstonesfzco.com")}
+                            {renderInput("Teléfono", "contact_phone", "+971 50 ...")}
+                            {renderInput("Dirección Física", "contact_address", "Dubai Airport Free Zone...")}
+                            {renderInput("Texto Copyright", "footer_copyright", "© 2025 ITS Stones...")}
+                        </>
+                    )}
 
-                        {minerals.map(mineral => (
-                            <div key={mineral.id} className="mineral-item-admin">
-                                {/* Mostramos la primera imagen si existe */}
-                                {mineral.images && mineral.images[0] ? (
-                                    <img src={mineral.images[0]} alt={mineral.name} />
-                                ) : (
-                                    <div style={{width:'60px', height:'60px', background:'#333', borderRadius:'4px'}}></div>
-                                )}
+                    {activeTab === 'legal' && (
+                        <>
+                            <h2>Páginas Legales (Admite HTML básico)</h2>
+                            <p style={{marginBottom:'20px', color:'#ccc'}}>Puedes usar etiquetas como <code>&lt;p&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;strong&gt;</code>.</p>
+                            {renderInput("Política de Privacidad", "privacy_policy", "Contenido HTML...", true)}
+                            {renderInput("Términos y Condiciones", "terms_of_service", "Contenido HTML...", true)}
+                            {renderInput("Política de Cookies", "cookie_policy", "Contenido HTML...", true)}
+                            {renderInput("Banner de Cookies (Texto corto)", "cookie_banner_text", "Utilizamos cookies para...", true)}
+                        </>
+                    )}
 
-                                <div className="mineral-info">
-                                    <h3>{mineral.name}</h3>
-                                    <small style={{color:'#888'}}>
-                                        {mineral.images ? mineral.images.length : 0} imágenes
-                                    </small>
-                                </div>
-                                <button onClick={() => handleDelete(mineral.id)} className="delete-btn">Eliminar</button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     );
 };
 
-export default ManageCatalog;
+export default ManageContent;
