@@ -8,11 +8,18 @@ import Branches from "../components/branches/Branches.jsx";
 import About from "../components/about/About.jsx";
 import Services from "../components/services/Services.jsx";
 import Mission from "../components/mission/Mission.jsx";
-import {useConfig} from "../context/ConfigContext.jsx";
+import { useConfig } from "../context/ConfigContext.jsx";
 
-function Home () {
-    const {config} = useConfig();
+function Home() {
+    const { config, loading } = useConfig();
     const location = useLocation();
+
+    // Helper para obtener datos de la BD o usar el texto original por defecto
+    const getValue = (key, defaultValue) => {
+        if (!config || !Array.isArray(config)) return defaultValue;
+        const item = config.find(item => item.key === key);
+        return item ? item.value : defaultValue;
+    };
 
     // Lógica para detectar si venimos de otra página y hacer scroll
     useEffect(() => {
@@ -30,21 +37,27 @@ function Home () {
         }
     }, [location]);
 
+    if (loading) return <div className="loader-placeholder"></div>;
+
     return (
         <>
             {/* Hero Section */}
             <section id="home" className="hero-home">
                 <div className="hero-image">
-                    <img src={config.images?.banner || banner} alt="ITS-STONES Banner" />
+                    {/* Imagen dinámica con fallback a tu banner original */}
+                    <img src={getValue('hero_image', banner)} alt="ITS-STONES Banner" />
                 </div>
                 <div className="hero-content">
-                    <h1>ITS-STONES</h1>
-                    <h2>Precious Metals & Gems Import</h2>
+                    {/* Títulos dinámicos */}
+                    <h1>{getValue('hero_title', 'ITS-STONES')}</h1>
+                    <h2>{getValue('hero_subtitle', 'Precious Metals & Gems Import')}</h2>
                     <p>
-                        Discover the difference of trading with integrity and excellence.
+                        {getValue('hero_text', 'Discover the difference of trading with integrity and excellence.')}
                     </p>
-                    <ShineButton href="#contact" >
-                        Contact us
+
+                    {/* Tu ShineButton original pero con texto editable */}
+                    <ShineButton href="#contact">
+                        {getValue('hero_cta_text', 'Contact us')}
                     </ShineButton>
                 </div>
             </section>

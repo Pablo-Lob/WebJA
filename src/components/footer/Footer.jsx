@@ -1,16 +1,24 @@
 import React from 'react';
-import { Mail, Phone, MapPin} from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
+import { useConfig } from '../../context/ConfigContext.jsx'; // Importamos hook
 
 const Footer = () => {
+    const { config } = useConfig();
+
+    // Helper para obtener valor
+    const getValue = (key, defaultValue) => {
+        return config?.find(item => item.key === key)?.value || defaultValue;
+    };
+
     return (
         <footer className="mineral-footer">
             {/* Main Footer Content */}
             <div className="footer-content">
                 <div className="footer-grid">
 
-                    {/* Productos */}
+                    {/* Productos (Estructural, se mantiene igual) */}
                     <div className="footer-column">
                         <h3 className="footer-heading">Products</h3>
                         <ul className="footer-links">
@@ -19,7 +27,7 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Servicios */}
+                    {/* Servicios (Estructural, se mantiene igual) */}
                     <div className="footer-column">
                         <h3 className="footer-heading">Service</h3>
                         <ul className="footer-links">
@@ -30,31 +38,27 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Legal */}
+                    {/* Contact Us (DINÁMICO) */}
                     <div className="footer-column">
-                        <h3 className="footer-heading">Legal</h3>
-                        <ul className="footer-links">
-                            <li><a href="/privacy-policy" className="footer-link">Privacy Policy</a></li>
-                            <li><a href="/cookie-policy" className="footer-link">Cookie Policy</a></li>
-                            <li><a href="#" className="footer-link">Anti-Money Laundering (AML) / Know Your Customer (KYC) Policy</a></li>
-                        </ul>
-                    </div>
-
-                    {/* Contacto */}
-                    <div className="footer-column">
-                        <h3 className="footer-heading">Contact</h3>
+                        <h3 className="footer-heading">Contact Us</h3>
                         <div className="contact-info">
                             <div className="contact-item">
                                 <MapPin className="contact-icon" />
-                                <a href="https://maps.app.goo.gl/J1PLLWMrtUt3n2Fe7" className="contact-text contact-link" target="_blank" rel="noopener noreferrer noreferrer">Address: Dubai Airport Free Zone</a>
-                                </div>
-                                <div className="contact-item">
+                                <span className="contact-text">
+                                    {getValue('contact_address', 'Dubai Airport Free Zone')}
+                                </span>
+                            </div>
+                            <div className="contact-item">
                                 <Phone className="contact-icon" />
-                                <span className="contact-text">+971501775203</span>
+                                <span className="contact-text">
+                                    {getValue('contact_phone', '+971501775203')}
+                                </span>
                             </div>
                             <div className="contact-item">
                                 <Mail className="contact-icon" />
-                                <span className="contact-text">info@itsstonesfzco.com</span>
+                                <span className="contact-text">
+                                    {getValue('contact_email', 'info@itsstonesfzco.com')}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -65,9 +69,9 @@ const Footer = () => {
             <div className="footer-bottom">
                 <div className="footer-bottom-content">
 
-                    {/* Copyright */}
+                    {/* Copyright (DINÁMICO) */}
                     <div className="footer-copyright">
-                        © 2025 ITS-Stones Integrated Stone Trading Services. All rights reserved.
+                        {getValue('footer_copyright', '© 2025 ITS-Stones Integrated Stone Trading Services. All rights reserved.')}
                     </div>
 
                     {/* Additional Links */}
