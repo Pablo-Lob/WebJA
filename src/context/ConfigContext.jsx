@@ -1,93 +1,41 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase-config';
+import React, { createContext, useState, useEffect } from 'react';
 
 const ConfigContext = createContext(null);
 
-export const useConfig = () => useContext(ConfigContext);
-
 export const ConfigProvider = ({ children }) => {
-    const [config, setConfig] = useState({
-        colors: {},
-        images: {}
-    });
-    const [texts, setTexts] = useState({
+
+    const API_URL = 'https://itsstonesfzco.com/api.php?table=siteConfig';
+
+    const [configData, setConfigData ] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const [texts, setTexts] = useState( {
         legal: {
-            privacy: "<p>Contenido no disponible. </p>",
-            terms: "<p>Contenido no disponible. </p>",
-            cookies: "<p>Contenido no disponible.</p>"
+            privacy: "",
+            terms: "",
+            cookies: ""
         }
     });
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                // 1. Configuracion visual
-                const docRef = doc(db, "siteContent", "generalConfig");
-                const docSnap = await getDoc(docRef);
+                const response = await fetch(API_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    setConfigData(data);
 
-                if (docSnap.exists()) {
-                    const data = docSnap. data();
-                    setConfig({
-                        colors: data. colors || {},
-                        images: data. images || {}
-                    });
-
-                    // Favicon dinamico
-                    if (data.images?. logo) {
-                        const link = document.querySelector("link[rel~='icon']");
-                        if (link) {
-                            link.href = data.images.logo;
-                        }
-                    }
-
-                    // Aplicar colores CSS
-                    if (data.colors) {
-                        const root = document.documentElement;
-                        const mapping = {
-                            goldPrimary: '--gold-primary',
-                            goldSecondary: '--gold-secondary',
-                            goldAccent: '--gold-accent',
-                            goldHover:  '--gold-hover',
-                            goldDim: '--gold-dim',
-                            bgBlack: '--bg-black',
-                            bgDark: '--bg-dark',
-                            bgSecondary: '--bg-secondary',
-                            bgCard:  '--bg-card',
-                            bgInput: '--bg-input',
-                            textWhite: '--text-white',
-                            textGray:  '--text-gray',
-                            textLightGray: '--text-light-gray',
-                            textDark: '--text-dark',
-                            textButton: '--text-button'
-                        };
-
-                        Object.entries(data.colors).forEach(([key, value]) => {
-                            if (mapping[key]) {
-                                root.style. setProperty(mapping[key], String(value));
-                            }
-                        });
-                    }
-                }
-
-                // 2. Textos legales
-                const legalRef = doc(db, "siteContent", "legalContent");
-                const legalSnap = await getDoc(legalRef);
-
-                if (legalSnap.exists()) {
-                    const legalData = legalSnap.data();
-                    setTexts({
+                    const newTexts = {
                         legal: {
-                            privacy: legalData.privacy || "<p>Contenido no disponible. </p>",
-                            terms: legalData.terms || "<p>Contenido no disponible.</p>",
-                            cookies: legalData.cookies || "<p>Contenido no disponible.</p>"
+                            privacy: data.find(item => item.key === 'privacy_policy')?.value || "<p>Contenido no disponible. </p>",
+                            terms: data.find(item => item.key === 'terms_of_service')?.value || "<p>Contenido no disponible. </p>",
+                            cookies: data.find(item => item.key === 'cookie_policy')?.value || "<p>Contenido no disponible.</p>"
                         }
-                    });
+                    };
+                    setTexts(newTexts);
                 }
-
             } catch (error) {
-                console.error("Error cargando configuracion:", error);
+                console.error("Error cargando base de datos:", error);
             } finally {
                 setLoading(false);
             }
@@ -97,7 +45,7 @@ export const ConfigProvider = ({ children }) => {
     }, []);
 
     return (
-        <ConfigContext.Provider value={{ config, texts, loading }}>
+        <ConfigContext.Provider value={{ config: configData, texts, loading }}>
             {children}
         </ConfigContext.Provider>
     );
