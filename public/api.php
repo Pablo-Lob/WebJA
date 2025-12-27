@@ -31,17 +31,15 @@ try {
 $table = isset($_GET['table']) ? $_GET['table'] : 'minerals';
 
 // Lista blanca de seguridad (Agregado services)
-$allowedTables = ['minerals', 'branches', 'services'];
+$allowedTables = ['minerals', 'branches', 'services', 'siteConfig', 'admin_users'];
 if (!in_array($table, $allowedTables)) {
     http_response_code(400);
-    echo json_encode(["error" => "Tabla no permitida"]);
+    echo json_encode(["error" => "Tabla no permitida" . $table]);
     exit;
 }
 
 // 2. DEFINIR CARPETA SEGÚN LA TABLA
-// Si es 'branches' -> uploads/branches/
-// Si es 'minerals' -> uploads/catalog/
-// Si es 'services' -> uploads/services/
+// Si es 'XXXXX' -> uploads/XXXXX/
 $uploadDir = 'uploads/';
 switch ($table) {
     case 'branches':

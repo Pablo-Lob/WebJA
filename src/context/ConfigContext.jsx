@@ -1,6 +1,14 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 
 const ConfigContext = createContext(null);
+
+export const useConfig = () => {
+    const context = useContext(ConfigContext);
+    if (!context) {
+        throw new Error('useConfig debe usarse dentro de un ConfigProvider');
+    }
+    return context;
+};
 
 export const ConfigProvider = ({ children }) => {
 
