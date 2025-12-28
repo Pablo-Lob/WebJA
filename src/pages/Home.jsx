@@ -10,7 +10,6 @@ import About from "../components/about/About.jsx";
 import Services from "../components/services/Services.jsx";
 import Mission from "../components/mission/Mission.jsx";
 import { useConfig } from "../context/ConfigContext.jsx";
-import { Helmet } from 'react-helmet-async';
 
 function Home() {
     const { config, loading } = useConfig();
@@ -54,10 +53,12 @@ function Home() {
 
     return (
         <>
-            {/* Si usas SEO, pon aquí el <Helmet> ... </Helmet> */}
+            {/* SEO */}
+            <title>{getValue('hero_title', 'ITS-STONES')} | Inicio</title>
+            <meta name="description" content={getValue('hero_text', 'Líderes en importación...')} />
 
+            {/* Secction HERO */}
             <section id="home" className="hero-home">
-                {/* IMPORTANTE: Asegúrate de que en Home.css .hero-image tenga 'overflow: hidden' */}
                 <div className="hero-image">
                     <img
                         src={getValue('hero_image', banner)}
