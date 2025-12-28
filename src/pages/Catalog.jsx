@@ -39,7 +39,9 @@ const Catalog = () => {
 
     return (
         <div className="catalog-page">
-            <meta name="robots" content="noindex" />
+            {/* SEO para que no indexe */}
+            <title>Catálogo | ITS Stones</title>
+            <meta name="robots" content="noindex, nofollow" />
 
             <div className="catalog-hero">
                 <h1>Exclusive Mineral Collection</h1>
