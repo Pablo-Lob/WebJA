@@ -12,6 +12,10 @@ const Footer = () => {
         return config?.find(item => item.key === key)?.value || defaultValue;
     };
 
+    const address = getValue('contact_address', 'Dubai Aireport Free Zone');
+    const phone = getValue('contact_phone', '+971501775203');
+    const email = getValue('contact_email', 'info@itsstonesfzco.com');
+
     return (
         <footer className="mineral-footer">
             {/* Main Footer Content */}
@@ -48,28 +52,46 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Contact Us  */}
+                    {/* Contact Us */}
                     <div className="footer-column">
                         <h3 className="footer-heading">Contact Us</h3>
                         <div className="contact-info">
+
+                            {/* Dirección */}
                             <div className="contact-item">
-                                <MapPin className="contact-icon" />
-                                <span className="contact-text">
-                                    {getValue('contact_address', 'Dubai Airport Free Zone')}
-                                </span>
+                                <MapPin className="contact-icon" size={18} />
+                                <a
+                                    href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="footer-link"
+                                >
+                                    {address}
+                                </a>
                             </div>
+
+                            {/* Teléfono */}
                             <div className="contact-item">
-                                <Phone className="contact-icon" />
-                                <span className="contact-text">
-                                    {getValue('contact_phone', '+971501775203')}
-                                </span>
+                                <Phone className="contact-icon" size={18} />
+                                <a
+                                    href={`tel:${phone.replace(/\s+/g, '')}`}
+                                    className="footer-link"
+                                >
+                                    {phone}
+                                </a>
                             </div>
+
+                            {/* Email */}
                             <div className="contact-item">
-                                <Mail className="contact-icon" />
-                                <span className="contact-text">
-                                    {getValue('contact_email', 'info@itsstonesfzco.com')}
-                                </span>
+                                <Mail className="contact-icon" size={18} />
+                                <a
+                                    href={`mailto:${email}`}
+                                    className="footer-link"
+                                >
+                                    {email}
+                                </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
