@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './Branches.css';
+import {useConfig} from '../../context/ConfigContext.jsx';
 
 const Branches = () => {
     const [branchesData, setBranchesData] = useState([]);
+
+    const { config } = useConfig();
+
+    const getValue = (key, defaultValue) => {
+        return config?.find(item => item.key === key)?.value || defaultValue;
+    }
 
     // URL API (Modo lectura)
     const API_URL = 'https://itsstonesfzco.com/api.php?table=branches';
@@ -25,9 +32,9 @@ const Branches = () => {
     return (
         <div className="branches-container">
             <div className="branches-header">
-                <h2>Our Global Presence</h2>
+                <h2>{getValue('branches_title', 'Our Global Presence')}</h2>
                 <div className="gold-divider-small"></div>
-                <p>Strategically located to serve the world's major markets.</p>
+                <p>{getValue('branches_subtitle', 'Strategically located to serve the world\'s major markets.')}</p>
             </div>
 
             <div className="branches-grid">

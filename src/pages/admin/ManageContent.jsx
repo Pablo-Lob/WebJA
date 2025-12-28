@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Save, Home, BookOpen, Phone, FileText, ArrowLeft } from 'lucide-react';
+import { Save, Home, BookOpen, Phone, FileText, ArrowLeft, Globe } from 'lucide-react';
 import './styles/ManageContent.css';
 
 const ManageContent = () => {
@@ -124,6 +124,9 @@ const ManageContent = () => {
                 <button className={`tab-button ${activeTab === 'legal' ? 'active' : ''}`} onClick={() => setActiveTab('legal')}>
                     <FileText size={18} /> Legal
                 </button>
+                <button className={`tab-button ${activeTab === 'sections' ? 'active' : ''}`} onClick={() => setActiveTab('sections')}>
+                    <Globe size={18} /> Secciones (About/Branches)
+                </button>
             </div>
 
             {/* Contenido del Formulario */}
@@ -168,6 +171,20 @@ const ManageContent = () => {
                             {renderInput("Términos y Condiciones", "terms_of_service", "Contenido HTML...", true)}
                             {renderInput("Política de Cookies", "cookie_policy", "Contenido HTML...", true)}
                             {renderInput("Banner de Cookies (Texto corto)", "cookie_banner_text", "Utilizamos cookies para...", true)}
+                        </>
+                    )}
+
+                    {activeTab === 'sections' && (
+                        <>
+                            <h2>Sección Branches (Sucursales)</h2>
+                            {renderInput("Título Principal", "branches_title", "Ej: Our Global Presence")}
+                            {renderInput("Subtítulo", "branches_subtitle", "Ej: Strategically located to serve...")}
+
+                            <hr style={{margin:'20px 0', borderColor:'rgba(255,255,255,0.1)'}}/>
+
+                            <h2>Sección About Us</h2>
+                            {renderInput("Título About", "about_title", "Ej: About Us")}
+                            {renderInput("Texto About", "about_text", "Descripción corta...", true)}
                         </>
                     )}
 
