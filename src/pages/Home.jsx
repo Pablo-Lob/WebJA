@@ -10,8 +10,7 @@ import About from "../components/about/About.jsx";
 import Services from "../components/services/Services.jsx";
 import Mission from "../components/mission/Mission.jsx";
 import { useConfig } from "../context/ConfigContext.jsx";
-// Si vas a usar SEO, importa Helmet aquí:
-// import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 
 function Home() {
     const { config, loading } = useConfig();

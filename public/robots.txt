@@ -1,9 +1,15 @@
 User-agent: *
 Allow: /
 
+# Bloquear admin y archivos privados
 Disallow: /admin/
 Disallow: /admin/*
-
-Disallow: /send-mail.php
-
 Disallow: /private/
+
+# Bloquear scripts PHP
+Disallow: /api.php
+Disallow: /login.php
+Disallow: /send-email.php
+
+# Sitemap
+Sitemap: https://itsstonesfzco.com/sitemap.xml

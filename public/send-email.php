@@ -1,6 +1,11 @@
 <?php
-// Configuración de cabeceras para permitir peticiones desde tu web (CORS)
-header("Access-Control-Allow-Origin: *");
+$allowed_origins = ["https://itsstonesfzco.com", "https://www.itsstonesfzco.com", "http://localhost:5173"];
+if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {
+    header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+} else {
+    exit; // Si no es tu dominio, se corta la ejecución.
+}
+
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
