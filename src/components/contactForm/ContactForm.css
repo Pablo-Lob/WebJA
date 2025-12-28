@@ -127,9 +127,10 @@
 
 /* El input de texto del teléfono */
 .react-tel-input .input-field.phone-custom-input {
-    width: 100%;
-    height: 100%; /* Asegura altura igual al email */
-    padding-left: 48px; /* Espacio para la bandera */
+    width: 100% !important;
+    height: auto !important; /* Asegura altura igual al email */
+    padding: 1rem !important;
+    padding-left: 48px !important; /* Espacio para la bandera */
     background-color: var(--input-bg-color);
     color: var(--text-color);
     border: none;

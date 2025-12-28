@@ -2,25 +2,29 @@ import React, { useState, useEffect } from 'react';
 import './ContactForm.css';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { Link } from 'react-router-dom'; // Importamos Link para la política
 
 function ContactForm() {
 
-    // 1. Estado visual (lo que ve el usuario en los inputs)
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
-        phone: '', // Aquí guardaremos el número completo con prefijo internacional
+        phone: '',
         message: '',
     });
 
-    // Estado para la configuración regional (Nuevo)
     const [countryCode, setCountryCode] = useState('es');
     const [submitStatus, setSubmitStatus] = useState(null);
 
-    // 2. Detección de ubicación (Nuevo)
-    // Consultamos una API externa para saber el país del usuario y poner la bandera correcta por defecto.
+    // Estado para controlar si mostramos la casilla de cookies
+    const [showCookieCheckbox, setShowCookieCheckbox] = useState(false);
+    // Estado para saber si la casilla está marcada
+    const [cookieChecked, setCookieChecked] = useState(false);
+
+    // 1. Al cargar, detectamos País y Estado de Cookies
     useEffect(() => {
+        // API País
         fetch('https://ipapi.co/json/')
             .then(res => res.json())
             .then(data => {
@@ -28,76 +32,76 @@ function ContactForm() {
                     setCountryCode(data.country_code.toLowerCase());
                 }
             })
-            .catch(err => console.error("No se pudo detectar el país:", err));
+            .catch(err => console.error("Error país:", err));
+
+        // Comprobación de Cookies
+        const consent = localStorage.getItem('cookieConsent');
+        if (consent !== 'true') {
+            setShowCookieCheckbox(true); // Si no ha aceptado, mostramos el checkbox
+        }
     }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value,
-        }));
+        setFormData(prevData => ({ ...prevData, [name]: value }));
     };
 
-    // Manejador especial para el input de teléfono (Nuevo)
     const handlePhoneChange = (value, country, e, formattedValue) => {
-        setFormData(prevData => ({
-            ...prevData,
-            phone: formattedValue, // Guardamos el valor formateado (ej: +34 600...)
-        }));
+        setFormData(prevData => ({ ...prevData, phone: formattedValue }));
+    };
+
+    // Manejo del click en el checkbox de cookies
+    const handleCookieCheck = (e) => {
+        setCookieChecked(e.target.checked);
+        if (e.target.checked) {
+            // Si la marca, guardamos la aceptación inmediatamente
+            localStorage.setItem('cookieConsent', 'true');
+            // Opcional: Podrías ocultar el banner global si estuviera abierto disparando un evento,
+            // pero con guardarlo en localStorage basta para futuras cargas.
+        } else {
+            // Si la desmarca (caso raro), borramos el permiso
+            localStorage.removeItem('cookieConsent');
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // VALIDACIÓN: Si se muestra el checkbox, DEBE estar marcado
+        if (showCookieCheckbox && !cookieChecked) {
+            alert("Please accept the Cookie Policy to submit this form.");
+            return;
+        }
+
         setSubmitStatus('sending');
 
-        // 3. PREPARACIÓN DE DATOS (Data Mapping)
-        // Aquí combinamos los campos nuevos para que encajen con lo que tu backend (PHP) espera.
         const dataToSend = {
-            // Reconstruimos el campo 'name' uniendo nombre y apellido
             name: `${formData.firstName} ${formData.lastName}`,
-
             email: formData.email,
-
-            // Como el diseño nuevo no tiene "Asunto", mandamos uno por defecto
             subject: "Nuevo contacto desde la web (Formulario)",
-
             message: formData.message,
-
-            // Añadimos el teléfono formateado con prefijo
             phone: formData.phone,
         };
 
         try {
-            // 4. ENVÍO AL SERVIDOR (PHP)
-            // Hacemos la petición POST a tu archivo en Hostinger
-            const response = await fetch('https://itsstonesfzco.com/send-mail.php', {
+            const response = await fetch('https://itsstonesfzco.com/send-email.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataToSend),
             });
 
             if (response.ok) {
-                console.log("Mensaje enviado correctamente al servidor.");
                 setSubmitStatus('success');
-
-                // Limpiamos el formulario
                 setFormData({
-                    firstName: '',
-                    lastName: '',
-                    email: '',
-                    phone: '',
-                    message: '',
+                    firstName: '', lastName: '', email: '', phone: '', message: '',
                 });
+                // Si envió con éxito y marcó el check, ya no necesitamos mostrarlo la próxima vez
+                if (cookieChecked) setShowCookieCheckbox(false);
             } else {
-                console.error("El servidor respondió con un error.");
                 setSubmitStatus('error');
             }
-
         } catch (error) {
-            console.error("Error de conexión al enviar el formulario:", error);
+            console.error("Error envío:", error);
             setSubmitStatus('error');
         }
     };
@@ -108,38 +112,12 @@ function ContactForm() {
                 <h2 className="form-heading">Contact Us</h2>
 
                 <div className="form-row">
-                    <input
-                        required
-                        placeholder="First name*"
-                        className="input-field"
-                        type="text"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                    />
-                    <input
-                        required
-                        placeholder="Last name*"
-                        className="input-field"
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                    />
+                    <input required placeholder="First name*" className="input-field" type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
+                    <input required placeholder="Last name*" className="input-field" type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
                 </div>
 
                 <div className="form-row">
-                    <input
-                        required
-                        placeholder="Email address*"
-                        className="input-field"
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                    />
-
-                    {/* Componente de Teléfono con estilos personalizados */}
+                    <input required placeholder="Email address*" className="input-field" type="email" name="email" value={formData.email} onChange={handleChange} />
                     <div className="phone-input-wrapper">
                         <PhoneInput
                             country={countryCode}
@@ -148,29 +126,32 @@ function ContactForm() {
                             inputClass="input-field phone-custom-input"
                             buttonClass="phone-custom-button"
                             dropdownClass="phone-custom-dropdown"
-                            preferredCountries={['ae', 'es', 'us', 'gb']} // Emiratos, España, USA, UK primero
+                            preferredCountries={['ae', 'es', 'us', 'gb']}
                         />
                     </div>
                 </div>
 
                 <div className="form-row full-width">
-                    <textarea
-                        required
-                        placeholder="Message*"
-                        rows={4}
-                        className="input-field textarea-field"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                    ></textarea>
+                    <textarea required placeholder="Message*" rows={4} className="input-field textarea-field" name="message" value={formData.message} onChange={handleChange}></textarea>
                 </div>
 
+                {showCookieCheckbox && (
+                    <div className="form-row full-width checkbox-row" style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '10px', color: '#fff' }}>
+                        <input
+                            type="checkbox"
+                            id="cookieCheck"
+                            checked={cookieChecked}
+                            onChange={handleCookieCheck}
+                            style={{ width: '20px', height: '20px', accentColor: 'var(--gold-primary)' }}
+                        />
+                        <label htmlFor="cookieCheck" style={{ fontSize: '0.9rem', cursor: 'pointer' }}>
+                            I have read and accept the <Link to="/cookie-policy" style={{ color: 'var(--gold-primary)', textDecoration: 'underline' }}>Cookie Policy</Link>.
+                        </label>
+                    </div>
+                )}
+
                 <div className="button-container">
-                    <button
-                        className="sendMessage-btn"
-                        type="submit"
-                        disabled={submitStatus === 'sending'}
-                    >
+                    <button className="sendMessage-btn" type="submit" disabled={submitStatus === 'sending'}>
                         {submitStatus === 'sending' ? 'Sending...' : 'Send'}
                     </button>
                 </div>
@@ -178,7 +159,7 @@ function ContactForm() {
                 <div className="feedback-message">
                     {submitStatus === 'sending' && <p>Sending message...</p>}
                     {submitStatus === 'success' && <p style={{ color: '#4caf50' }}>Message sent successfully!</p>}
-                    {submitStatus === 'error' && <p style={{ color: '#f44336' }}>There was an error sending your message. Please try again.</p>}
+                    {submitStatus === 'error' && <p style={{ color: '#f44336' }}>Error sending message.</p>}
                 </div>
             </form>
         </div>

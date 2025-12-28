@@ -23,17 +23,25 @@ const CookieConsent = () => {
         setIsVisible(false);
     };
 
+    const handleDeny = () => {
+        localStorage.setItem('cookieConsent', 'false');
+        setIsVisible(false);
+    }
+
     if (!isVisible) return null;
 
     return (
         <div className="cookie-consent-banner">
             <div className="cookie-content">
                 <p>
-                    {getValue('cookie_banner_text', 'Utilizamos cookies propias y de terceros para mejorar su experiencia. Si continúa navegando, consideramos que acepta su uso.')}
-                    <Link to="/cookie-policy" className="cookie-link"> Más información</Link>.
+                    {getValue('cookie_banner_text', 'We use our own and third-party cookies to improve your experience. By continuing to browse, you agree to their use.')}
+                    <Link to="/cookie-policy" className="cookie-link"> More information</Link>.
                 </p>
-                <button onClick={handleAccept} className="cookie-accept-btn">
-                    Aceptar Cookies
+                <button onClick={handleAccept} className="cookie-btn">
+                    Accept Cookies
+                </button>
+                <button onClick={handleDeny} className="cookie-btn">
+                    Deny Cookies
                 </button>
             </div>
         </div>

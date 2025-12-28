@@ -18,7 +18,7 @@ const Footer = () => {
             <div className="footer-content">
                 <div className="footer-grid">
 
-                    {/* Productos (Estructural, se mantiene igual) */}
+                    {/* Productos  */}
                     <div className="footer-column">
                         <h3 className="footer-heading">Products</h3>
                         <ul className="footer-links">
@@ -27,7 +27,7 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Servicios (Estructural, se mantiene igual) */}
+                    {/* Servicios  */}
                     <div className="footer-column">
                         <h3 className="footer-heading">Service</h3>
                         <ul className="footer-links">
@@ -38,7 +38,7 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Contact Us (DINÁMICO) */}
+                    {/* Contact Us  */}
                     <div className="footer-column">
                         <h3 className="footer-heading">Contact Us</h3>
                         <div className="contact-info">

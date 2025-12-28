@@ -44,7 +44,7 @@
     color: #fff;
 }
 
-.cookie-accept-btn {
+.cookie-btn {
     background: linear-gradient(135deg, #d4af37 0%, #aa8a2e 100%);
     color: #000;
     border: none;
@@ -57,7 +57,7 @@
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.cookie-accept-btn:hover {
+.cookie-btn:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
 }
@@ -69,7 +69,7 @@
         text-align: center;
     }
 
-    .cookie-accept-btn {
+    .cookie-btn {
         width: 100%;
     }
 }
