@@ -9,6 +9,7 @@ import About from "../components/about/About.jsx";
 import Services from "../components/services/Services.jsx";
 import Mission from "../components/mission/Mission.jsx";
 import { useConfig } from "../context/ConfigContext.jsx";
+import {ParallaxProvider, Parallax} from 'react-scroll-parallax';
 
 function Home() {
     const { config, loading } = useConfig();
@@ -42,10 +43,13 @@ function Home() {
     return (
         <>
             {/* Hero Section */}
+            <ParallaxProvider>
             <section id="home" className="hero-home">
                 <div className="hero-image">
                     {/* Imagen dinámica con fallback a tu banner original */}
+                    <Parallax speed={-20}>
                     <img src={getValue('hero_image', banner)} alt="ITS-STONES Banner" />
+                    </Parallax>
                 </div>
                 <div className="hero-content">
                     {/* Títulos dinámicos */}
@@ -61,6 +65,7 @@ function Home() {
                     </ShineButton>
                 </div>
             </section>
+            </ParallaxProvider>
 
             {/* About us Section */}
             <section id="about-us" className="about-home">

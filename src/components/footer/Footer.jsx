@@ -38,6 +38,16 @@ const Footer = () => {
                         </ul>
                     </div>
 
+                    {/* Legal */}
+                    <div className="footer-column">
+                        <h3 className="footer-heading">Legal</h3>
+                        <ul className="footer-links">
+                            <li><a href="/privacy-policy" className="footer-link">Privacy Policy</a></li>
+                            <li><a href="/cookie-policy" className="footer-link">Cookie Policy</a></li>
+                            <li><a href="#" className="footer-link">Anti-Money Laundering (AML) / Know Your Customer (KYC) Policy</a></li>
+                        </ul>
+                    </div>
+
                     {/* Contact Us  */}
                     <div className="footer-column">
                         <h3 className="footer-heading">Contact Us</h3>

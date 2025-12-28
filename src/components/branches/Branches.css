@@ -154,8 +154,9 @@
     }
 
     .branch-card {
-        max-width: 100%; /* Ocupar todo el ancho en pantallas pequeñas */
+        max-width: 100%;
         height: auto;
+        flex: 0 1 auto;
     }
 
     .branch-image-wrapper {
