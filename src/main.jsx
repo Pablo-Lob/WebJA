@@ -4,11 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import './App.css';
 import {ConfigProvider} from './context/ConfigContext.jsx';
+import {ParallaxProvider} from "react-scroll-parallax";
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <ConfigProvider>
-            <App />
-        </ConfigProvider>
+        <ParallaxProvider>
+            <ConfigProvider>
+                <App />
+            </ConfigProvider>
+        </ParallaxProvider>
     </StrictMode>,
 )

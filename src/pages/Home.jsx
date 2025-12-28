@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react'; // <--- Importamos useState
 import { useLocation } from 'react-router-dom';
+// NOTA: SI habías importado 'react-scroll-parallax', BORRA ESA LÍNEA.
 import './styles/Home.css';
 import ShineButton from '../components/shineButton/ShineButton.jsx';
 import ContactForm from "../components/contactForm/ContactForm.jsx";
@@ -9,24 +10,32 @@ import About from "../components/about/About.jsx";
 import Services from "../components/services/Services.jsx";
 import Mission from "../components/mission/Mission.jsx";
 import { useConfig } from "../context/ConfigContext.jsx";
-import {ParallaxProvider, Parallax} from 'react-scroll-parallax';
+// Si vas a usar SEO, importa Helmet aquí:
+// import { Helmet } from 'react-helmet-async';
 
 function Home() {
     const { config, loading } = useConfig();
     const location = useLocation();
 
-    // Helper para obtener datos de la BD o usar el texto original por defecto
+    // --- LÓGICA PARALLAX MANUAL (SUTIL) ---
+    const [offsetY, setOffsetY] = useState(0);
+    const handleScroll = () => setOffsetY(window.scrollY);
+
+    useEffect(() => {
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+    // --------------------------------------
+
     const getValue = (key, defaultValue) => {
         if (!config || !Array.isArray(config)) return defaultValue;
         const item = config.find(item => item.key === key);
         return item ? item.value : defaultValue;
     };
 
-    // Lógica para detectar si venimos de otra página y hacer scroll
     useEffect(() => {
         if (location.state && location.state.targetId) {
             const targetId = location.state.targetId;
-
             if (targetId === 'home') {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
@@ -40,58 +49,42 @@ function Home() {
 
     if (loading) return <div className="loader-placeholder"></div>;
 
+    // Factor de velocidad: 0.4 significa que se mueve al 40% de la velocidad del scroll.
+    // Si quieres MÁS movimiento, pon 0.5 o 0.6. Si quieres MENOS, pon 0.3.
+    const parallaxSpeed = 0.4;
+
     return (
         <>
-            {/* Hero Section */}
-            <ParallaxProvider>
+            {/* Si usas SEO, pon aquí el <Helmet> ... </Helmet> */}
+
             <section id="home" className="hero-home">
+                {/* IMPORTANTE: Asegúrate de que en Home.css .hero-image tenga 'overflow: hidden' */}
                 <div className="hero-image">
-                    {/* Imagen dinámica con fallback a tu banner original */}
-                    <Parallax speed={-20}>
-                    <img src={getValue('hero_image', banner)} alt="ITS-STONES Banner" />
-                    </Parallax>
+                    <img
+                        src={getValue('hero_image', banner)}
+                        alt="ITS-STONES Banner"
+                        style={{
+                            // Aquí está la magia sutil:
+                            transform: `translateY(${offsetY * parallaxSpeed}px)`,
+                            willChange: 'transform' // Optimización para el navegador
+                        }}
+                    />
                 </div>
                 <div className="hero-content">
-                    {/* Títulos dinámicos */}
                     <h1>{getValue('hero_title', 'ITS-STONES')}</h1>
                     <h2>{getValue('hero_subtitle', 'Precious Metals & Gems Import')}</h2>
-                    <p>
-                        {getValue('hero_text', 'Discover the difference of trading with integrity and excellence.')}
-                    </p>
-
-                    {/* Tu ShineButton original pero con texto editable */}
+                    <p>{getValue('hero_text', 'Discover the difference of trading with integrity and excellence.')}</p>
                     <ShineButton href="#contact">
                         {getValue('hero_cta_text', 'Contact us')}
                     </ShineButton>
                 </div>
             </section>
-            </ParallaxProvider>
 
-            {/* About us Section */}
-            <section id="about-us" className="about-home">
-                <About/>
-            </section>
-
-            {/* Services Section */}
-            <section id="services" className="services-home">
-                <Services />
-            </section>
-
-            {/* Mission Section */}
-            <section id="mission" className="mission-home">
-                <Mission />
-            </section>
-
-            {/* Branches */}
-            <section id="branches" className="branches-section">
-                <Branches />
-            </section>
-
-            {/* Contacto */}
-            <section id="contact" className="contact-home">
-                <ContactForm />
-            </section>
-            {/* Footer */}
+            <section id="about-us" className="about-home"><About/></section>
+            <section id="services" className="services-home"><Services /></section>
+            <section id="mission" className="mission-home"><Mission /></section>
+            <section id="branches" className="branches-section"><Branches /></section>
+            <section id="contact" className="contact-home"><ContactForm /></section>
         </>
     );
 }
