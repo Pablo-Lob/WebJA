@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/ManageCatalog.css';
+import './ManageCatalog.css';
 
 const ManageCatalog = () => {
     const navigate = useNavigate();

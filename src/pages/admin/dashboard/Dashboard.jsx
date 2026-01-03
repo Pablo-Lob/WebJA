@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/Dashboard.css';
+import './Dashboard.css';
 import { Palette, Image, LogOut, Globe, Gem, Briefcase, Users} from 'lucide-react';
 import {CgPassword} from "react-icons/cg";
 import {PiPassword} from "react-icons/pi";
@@ -98,7 +98,7 @@ const Dashboard = () => {
             </div>
 
             <div className="dashboard-footer">
-                <a href="/" className="back-to-site">
+                <a href="/public" className="back-to-site">
                     Go to Website
                 </a>
             </div>

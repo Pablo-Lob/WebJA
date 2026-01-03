@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, ArrowLeft } from 'lucide-react';
-import './styles/ManageCatalog.css';
+import './ManageCatalog.css';
 
 const ManageBranches = () => {
     const navigate = useNavigate();

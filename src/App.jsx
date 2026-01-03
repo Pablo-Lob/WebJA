@@ -4,25 +4,26 @@ import NotFound from './pages/NotFound.jsx';
 import Navbar from './components/navbar/Navbar.jsx';
 import Footer from './components/footer/Footer.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Dashboard from "./pages/admin/Dashboard.jsx";
-import ManageContent from "./pages/admin/ManageContent.jsx";
+import Dashboard from "./pages/admin/dashboard/Dashboard.jsx";
+import ManageContent from "./pages/admin/manage/ManageContent.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import Login from './pages/admin/Login.jsx';
+import Login from './pages/admin/login/Login.jsx';
 import Loader from './components/loader/Loader.jsx';
 import {useConfig} from './context/ConfigContext.jsx';
 import LegalPage from './pages/LegalPage.jsx';
 import Catalog from "./pages/Catalog.jsx";
-import ManageCatalog from "./pages/admin/ManageCatalog.jsx";
-import ManageBranches from "./pages/admin/ManageBranches.jsx";
-import ManageServices from "./pages/admin/ManageServices.jsx";
-import ManageAdmins from "./pages/admin/ManageAdmins.jsx";
+import ManageCatalog from "./pages/admin/manage/ManageCatalog.jsx";
+import ManageBranches from "./pages/admin/manage/ManageBranches.jsx";
+import ManageServices from "./pages/admin/manage/ManageServices.jsx";
+import ManageAdmins from "./pages/admin/manage/ManageAdmins.jsx";
 import ChangePassword from "./pages/admin/ChangePassword.jsx";
 import CookieConsent from "./components/cookieConsent/CookieConsent.jsx";
-import ManageLanding from "./pages/admin/ManageLanding.jsx";
-import ManageHero from "./pages/admin/ManageHero.jsx";
-import ManageAbout from "./pages/admin/ManageAbout.jsx";
+import ManageLanding from "./pages/admin/manage/ManageLanding.jsx";
+import ManageHero from "./pages/admin/manage/ManageHero.jsx";
+import ManageAbout from "./pages/admin/manage/ManageAbout.jsx";
+import ManageMission from "./pages/admin/manage/ManageMission.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -139,6 +140,12 @@ function App () {
                         <Route path="/admin/About-us" element={
                             <ProtectedRoute>
                                 <ManageAbout />
+                            </ProtectedRoute>
+                        }  />
+
+                        <Route path="/admin/missions" element={
+                            <ProtectedRoute>
+                                <ManageMission/>
                             </ProtectedRoute>
                         }  />
 

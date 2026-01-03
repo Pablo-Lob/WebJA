@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, ArrowLeft, Image as ImageIcon } from 'lucide-react';
-import './styles/ManageContent.css'; // Usamos los mismos estilos
+import './ManageContent.css'; // Usamos los mismos estilos
 
 const ManageHero = () => {
     const navigate = useNavigate();
@@ -88,7 +88,7 @@ const ManageHero = () => {
     return (
         <div className="manage-container">
             <div className="manage-header">
-                <button onClick={() => navigate('/admin/landing')} className="back-link">
+                <button onClick={() => navigate('/admin/dashboard/landing-page')} className="back-link">
                     <ArrowLeft size={20}/> Back to Landing
                 </button>
                 <h1>Manage Hero Section</h1>

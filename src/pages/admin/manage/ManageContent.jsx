@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, Home, BookOpen, Phone, FileText, ArrowLeft, Info } from 'lucide-react';
-import './styles/ManageContent.css';
+import './ManageContent.css';
 
 const ManageContent = () => {
     const navigate = useNavigate();
@@ -88,7 +88,7 @@ const ManageContent = () => {
         <div className="manage-container">
             <div className="manage-header">
                 <div style={{display:'flex', alignItems:'center', gap:'15px'}}>
-                    <button onClick={() => navigate('/admin/landing')} className="back-link" style={{background:'none', border:'none', cursor:'pointer', fontSize:'1rem'}}>
+                    <button onClick={() => navigate('/admin/dashboard/landing-page')} className="back-link" style={{background:'none', border:'none', cursor:'pointer', fontSize:'1rem'}}>
                         <ArrowLeft size={20}/> Back to Landing
                     </button>
                     <h1>General Content Editor</h1>

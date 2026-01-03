@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/Login.css';
+import './Login.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -97,7 +97,7 @@ const Login = () => {
                 </form>
 
                 <div className="login-footer">
-                    <a href="/">← Back to site</a>
+                    <a href="/public">← Back to site</a>
                 </div>
             </div>
         </div>

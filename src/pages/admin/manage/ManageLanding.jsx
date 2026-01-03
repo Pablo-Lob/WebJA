@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/Dashboard.css'; // Reutilizamos el mismo CSS del Dashboard
+import '../dashboard/Dashboard.css'; // Reutilizamos el mismo CSS del Dashboard
 import { Layout, Globe, Briefcase, FileText, ArrowLeft, Image } from 'lucide-react';
 
 const ManageLanding = () => {
