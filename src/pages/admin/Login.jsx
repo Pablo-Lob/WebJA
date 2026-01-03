@@ -29,7 +29,6 @@ const Login = () => {
 
             const result = await response.json();
 
-            // --- CORRECCIÓN AQUÍ ---
             // Verificamos result.status === 'success' (como lo envía el PHP)
             if (result.status === 'success') {
 
@@ -47,11 +46,11 @@ const Login = () => {
                 }
             } else {
                 // Si el PHP devuelve error (status: "error")
-                setError(result.message || 'Credenciales incorrectas');
+                setError(result.message || 'Invalid credentials');
             }
         } catch (error) {
             console.error("Error login:", error);
-            setError('Error de conexión con el servidor');
+            setError('Server connection error');
         } finally {
             setLoading(false);
         }
@@ -62,7 +61,7 @@ const Login = () => {
             <div className="login-card">
                 <div className="login-header">
                     <h1>Admin Login</h1>
-                    <p>Accede al panel de administración</p>
+                    <p>Access the administration panel</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="login-form">
@@ -81,24 +80,24 @@ const Login = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Contraseña</label>
+                        <label htmlFor="password">Password</label>
                         <input
                             type="password"
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Ingresa tu contraseña"
+                            placeholder="Enter your password"
                             required
                         />
                     </div>
 
                     <button type="submit" className="login-button" disabled={loading}>
-                        {loading ? 'Verificando...' : 'Iniciar Sesión'}
+                        {loading ? 'Verifying...' : 'Login'}
                     </button>
                 </form>
 
                 <div className="login-footer">
-                    <a href="/">← Volver al sitio</a>
+                    <a href="/">← Back to site</a>
                 </div>
             </div>
         </div>

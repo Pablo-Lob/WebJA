@@ -1,53 +1,104 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Save, ArrowLeft } from 'lucide-react';
 import './styles/ManageCatalog.css';
 
 const ManageBranches = () => {
     const navigate = useNavigate();
-    const [branches, setBranches] = useState([]);
-    const [loading, setLoading] = useState(false);
 
-    // Estado para Edición
-    const [editingId, setEditingId] = useState(null); // Si es null, estamos creando. Si tiene ID, editamos.
-
-    const [newBranch, setNewBranch] = useState({
-        city: '',
-        description: '',
-        details: ''
+    // --- ESTADO 1: Configuración (Títulos de la Sección) ---
+    // Estos datos van a la tabla 'siteConfig'
+    const [titles, setTitles] = useState({
+        title: '',
+        subtitle: ''
     });
+    const [loadingTitles, setLoadingTitles] = useState(false);
+
+    // --- ESTADO 2: Lista de Sedes (Items individuales) ---
+    // Estos datos van a la tabla 'branches'
+    const [branches, setBranches] = useState([]);
+    const [loadingBranches, setLoadingBranches] = useState(false);
+
+    // Estado para formulario de nueva/editar sede
+    const [editingId, setEditingId] = useState(null);
+    const [newBranch, setNewBranch] = useState({ city: '', description: '', details: '' });
     const [imageFile, setImageFile] = useState(null);
 
-    const API_URL = 'https://itsstonesfzco.com/api.php?table=branches';
+    // APIs
+    const API_CONFIG = 'https://itsstonesfzco.com/api.php?table=siteConfig';
+    const API_BRANCHES = 'https://itsstonesfzco.com/api.php?table=branches';
 
-    // 1. Cargar
-    const fetchBranches = async () => {
-        try {
-            const response = await fetch(`${API_URL}&t=${Date.now()}`);
-            if (!response.ok) throw new Error("Error del servidor");
-            const data = await response.json();
-            setBranches(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error("Error cargando sedes:", error);
-        }
-    };
-
+    // 1. CARGA INICIAL
     useEffect(() => {
+        // Cargar Títulos
+        const fetchConfig = async () => {
+            try {
+                const res = await fetch(`${API_CONFIG}&t=${Date.now()}`);
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    const t = data.find(i => i.key === 'branches_title');
+                    const s = data.find(i => i.key === 'branches_subtitle');
+                    setTitles({
+                        title: t ? t.value : '',
+                        subtitle: s ? s.value : ''
+                    });
+                }
+            } catch (e) { console.error(e); }
+        };
+
+        // Cargar Lista de Sedes
+        const fetchBranches = async () => {
+            try {
+                const res = await fetch(`${API_BRANCHES}&t=${Date.now()}`);
+                const data = await res.json();
+                setBranches(Array.isArray(data) ? data : []);
+            } catch (e) { console.error(e); }
+        };
+
+        fetchConfig();
         fetchBranches();
     }, []);
 
-    // 2. Preparar Edición
-    const handleEdit = (branch) => {
+    // 2. GUARDAR TÍTULOS
+    const handleSaveTitles = async (e) => {
+        e.preventDefault();
+        setLoadingTitles(true);
+        try {
+            // Preparamos el array como lo espera siteConfig
+            const dataToSend = [
+                { key: 'branches_title', value: titles.title },
+                { key: 'branches_subtitle', value: titles.subtitle }
+            ];
+
+            const res = await fetch(API_CONFIG, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSend)
+            });
+
+            const result = await res.json();
+            if (result.status === 'success') alert("Section headers updated!");
+            else alert("Error saving headers");
+
+        } catch (error) {
+            alert("Connection error");
+        } finally {
+            setLoadingTitles(false);
+        }
+    };
+
+    // 3. Gestión de branches
+    const handleEditBranch = (branch) => {
         setEditingId(branch.id);
         setNewBranch({
             city: branch.city,
             description: branch.description,
             details: branch.details
         });
-        // Scroll suave hacia el formulario
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Scroll al formulario de edición (no al top de la página)
+        document.getElementById('branch-form').scrollIntoView({ behavior: 'smooth' });
     };
 
-    // 3. Cancelar Edición
     const cancelEdit = () => {
         setEditingId(null);
         setNewBranch({ city: '', description: '', details: '' });
@@ -55,92 +106,123 @@ const ManageBranches = () => {
         document.getElementById('file-upload').value = "";
     };
 
-    // 4. Submit (Crear o Editar)
-    const handleSubmit = async (e) => {
+    const handleSaveBranch = async (e) => {
         e.preventDefault();
-        setLoading(true);
-
+        setLoadingBranches(true);
         try {
             const formData = new FormData();
-            // Si estamos editando, mandamos el ID
-            if (editingId) {
-                formData.append('id', editingId);
-            }
-
+            if (editingId) formData.append('id', editingId);
             formData.append('city', newBranch.city);
             formData.append('description', newBranch.description);
             formData.append('details', newBranch.details);
+            if (imageFile) formData.append('image', imageFile);
 
-            if (imageFile) {
-                formData.append('image', imageFile);
-            }
-
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();
+            const res = await fetch(API_BRANCHES, { method: 'POST', body: formData });
+            const result = await res.json();
 
             if (result.status === 'success') {
-                alert(editingId ? "Sede actualizada" : "Sede creada");
-                cancelEdit(); // Limpiar todo
-                fetchBranches(); // Recargar lista
+                alert(editingId ? "Location updated" : "Location added");
+                cancelEdit();
+                // Recargar lista
+                const resList = await fetch(`${API_BRANCHES}&t=${Date.now()}`);
+                const dataList = await resList.json();
+                setBranches(Array.isArray(dataList) ? dataList : []);
             } else {
-                alert("Error: " + (result.error || "Desconocido"));
+                alert("Error: " + result.error);
             }
         } catch (error) {
-            console.error("Error al subir:", error);
-            alert("Error de conexión");
+            alert("Connection error");
         } finally {
-            setLoading(false);
+            setLoadingBranches(false);
         }
     };
 
-    // 5. Borrar
     const handleDelete = async (id) => {
-        if (window.confirm("¿Seguro que quieres borrar esta sede?")) {
-            try {
-                await fetch(`${API_URL}&id=${id}`, { method: 'DELETE' });
-                fetchBranches();
-            } catch (error) {
-                console.error("Error borrando:", error);
-            }
+        if (window.confirm("Delete this location?")) {
+            await fetch(`${API_BRANCHES}&id=${id}`, { method: 'DELETE' });
+            // Recargar rápido
+            const res = await fetch(`${API_BRANCHES}&t=${Date.now()}`);
+            const data = await res.json();
+            setBranches(data);
         }
     };
 
     return (
         <div className="manage-catalog-container">
             <div className="catalog-header">
-                <button onClick={() => navigate('/admin/dashboard')} className="back-btn-simple">
-                    ← Volver
+                <button onClick={() => navigate('/admin/dashboard/landing-page')} className="back-btn-simple">
+                    <ArrowLeft size={18} style={{marginRight:'5px'}}/> Back to Landing
                 </button>
-                <h1>Gestor de Sedes</h1>
+                <h1>Branches Manager</h1>
             </div>
 
-            <div className="admin-grid">
-                {/* Formulario */}
+            {/* --- SECCIÓN A: CONFIGURACIÓN GLOBAL (Títulos) --- */}
+            <div className="admin-grid" style={{marginBottom:'30px'}}>
+                <div className="upload-section" style={{borderLeft:'4px solid #f1c40f'}}>
+                    <div style={{display:'flex', alignItems:'center', gap:'10px', marginBottom:'15px'}}>
+                        <h2 style={{margin:0}}>Section Header</h2>
+                        <span style={{fontSize:'0.8rem', color:'#aaa'}}>(Visible on Home Page)</span>
+                    </div>
+
+                    <form onSubmit={handleSaveTitles}>
+                        <div className="form-group">
+                            <label style={{fontWeight:'bold'}}>Main Title</label>
+                            <input
+                                type="text"
+                                className="admin-input"
+                                value={titles.title}
+                                onChange={e => setTitles({...titles, title: e.target.value})}
+                                placeholder="Ex: Our Global Presence"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label style={{fontWeight:'bold'}}>Subtitle</label>
+                            <input
+                                type="text"
+                                className="admin-input"
+                                value={titles.subtitle}
+                                onChange={e => setTitles({...titles, subtitle: e.target.value})}
+                                placeholder="Ex: Strategically located..."
+                            />
+                        </div>
+
+                        <button type="submit" className="save-btn" disabled={loadingTitles}>
+                            <Save size={18} style={{marginRight:'5px'}}/>
+                            {loadingTitles ? 'Saving...' : 'Update Headers'}
+                        </button>
+                    </form>
+                </div>
+
+                {/* Panel informativo lateral (Opcional) */}
+                <div className="list-section" style={{display:'flex', alignItems:'center', justifyContent:'center', color:'#aaa', fontStyle:'italic'}}>
+                    <p>Use this top section to control the text that appears above the map/list on the main page.</p>
+                </div>
+            </div>
+
+            <hr className="divider" style={{margin:'0 0 30px 0', border:'0', borderTop:'1px solid #444'}}/>
+
+            {/* --- SECCIÓN B: LISTADO DE SEDES (CRUD) --- */}
+            <div className="admin-grid" id="branch-form">
+                {/* Formulario Nueva Sede */}
                 <div className="upload-section">
                     <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                        <h2>{editingId ? 'Editar Sede' : 'Añadir Nueva Sede'}</h2>
+                        <h2>{editingId ? 'Edit Location': 'Add New Location'}</h2>
                         {editingId && (
-                            <button onClick={cancelEdit} style={{background:'#e74c3c', color:'white', border:'none', padding:'5px 10px', borderRadius:'4px', cursor:'pointer'}}>
-                                Cancelar Edición
-                            </button>
+                            <button onClick={cancelEdit} className="cancel-btn">Cancel</button>
                         )}
                     </div>
 
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSaveBranch}>
                         <input
                             type="text"
-                            placeholder="Ciudad (Ej: DUBAI)"
+                            placeholder="City (Ex: DUBAI)"
                             className="admin-input"
                             value={newBranch.city}
                             onChange={e => setNewBranch({...newBranch, city: e.target.value})}
                             required
                         />
                         <textarea
-                            placeholder="Descripción..."
+                            placeholder="Description..."
                             className="admin-textarea"
                             value={newBranch.description}
                             onChange={e => setNewBranch({...newBranch, description: e.target.value})}
@@ -148,7 +230,7 @@ const ManageBranches = () => {
                         />
                         <input
                             type="text"
-                            placeholder="Detalles (Dirección...)"
+                            placeholder="Details (Address, Phone...)"
                             className="admin-input"
                             value={newBranch.details}
                             onChange={e => setNewBranch({...newBranch, details: e.target.value})}
@@ -157,7 +239,7 @@ const ManageBranches = () => {
 
                         <div className="file-input-wrapper">
                             <label style={{display:'block', marginBottom:'5px', color:'#aaa'}}>
-                                {editingId ? 'Cambiar Imagen (Opcional):' : 'Imagen:'}
+                                {editingId ? 'Change Image:' : 'Location Image:'}
                             </label>
                             <input
                                 id="file-upload"
@@ -168,15 +250,15 @@ const ManageBranches = () => {
                             />
                         </div>
 
-                        <button type="submit" className="save-btn" disabled={loading}>
-                            {loading ? 'Guardando...' : (editingId ? 'Actualizar Sede' : 'Publicar Sede')}
+                        <button type="submit" className="save-btn" disabled={loadingBranches}>
+                            {loadingBranches ? 'Saving...' : (editingId ? 'Update Location': 'Add Location')}
                         </button>
                     </form>
                 </div>
 
-                {/* Lista */}
+                {/* Lista Visual */}
                 <div className="list-section">
-                    <h2>Sedes Activas</h2>
+                    <h2>Active Locations ({branches.length})</h2>
                     <div className="minerals-list">
                         {branches.map(branch => (
                             <div key={branch.id} className="mineral-item-admin">
@@ -190,8 +272,8 @@ const ManageBranches = () => {
                                     <p className="small-text">{branch.details}</p>
                                 </div>
                                 <div className="actions">
-                                    <button onClick={() => handleEdit(branch)} className="edit-btn">Editar</button>
-                                    <button onClick={() => handleDelete(branch.id)} className="delete-btn">Eliminar</button>
+                                    <button onClick={() => handleEditBranch(branch)} className="edit-btn">Edit</button>
+                                    <button onClick={() => handleDelete(branch.id)} className="delete-btn">Delete</button>
                                 </div>
                             </div>
                         ))}

@@ -5,7 +5,7 @@ import { useConfig } from '../context/ConfigContext.jsx';
 const LegalPage = ({ id, title }) => {
     const { texts } = useConfig();
 
-    const content = texts?.legal?.[id] || "<p>Contenido no disponible. </p>";
+    const content = texts?.legal?.[id] || "<p>Content not available. </p>";
 
     return (
         <div className="legal-container">

@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Dashboard.css';
 import { Palette, Image, LogOut, Globe, Gem, Briefcase, Users} from 'lucide-react';
+import {CgPassword} from "react-icons/cg";
+import {PiPassword} from "react-icons/pi";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -16,49 +18,62 @@ const Dashboard = () => {
         navigate('/admin/content', { state: { initialTab: tabName } });
     };
 
+    {/* const handleChangePassword = () => {
+        const userId = localStorage.getItem('adminUserId');
+        if (userId) {
+            navigate('/admin/change-password');
+        } else {
+            alert('User ID not found. Please log in again.');
+            navigate('/admin/login');
+        }
+    }*/}
+
     const sections = [
         {
+            id: 'content',
+            title: 'Landing Page Manager',
+            description: 'Hero, Services, Branches...',
+            icon: <Image size={40} />,
+            isDirectLink: true,
+            path: '/admin/dashboard/landing-page'
+        },
+        {
             id: 'minerals',
-            title: 'Gestor de Minerales',
-            description: 'Actualiza el catálogo de minerales.',
+            title: 'Minerals Manager',
+            description: 'Update the minerals catalog.',
             icon: <Gem size={40} />,
             isDirectLink: true,
             path: '/admin/catalog'
         },
         {
-            id: 'branches',
-            title: 'Gestor de Sedes',
-            description: 'Añade o edita las sedes globales (Branches).',
-            icon: <Globe size={40} />,
-            isDirectLink: true,
-            path: '/admin/branches'
-        },
-        {
-            id: 'services',
-            title: 'Gestor de Servicios',
-            description: 'Edita los servicios ofrecidos (Importación/Logística).',
+            id: 'blog',
+            title: 'Blog Manager',
+            description: 'Create and edit blog posts.',
             icon: <Briefcase size={40} />,
             isDirectLink: true,
-            path: '/admin/services'
+            path: '/admin/blog'
         },
         {
             id: 'users',
-            title: 'Gestor de Usuarios',
-            description: 'Añade administradores y gestiona roles.',
+            title: 'User Manager',
+            description: 'Add admins and manage roles.',
             icon: <Users size={40} />,
             isDirectLink: true,
             path: '/admin/users'
-        },
+        }
     ];
 
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
-                <h1>Panel de Control</h1>
-                <p>Bienvenido al sistema de gestión de ITS-Stones</p>
+                <h1>Control Panel</h1>
+                <p>Welcome to the ITS-Stones management system</p>
                 <button onClick={handleLogout} className="logout-button">
-                    <LogOut size={18} style={{marginRight: '8px'}}/> Cerrar Sesión
+                    <LogOut size={18} style={{marginRight: '8px'}}/> Logout
                 </button>
+                {/* <button onClick={handleChangePassword} className="changepassword-button">
+                    <PiPassword size={18} style={{marginRight: '8px'}}/> Change Password
+                </button> */}
             </div>
 
             <div className="dashboard-grid">
@@ -66,7 +81,6 @@ const Dashboard = () => {
                     <div
                         key={section.id}
                         className="dashboard-card"
-                        // 3. CORREGIDO: LÓGICA PARA DECIDIR SI ES TAB O RUTA DIRECTA
                         onClick={() => {
                             if (section.isDirectLink) {
                                 navigate(section.path);
@@ -78,14 +92,14 @@ const Dashboard = () => {
                         <div className="card-icon">{section.icon}</div>
                         <h3>{section.title}</h3>
                         <p>{section.description}</p>
-                        <span className="card-arrow">Gestionar →</span>
+                        <span className="card-arrow">Manage →</span>
                     </div>
                 ))}
             </div>
 
             <div className="dashboard-footer">
                 <a href="/" className="back-to-site">
-                    Ir al Sitio Web
+                    Go to Website
                 </a>
             </div>
         </div>

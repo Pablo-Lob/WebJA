@@ -20,6 +20,9 @@ import ManageServices from "./pages/admin/ManageServices.jsx";
 import ManageAdmins from "./pages/admin/ManageAdmins.jsx";
 import ChangePassword from "./pages/admin/ChangePassword.jsx";
 import CookieConsent from "./components/cookieConsent/CookieConsent.jsx";
+import ManageLanding from "./pages/admin/ManageLanding.jsx";
+import ManageHero from "./pages/admin/ManageHero.jsx";
+import ManageAbout from "./pages/admin/ManageAbout.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -97,6 +100,12 @@ function App () {
                             </ProtectedRoute>
                         } />
 
+                        <Route path="/admin/dashboard/landing-page" element={
+                            <ProtectedRoute>
+                                <ManageLanding />
+                            </ProtectedRoute>
+                        } />
+
                         <Route path="/admin/content" element={
                             <ProtectedRoute>
                                 <ManageContent />
@@ -109,18 +118,6 @@ function App () {
                             </ProtectedRoute>
                         } />
 
-                        <Route path="/admin/branches" element={
-                            <ProtectedRoute>
-                                <ManageBranches />
-                            </ProtectedRoute>
-                        } />
-
-                        <Route path="/admin/services" element={
-                            <ProtectedRoute>
-                                <ManageServices />
-                            </ProtectedRoute>
-                        } />
-
                         <Route path="/admin/change-password" element={
                             <ProtectedRoute>
                                 <ChangePassword />
@@ -130,6 +127,30 @@ function App () {
                         <Route path="/admin/users" element={
                             <ProtectedRoute>
                                 <ManageAdmins/>
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="/admin/hero" element={
+                            <ProtectedRoute>
+                                <ManageHero/>
+                            </ProtectedRoute>
+                        }  />
+
+                        <Route path="/admin/About-us" element={
+                            <ProtectedRoute>
+                                <ManageAbout />
+                            </ProtectedRoute>
+                        }  />
+
+                        <Route path="/admin/branches" element={
+                            <ProtectedRoute>
+                                <ManageBranches />
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="/admin/services" element={
+                            <ProtectedRoute>
+                                <ManageServices />
                             </ProtectedRoute>
                         } />
 

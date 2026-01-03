@@ -35,15 +35,15 @@ export const ConfigProvider = ({ children }) => {
 
                     const newTexts = {
                         legal: {
-                            privacy: data.find(item => item.key === 'privacy_policy')?.value || "<p>Contenido no disponible. </p>",
-                            terms: data.find(item => item.key === 'terms_of_service')?.value || "<p>Contenido no disponible. </p>",
-                            cookies: data.find(item => item.key === 'cookie_policy')?.value || "<p>Contenido no disponible.</p>"
+                            privacy: data.find(item => item.key === 'privacy_policy')?.value || "<p>Content not available. </p>",
+                            terms: data.find(item => item.key === 'terms_of_service')?.value || "<p>Content not available. </p>",
+                            cookies: data.find(item => item.key === 'cookie_policy')?.value || "<p>Content not available. </p>"
                         }
                     };
                     setTexts(newTexts);
                 }
             } catch (error) {
-                console.error("Error cargando base de datos:", error);
+                console.error("Error loading database:", error);
             } finally {
                 setLoading(false);
             }

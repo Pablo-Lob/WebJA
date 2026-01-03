@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Save, Home, BookOpen, Phone, FileText, ArrowLeft, Globe } from 'lucide-react';
+import { Save, Home, BookOpen, Phone, FileText, ArrowLeft, Info } from 'lucide-react';
 import './styles/ManageContent.css';
 
 const ManageContent = () => {
@@ -9,7 +9,6 @@ const ManageContent = () => {
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('home');
 
-    // URL de tu API para la tabla de configuración
     const API_URL = 'https://itsstonesfzco.com/api.php?table=siteConfig';
 
     // 1. Cargar Configuración
@@ -22,19 +21,17 @@ const ManageContent = () => {
                     setConfig(Array.isArray(data) ? data : []);
                 }
             } catch (error) {
-                console.error("Error cargando configuración:", error);
+                console.error("Error loading config:", error);
             }
         };
         fetchConfig();
     }, []);
 
-    // Helper: Obtener valor de una clave
     const getValue = (key) => {
         const item = config.find(c => c.key === key);
         return item ? item.value : '';
     };
 
-    // Helper: Actualizar estado local
     const handleChange = (key, value) => {
         setConfig(prev => {
             const exists = prev.find(item => item.key === key);
@@ -45,36 +42,27 @@ const ManageContent = () => {
         });
     };
 
-    // 2. Guardar Todo
     const handleSave = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         try {
-            // Filtramos valores vacíos o nulos para limpiar
             const dataToSend = config.filter(item => item.value !== null);
-
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataToSend)
             });
-
             const result = await response.json();
-            if (result.status === 'success') {
-                alert("¡Contenido actualizado correctamente!");
-            } else {
-                alert("Error al guardar: " + (result.error || "Desconocido"));
-            }
+            if (result.status === 'success') alert("Content updated successfully!");
+            else alert("Error saving: " + (result.error || "Unknown error"));
         } catch (error) {
             console.error(error);
-            alert("Error de conexión");
+            alert("Connection error");
         } finally {
             setLoading(false);
         }
     };
 
-    // Renderizar inputs de forma limpia
     const renderInput = (label, key, placeholder, isTextarea = false) => (
         <div className="form-group">
             <label>{label}</label>
@@ -100,91 +88,87 @@ const ManageContent = () => {
         <div className="manage-container">
             <div className="manage-header">
                 <div style={{display:'flex', alignItems:'center', gap:'15px'}}>
-                    <button onClick={() => navigate('/admin/dashboard')} className="back-link" style={{background:'none', border:'none', cursor:'pointer', fontSize:'1rem'}}>
-                        <ArrowLeft size={20}/> Volver
+                    <button onClick={() => navigate('/admin/landing')} className="back-link" style={{background:'none', border:'none', cursor:'pointer', fontSize:'1rem'}}>
+                        <ArrowLeft size={20}/> Back to Landing
                     </button>
-                    <h1>Editor de Contenidos</h1>
+                    <h1>General Content Editor</h1>
                 </div>
                 <button onClick={handleSave} className="save-button" style={{width:'auto', marginTop:0, display:'flex', alignItems:'center', gap:'10px'}} disabled={loading}>
-                    <Save size={20} /> {loading ? 'Guardando...' : 'Guardar Cambios'}
+                    <Save size={20} /> {loading ? 'Saving...' : 'Save Changes'}
                 </button>
             </div>
 
-            {/* Pestañas de Navegación */}
+            {/* Pestañas */}
             <div className="manage-tabs">
                 <button className={`tab-button ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>
-                    <Home size={18} /> Inicio (Hero)
+                    <Home size={18} /> Hero (Home)
+                </button>
+                <button className={`tab-button ${activeTab === 'about' ? 'active' : ''}`} onClick={() => setActiveTab('about')}>
+                    <Info size={18} /> About Us
                 </button>
                 <button className={`tab-button ${activeTab === 'mission' ? 'active' : ''}`} onClick={() => setActiveTab('mission')}>
-                    <BookOpen size={18} /> Misión
+                    <BookOpen size={18} /> Mission
                 </button>
                 <button className={`tab-button ${activeTab === 'contact' ? 'active' : ''}`} onClick={() => setActiveTab('contact')}>
-                    <Phone size={18} /> Contacto
+                    <Phone size={18} /> Contact Info
                 </button>
                 <button className={`tab-button ${activeTab === 'legal' ? 'active' : ''}`} onClick={() => setActiveTab('legal')}>
-                    <FileText size={18} /> Legal
-                </button>
-                <button className={`tab-button ${activeTab === 'sections' ? 'active' : ''}`} onClick={() => setActiveTab('sections')}>
-                    <Globe size={18} /> Secciones (About/Branches)
+                    <FileText size={18} /> Legal Pages
                 </button>
             </div>
 
-            {/* Contenido del Formulario */}
+            {/* Contenido */}
             <div className="manage-content">
                 <form onSubmit={handleSave} className="content-section">
 
                     {activeTab === 'home' && (
                         <>
-                            <h2>Sección Principal (Hero)</h2>
-                            {renderInput("Título Principal", "hero_title", "Ej: ITS-STONES")}
-                            {renderInput("Subtítulo", "hero_subtitle", "Ej: Precious Metals & Gems Import")}
-                            {renderInput("Texto Descriptivo", "hero_text", "Descripción corta del banner...")}
-                            {renderInput("Texto del Botón", "hero_cta_text", "Ej: Contact Us")}
-                            <p style={{fontSize:'0.9rem', color:'#aaa', marginTop:'10px'}}>* La imagen del banner se gestiona subiendo un archivo llamado 'banner.webp' en la carpeta assets o vía FTP por ahora.</p>
+                            <h2>Hero Section</h2>
+                            <p style={{color:'#aaa', marginBottom:'20px'}}>Content for the main banner.</p>
+                            {renderInput("Main Title", "hero_title", "Ex: ITS-STONES")}
+                            {renderInput("Subtitle", "hero_subtitle", "Ex: Precious Metals & Gems Import")}
+                            {renderInput("Description Text", "hero_text", "Short description...", true)}
+                            {renderInput("Button Text", "hero_cta_text", "Ex: Contact Us")}
+                        </>
+                    )}
+
+                    {activeTab === 'about' && (
+                        <>
+                            <h2>About Us Section</h2>
+                            <p style={{color:'#aaa', marginBottom:'20px'}}>Introduction text about the company.</p>
+                            {renderInput("Section Title", "about_title", "Ex: About Us")}
+                            {renderInput("Main Text", "about_text", "Company history and description...", true)}
                         </>
                     )}
 
                     {activeTab === 'mission' && (
                         <>
-                            <h2>Nuestra Misión</h2>
-                            {renderInput("Título", "mission_title", "Ej: Our Mission")}
-                            {renderInput("Párrafo Superior", "mission_text_top", "Texto principal de la misión...", true)}
-                            {renderInput("Párrafo Inferior", "mission_text_bottom", "Texto secundario o visión...", true)}
+                            <h2>Mission & Vision</h2>
+                            {renderInput("Section Title", "mission_title", "Ex: Our Mission")}
+                            {renderInput("Top Paragraph", "mission_text_top", "Primary mission statement...", true)}
+                            {renderInput("Bottom Paragraph", "mission_text_bottom", "Secondary vision statement...", true)}
                         </>
                     )}
 
                     {activeTab === 'contact' && (
                         <>
-                            <h2>Datos de Contacto (Pie de página)</h2>
-                            {renderInput("Correo Electrónico", "contact_email", "info@itsstonesfzco.com")}
-                            {renderInput("Teléfono", "contact_phone", "+971 50 ...")}
-                            {renderInput("Dirección Física", "contact_address", "Dubai Airport Free Zone...")}
-                            {renderInput("Texto Copyright", "footer_copyright", "© 2025 ITS Stones...")}
+                            <h2>Contact Information</h2>
+                            <p style={{color:'#aaa', marginBottom:'20px'}}>Used in Footer and Contact Page.</p>
+                            {renderInput("Email Address", "contact_email", "info@itsstonesfzco.com")}
+                            {renderInput("Phone Number", "contact_phone", "+971 50 ...")}
+                            {renderInput("Address", "contact_address", "Dubai Airport Free Zone...")}
+                            {renderInput("Copyright Text", "footer_copyright", "© 2025 ITS Stones...")}
                         </>
                     )}
 
                     {activeTab === 'legal' && (
                         <>
-                            <h2>Páginas Legales (Admite HTML básico)</h2>
-                            <p style={{marginBottom:'20px', color:'#ccc'}}>Puedes usar etiquetas como <code>&lt;p&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;strong&gt;</code>.</p>
-                            {renderInput("Política de Privacidad", "privacy_policy", "Contenido HTML...", true)}
-                            {renderInput("Términos y Condiciones", "terms_of_service", "Contenido HTML...", true)}
-                            {renderInput("Política de Cookies", "cookie_policy", "Contenido HTML...", true)}
-                            {renderInput("Banner de Cookies (Texto corto)", "cookie_banner_text", "Utilizamos cookies para...", true)}
-                        </>
-                    )}
-
-                    {activeTab === 'sections' && (
-                        <>
-                            <h2>Sección Branches (Sucursales)</h2>
-                            {renderInput("Título Principal", "branches_title", "Ej: Our Global Presence")}
-                            {renderInput("Subtítulo", "branches_subtitle", "Ej: Strategically located to serve...")}
-
-                            <hr style={{margin:'20px 0', borderColor:'rgba(255,255,255,0.1)'}}/>
-
-                            <h2>Sección About Us</h2>
-                            {renderInput("Título About", "about_title", "Ej: About Us")}
-                            {renderInput("Texto About", "about_text", "Descripción corta...", true)}
+                            <h2>Legal Documents</h2>
+                            <p style={{marginBottom:'20px', color:'#ccc'}}>HTML tags supported.</p>
+                            {renderInput("Privacy Policy", "privacy_policy", "Paste HTML...", true)}
+                            {renderInput("Terms & Conditions", "terms_of_service", "Paste HTML...", true)}
+                            {renderInput("Cookie Policy", "cookie_policy", "Paste HTML...", true)}
+                            {renderInput("Cookie Banner", "cookie_banner_text", "Short notice text...", true)}
                         </>
                     )}
 
