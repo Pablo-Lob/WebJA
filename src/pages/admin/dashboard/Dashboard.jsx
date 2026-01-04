@@ -1,83 +1,91 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
-import { Palette, Image, LogOut, Globe, Gem, Briefcase, Users} from 'lucide-react';
-import {CgPassword} from "react-icons/cg";
-import {PiPassword} from "react-icons/pi";
+import { Image, LogOut, Globe, Gem, Briefcase, Users } from 'lucide-react';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const [role, setRole] = useState('editor'); // Por defecto 'editor' para seguridad
+
+    useEffect(() => {
+        // Leer el rol guardado al cargar
+        const storedRole = localStorage.getItem('adminRole');
+        if (storedRole) {
+            setRole(storedRole);
+        }
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUserId');
+        localStorage.removeItem('adminRole');
         navigate('/admin/login');
     };
 
-    // Función para navegar a la pestaña específica
     const goToTab = (tabName) => {
         navigate('/admin/content', { state: { initialTab: tabName } });
     };
 
-    {/* const handleChangePassword = () => {
-        const userId = localStorage.getItem('adminUserId');
-        if (userId) {
-            navigate('/admin/change-password');
-        } else {
-            alert('User ID not found. Please log in again.');
-            navigate('/admin/login');
-        }
-    }*/}
-
-    const sections = [
+    // Definimos todas las secciones
+    const allSections = [
         {
-            id: 'content',
-            title: 'Landing Page Manager',
-            description: 'Hero, Services, Branches...',
+            id: 'landing',
+            title: 'Gestor Landing Page',
+            description: 'Hero, Servicios, Sedes...',
             icon: <Image size={40} />,
             isDirectLink: true,
-            path: '/admin/dashboard/landing-page'
+            path: '/admin/dashboard/landing-page',
+            requiredRole: 'editor' // Todos pueden ver esto
         },
         {
             id: 'minerals',
-            title: 'Minerals Manager',
-            description: 'Update the minerals catalog.',
+            title: 'Gestor de Minerales',
+            description: 'Actualiza el catálogo de minerales.',
             icon: <Gem size={40} />,
             isDirectLink: true,
-            path: '/admin/catalog'
+            path: '/admin/catalog',
+            requiredRole: 'editor'
         },
         {
             id: 'blog',
-            title: 'Blog Manager',
-            description: 'Create and edit blog posts.',
+            title: 'Gestor de Blog',
+            description: 'Publicar noticias (Próximamente).',
             icon: <Briefcase size={40} />,
             isDirectLink: true,
-            path: '/admin/blog'
+            path: '/admin/blog',
+            requiredRole: 'editor'
         },
         {
             id: 'users',
-            title: 'User Manager',
-            description: 'Add admins and manage roles.',
+            title: 'Gestor de Usuarios',
+            description: 'Añadir admins y permisos.',
             icon: <Users size={40} />,
             isDirectLink: true,
-            path: '/admin/users'
+            path: '/admin/users',
+            requiredRole: 'superadmin' // <--- SOLO SUPERADMIN
         }
     ];
+
+    // Filtramos las secciones según el rol del usuario
+    const visibleSections = allSections.filter(section => {
+        if (section.requiredRole === 'superadmin' && role !== 'superadmin') {
+            return false; // Ocultar si requiere superadmin y no lo eres
+        }
+        return true;
+    });
 
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
-                <h1>Control Panel</h1>
-                <p>Welcome to the ITS-Stones management system</p>
+                <h1>Panel de Control</h1>
+                <p>Bienvenido al sistema de gestión ITS-Stones ({role === 'superadmin' ? 'Super Admin' : 'Editor'})</p>
                 <button onClick={handleLogout} className="logout-button">
-                    <LogOut size={18} style={{marginRight: '8px'}}/> Logout
+                    <LogOut size={18} style={{marginRight: '8px'}}/> Cerrar Sesión
                 </button>
-                {/* <button onClick={handleChangePassword} className="changepassword-button">
-                    <PiPassword size={18} style={{marginRight: '8px'}}/> Change Password
-                </button> */}
             </div>
 
             <div className="dashboard-grid">
-                {sections.map((section) => (
+                {visibleSections.map((section) => (
                     <div
                         key={section.id}
                         className="dashboard-card"
@@ -92,14 +100,14 @@ const Dashboard = () => {
                         <div className="card-icon">{section.icon}</div>
                         <h3>{section.title}</h3>
                         <p>{section.description}</p>
-                        <span className="card-arrow">Manage →</span>
+                        <span className="card-arrow">Gestionar →</span>
                     </div>
                 ))}
             </div>
 
             <div className="dashboard-footer">
                 <a href="/" className="back-to-site">
-                    Go to Website
+                    Ir al Sitio Web
                 </a>
             </div>
         </div>

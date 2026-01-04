@@ -24,6 +24,8 @@ import ManageLanding from "./pages/admin/manage/ManageLanding.jsx";
 import ManageHero from "./pages/admin/manage/ManageHero.jsx";
 import ManageAbout from "./pages/admin/manage/ManageAbout.jsx";
 import ManageMission from "./pages/admin/manage/ManageMission.jsx";
+import ManageBlog from "./pages/admin/manage/ManageBlog.jsx";
+import Blog from "./pages/Blog.jsx";
 
 function KeyboardShortcuts() {
     const navigate = useNavigate();
@@ -88,9 +90,10 @@ function App () {
                             <Route path="/privacy-policy" element={<LegalPage id="privacy" title="Politica de Privacidad" />} />
                             <Route path="/terms-policy" element={<LegalPage id="terms" title="Terminos y Condiciones" />} />
                             <Route path="/cookie-policy" element={<LegalPage id="cookies" title="Politica de Cookies" />} />
-
                             {/* Catalogo */}
                             <Route path="/catalog" element={<Catalog />} />
+                            {/* Blog */}
+                            <Route path="/blog" element={<Blog />} />
                         </Route>
 
                         <Route path="/admin/login" element={<Login />} />
@@ -161,6 +164,11 @@ function App () {
                             </ProtectedRoute>
                         } />
 
+                        <Route path="/admin/blog" element={
+                            <ProtectedRoute>
+                                <ManageBlog/>
+                            </ProtectedRoute>
+                        } />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>

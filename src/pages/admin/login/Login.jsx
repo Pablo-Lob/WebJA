@@ -9,7 +9,6 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    // Asegúrate de que esta URL sea correcta en producción
     const LOGIN_URL = 'https://itsstonesfzco.com/login.php';
 
     const handleSubmit = async (e) => {
@@ -29,28 +28,28 @@ const Login = () => {
 
             const result = await response.json();
 
-            // Verificamos result.status === 'success' (como lo envía el PHP)
             if (result.status === 'success') {
-
-                // Guardamos el token real
+                // 1. Guardar Token e ID
                 localStorage.setItem('adminToken', result.token);
-
-                // Guardamos el ID para posibles cambios de contraseña
                 localStorage.setItem('adminUserId', result.user.id);
 
-                // Verificamos si está obligado a cambiar contraseña
-                if (result.user.must_change_password) {
+                // 2. IMPORTANTE: Guardar el ROL para usarlo en el Dashboard
+                // (Asegúrate de que tu login.php devuelva 'role' dentro de 'user')
+                localStorage.setItem('adminRole', result.user.role || 'editor');
+
+                // 3. Lógica de Cambio de Contraseña (ACTIVADA)
+                // Si la base de datos dice que debe cambiarla, lo mandamos allí
+                if (result.user.must_change_password == 1) {
                     navigate('/admin/change-password');
                 } else {
                     navigate('/admin/dashboard');
                 }
             } else {
-                // Si el PHP devuelve error (status: "error")
-                setError(result.message || 'Invalid credentials');
+                setError(result.message || 'Credenciales incorrectas');
             }
         } catch (error) {
             console.error("Error login:", error);
-            setError('Server connection error');
+            setError('Error de conexión con el servidor');
         } finally {
             setLoading(false);
         }
@@ -60,15 +59,15 @@ const Login = () => {
         <div className="login-container">
             <div className="login-card">
                 <div className="login-header">
-                    <h1>Admin Login</h1>
-                    <p>Access the administration panel</p>
+                    <h1>Panel de Administración</h1>
+                    <p>Acceso seguro ITS-Stones</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="login-form">
                     {error && <div className="login-error">{error}</div>}
 
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="email">Correo Electrónico</label>
                         <input
                             type="email"
                             id="email"
@@ -80,24 +79,24 @@ const Login = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Contraseña</label>
                         <input
                             type="password"
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Enter your password"
+                            placeholder="Introduce tu contraseña"
                             required
                         />
                     </div>
 
                     <button type="submit" className="login-button" disabled={loading}>
-                        {loading ? 'Verifying...' : 'Login'}
+                        {loading ? 'Verificando...' : 'Entrar'}
                     </button>
                 </form>
 
                 <div className="login-footer">
-                    <a href="/public">← Back to site</a>
+                    <a href="/">← Volver a la web</a>
                 </div>
             </div>
         </div>

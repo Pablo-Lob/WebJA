@@ -1,0 +1,132 @@
+.admin-blog-container {
+    padding: 30px;
+    background-color: #0f111a; /* Fondo oscuro admin */
+    min-height: 100vh;
+    color: white;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 20px;
+}
+
+.highlight {
+    color: #00f3ff;
+}
+
+/* Botones Neon */
+.btn-neon {
+    background: linear-gradient(90deg, #00f3ff, #0066ff);
+    border: none;
+    padding: 10px 25px;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+    transition: 0.3s;
+}
+
+.btn-neon:hover {
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid #555;
+    color: #aaa;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Tabla Admin */
+.neon-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.neon-table th {
+    background: rgba(0, 243, 255, 0.1);
+    color: #00f3ff;
+    padding: 15px;
+    text-align: left;
+}
+
+.neon-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-badge.published {
+    background: rgba(10, 255, 10, 0.1);
+    color: #0aff0a;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(10, 255, 10, 0.3);
+}
+
+/* Formulario */
+.admin-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.form-section {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.seo-box {
+    border: 1px solid rgba(188, 19, 254, 0.3);
+    background: rgba(188, 19, 254, 0.05);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea,
+.dark-select {
+    width: 100%;
+    background: #050505;
+    border: 1px solid #333;
+    padding: 12px;
+    color: white;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #00f3ff;
+    box-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+}
+
+.seo-help {
+    font-size: 0.8rem;
+    color: #ccc;
+    margin-bottom: 15px;
+    font-style: italic;
+}
