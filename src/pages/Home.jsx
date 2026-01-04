@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'; // <--- Importamos useState
 import { useLocation } from 'react-router-dom';
-// NOTA: SI habías importado 'react-scroll-parallax', BORRA ESA LÍNEA.
 import './styles/Home.css';
 import ShineButton from '../components/shineButton/ShineButton.jsx';
 import ContactForm from "../components/contactForm/ContactForm.jsx";
@@ -51,11 +50,19 @@ function Home() {
     // Si quieres MÁS movimiento, pon 0.5 o 0.6. Si quieres MENOS, pon 0.3.
     const parallaxSpeed = 0.4;
 
+    // Variables para usar en SEO y en el render
+    const heroTitle = getValue('hero_title', 'ITS-STONES');
+    const heroSubtitle = getValue('hero_subtitle', 'Precious Metals & Gems Import');
+    const heroText = getValue('hero_text', 'Discover the difference of trading with integrity and excellence.');
+    const heroImage = getValue('hero_image', banner);
+
+
     return (
         <>
             {/* SEO */}
-            <title>{getValue('hero_title', 'ITS-STONES')} | Inicio</title>
-            <meta name="description" content={getValue('hero_text', 'Líderes en importación...')} />
+            <title>Home | {heroTitle} - {heroSubtitle}</title>
+            <meta name="description" content={heroText.substring(0, 160)} />
+            <link rel="preload" as="image" href={heroImage} />
 
             {/* Secction HERO */}
             <section id="home" className="hero-home">
@@ -64,9 +71,8 @@ function Home() {
                         src={getValue('hero_image', banner)}
                         alt="ITS-STONES Banner"
                         style={{
-                            // Aquí está la magia sutil:
                             transform: `translateY(${offsetY * parallaxSpeed}px)`,
-                            willChange: 'transform' // Optimización para el navegador
+                            willChange: 'transform'
                         }}
                     />
                 </div>
