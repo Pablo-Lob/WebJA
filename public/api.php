@@ -107,7 +107,7 @@ $baseUrl = $protocol . "://" . $_SERVER['HTTP_HOST'] . "/" . $uploadDir;
 $method = $_SERVER['REQUEST_METHOD'];
 
 // ==========================================
-//  LÓGICA SITE CONFIG (Dinámico)
+//  LÓGICA SITE CONFIG
 // ==========================================
 if ($table === 'siteConfig') {
     if ($method === 'GET') {
@@ -116,48 +116,42 @@ if ($table === 'siteConfig') {
         exit;
     }
     if ($method === 'POST') {
-        // A) Subida de imágenes individuales (logo, banner, about_image)
-        if (isset($_FILES['image']) && isset($_POST['key'])) {
-            $key = $_POST['key'];
-            if ($_FILES['image']['error'] === 0) {
-                // Validación básica de tipo de archivo
-                $finfo = new finfo(FILEINFO_MIME_TYPE);
-                $mime = $finfo->file($_FILES['image']['tmp_name']);
-                if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'])) {
-                    echo json_encode(["error" => "Formato no válido"]); exit;
-                }
-
-                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                $filename = $key . '_' . time() . '.' . $ext;
-
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $filename)) {
-                    $imageUrl = $baseUrl . $filename;
-                    $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute([$key, $imageUrl]);
-                    echo json_encode(["status" => "success", "url" => $imageUrl]);
-                } else {
-                    http_response_code(500);
-                    echo json_encode(["error" => "Error al guardar archivo"]);
-                }
-            }
-            exit;
-        }
-
-        // B) Guardado de Textos (JSON masivo)
-        $input = json_decode(file_get_contents('php://input'), true);
-        if (!$input && !empty($_POST)) $input = $_POST;
-        if (is_array($input)) {
+        // 1. Guardar Textos (Cualquier campo de texto que venga en el FormData)
+        foreach ($_POST as $key => $value) {
             $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (:key, :value) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
             $stmt = $pdo->prepare($sql);
-            foreach ($input as $item) {
-                if (isset($item['key']) && isset($item['value'])) {
-                    $stmt->execute([':key' => $item['key'], ':value' => $item['value']]);
+            $stmt->execute([':key' => $key, ':value' => $value]);
+        }
+
+        // 2. Guardar Archivos (Detecta hero_image, mission_image, about_image...)
+        if (!empty($_FILES)) {
+            foreach ($_FILES as $key => $file) {
+                if ($file['error'] === 0) {
+                    // Validar tipo MIME
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $mime = $finfo->file($file['tmp_name']);
+
+                    if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'])) {
+                        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+
+                        // Usamos el nombre del campo (ej: hero_image) para nombrar el archivo
+                        $filename = $key . '_' . time() . '.' . $ext;
+
+                        if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
+                            $imageUrl = $baseUrl . $filename;
+
+                            // Guardamos la URL en la BD usando la misma clave
+                            $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute([$key, $imageUrl]);
+                        }
+                    }
                 }
             }
-            echo json_encode(["status" => "success"]);
-            exit;
         }
+
+        echo json_encode(["status" => "success"]);
+        exit;
     }
     exit;
 }
