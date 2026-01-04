@@ -1,8 +1,9 @@
 .admin-blog-container {
-    padding: 30px;
-    background-color: #0f111a; /* Fondo oscuro admin */
+    padding: 40px;
+    background-color: #121212; /* Fondo muy oscuro, casi negro */
     min-height: 100vh;
-    color: white;
+    color: #e0e0e0;
+    font-family: 'Rajdhani', sans-serif;
 }
 
 .admin-header {
@@ -10,88 +11,138 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 40px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2); /* Gold dim */
     padding-bottom: 20px;
 }
 
-.highlight {
-    color: #00f3ff;
+.admin-header h2 {
+    font-weight: 600;
+    color: #fff;
 }
 
-/* Botones Neon */
-.btn-neon {
-    background: linear-gradient(90deg, #00f3ff, #0066ff);
+.highlight {
+    color: var(--gold-primary); /* #d4af37 */
+}
+
+/* Botones */
+.btn-gold {
+    background-color: var(--gold-primary);
+    color: #000;
     border: none;
     padding: 10px 25px;
-    color: white;
-    font-weight: bold;
+    font-weight: 700;
     border-radius: 4px;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
     transition: 0.3s;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
 
-.btn-neon:hover {
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
-    transform: translateY(-2px);
+.btn-gold:hover {
+    background-color: #b8860b; /* Gold hover */
+    transform: translateY(-1px);
 }
 
-.btn-ghost {
+.btn-secondary {
     background: transparent;
-    border: 1px solid #555;
-    color: #aaa;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #ccc;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-secondary:hover {
+    border-color: #fff;
+    color: #fff;
+}
+
+.btn-upload {
+    background: #2a2a2a;
+    border: 1px dashed #555;
+    color: #aaa;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 5px;
+    display: inline-block;
 }
 
 /* Tabla Admin */
-.neon-table {
+.data-table-wrapper {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.admin-table {
     width: 100%;
     border-collapse: collapse;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
-    overflow: hidden;
 }
 
-.neon-table th {
-    background: rgba(0, 243, 255, 0.1);
-    color: #00f3ff;
-    padding: 15px;
+.admin-table th {
     text-align: left;
+    padding: 15px;
+    color: var(--gold-secondary);
+    border-bottom: 2px solid rgba(255,255,255,0.05);
+    font-size: 1rem;
+    text-transform: uppercase;
 }
 
-.neon-table td {
+.admin-table td {
     padding: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #ccc;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .status-badge.published {
-    background: rgba(10, 255, 10, 0.1);
-    color: #0aff0a;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    border: 1px solid rgba(10, 255, 10, 0.3);
+    background: rgba(10, 255, 10, 0.15);
+    color: #5eff5e;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-right: 10px;
+    transition: transform 0.2s;
+}
+
+.action-btn:hover {
+    transform: scale(1.2);
 }
 
 /* Formulario */
 .admin-form {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2fr 1fr; /* Columna ancha contenido, estrecha sidebar */
     gap: 30px;
 }
 
 .form-section {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 25px;
+    background: #1a1a1a;
+    padding: 30px;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.seo-box {
-    border: 1px solid rgba(188, 19, 254, 0.3);
-    background: rgba(188, 19, 254, 0.05);
+.form-section h4 {
+    margin-top: 0;
+    color: var(--gold-secondary);
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px;
 }
 
 .form-group {
@@ -103,30 +154,39 @@
     margin-bottom: 8px;
     color: #aaa;
     font-size: 0.9rem;
+    font-weight: 600;
 }
 
-.form-group input,
+.form-group input[type="text"],
 .form-group textarea,
-.dark-select {
+.admin-select {
     width: 100%;
-    background: #050505;
+    background: #0d0d0d;
     border: 1px solid #333;
     padding: 12px;
     color: white;
     border-radius: 4px;
     font-family: inherit;
+    font-size: 1rem;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #00f3ff;
-    box-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+    border-color: var(--gold-primary);
 }
 
-.seo-help {
+.preview-img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    margin-top: 10px;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+.helper-text {
     font-size: 0.8rem;
-    color: #ccc;
-    margin-bottom: 15px;
-    font-style: italic;
+    color: #666;
+    margin-top: 5px;
 }

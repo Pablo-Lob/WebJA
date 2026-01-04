@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Save, Trash2, Shield, ArrowLeft } from 'lucide-react';
-import './ManageCatalog.css';
+import { Save, Trash2, ArrowLeft, UserPlus } from 'lucide-react';
+import './ManageCatalog.css'; // Reusing catalog styles for consistency
 
 const ManageAdmins = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
 
-    // Estado para nuevo usuario
+    // New User State
     const [newUser, setNewUser] = useState({
         email: '',
         password: '',
@@ -17,168 +16,146 @@ const ManageAdmins = () => {
 
     const API_URL = 'https://itsstonesfzco.com/api.php?table=admin_users';
 
-    // --- PROTECCIÓN DE RUTA ---
     useEffect(() => {
         const role = localStorage.getItem('adminRole');
         if (role !== 'superadmin') {
-            alert("Acceso Denegado: Se requieren permisos de Super Admin.");
-            navigate('/admin/dashboard'); // Expulsar al dashboard
+            alert("Access Denied: Super Admin permissions required.");
+            navigate('/admin/dashboard');
         } else {
-            // Solo cargamos usuarios si es superadmin
             fetchUsers();
         }
     }, [navigate]);
 
-    // 1. Cargar Usuarios
     const fetchUsers = async () => {
         try {
             const res = await fetch(`${API_URL}&t=${Date.now()}`);
             const data = await res.json();
             setUsers(Array.isArray(data) ? data : []);
         } catch (error) {
-            console.error("Error cargando usuarios:", error);
+            console.error("Error loading users:", error);
         }
     };
 
-    // 2. Crear Usuario
-    const handleSubmit = async (e) => {
+    const handleCreate = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        const formData = new FormData();
+        formData.append('action', 'create');
+        formData.append('email', newUser.email);
+        formData.append('password', newUser.password);
+        formData.append('role', newUser.role);
 
         try {
-            const formData = new FormData();
-            formData.append('action', 'create');
-            formData.append('email', newUser.email);
-            formData.append('password', newUser.password);
-            formData.append('role', newUser.role); // 'superadmin' o 'editor'
-
             const res = await fetch(API_URL, {
                 method: 'POST',
                 body: formData
             });
             const result = await res.json();
-
             if (result.status === 'success') {
-                alert('Usuario creado correctamente');
+                alert("User created successfully");
                 setNewUser({ email: '', password: '', role: 'editor' });
                 fetchUsers();
             } else {
-                alert('Error: ' + (result.error || 'Posible email duplicado'));
+                alert("Error: " + (result.error || "Could not create user"));
             }
-        } catch (error) {
-            alert('Error de conexión');
-        } finally {
-            setLoading(false);
+        } catch (err) {
+            alert("Connection error");
         }
     };
 
-    // 3. Eliminar Usuario
     const handleDelete = async (id) => {
-        // Evitar que te borres a ti mismo (opcional pero recomendado)
-        const myId = localStorage.getItem('adminUserId');
-        if (id == myId) {
-            alert("No puedes eliminar tu propia cuenta.");
-            return;
-        }
+        if (!window.confirm("Are you sure you want to delete this user?")) return;
 
-        if (window.confirm("¿Seguro que quieres eliminar este administrador?")) {
+        try {
             await fetch(`${API_URL}&id=${id}`, { method: 'DELETE' });
             fetchUsers();
+        } catch (err) {
+            alert("Error deleting user");
         }
     };
 
     return (
         <div className="manage-catalog-container">
             <div className="catalog-header">
-                <button onClick={() => navigate('/admin/dashboard')} className="back-btn-simple">
-                    <ArrowLeft size={18} style={{marginRight:'5px'}}/> Volver
+                <button className="back-btn" onClick={() => navigate('/admin/dashboard')}>
+                    <ArrowLeft size={20} />
                 </button>
-                <h1>Gestor de Usuarios (Admins)</h1>
+                <h2>Manage <span className="highlight">Administrators</span></h2>
             </div>
 
             <div className="admin-grid">
-                {/* Formulario de Creación */}
-                <div className="upload-section" style={{borderLeft:'4px solid #9b59b6'}}>
-                    <h2>Crear Nuevo Admin</h2>
-                    <form onSubmit={handleSubmit}>
+                {/* Create User Form */}
+                <div className="upload-section">
+                    <h3><UserPlus size={20} style={{marginRight:'10px', verticalAlign:'middle'}}/> Create New User</h3>
+                    <form onSubmit={handleCreate} style={{marginTop:'20px'}}>
                         <div className="form-group">
                             <label>Email</label>
                             <input
                                 type="email"
-                                placeholder="nombre@itsstones.com"
                                 className="admin-input"
                                 value={newUser.email}
                                 onChange={e => setNewUser({...newUser, email: e.target.value})}
                                 required
                             />
                         </div>
-
                         <div className="form-group">
-                            <label>Contraseña Inicial</label>
+                            <label>Password</label>
                             <input
                                 type="password"
-                                placeholder="Contraseña temporal"
                                 className="admin-input"
                                 value={newUser.password}
                                 onChange={e => setNewUser({...newUser, password: e.target.value})}
                                 required
                             />
                         </div>
-
                         <div className="form-group">
-                            <label>Rol / Permisos</label>
+                            <label>Role</label>
                             <select
                                 className="admin-input"
                                 value={newUser.role}
                                 onChange={e => setNewUser({...newUser, role: e.target.value})}
                             >
-                                <option value="superadmin">Super Admin (Acceso Total)</option>
-                                <option value="editor">Editor (Solo Contenido)</option>
+                                <option value="editor">Editor</option>
+                                <option value="superadmin">Super Admin</option>
                             </select>
                         </div>
-
-                        <button type="submit" className="save-btn" disabled={loading} style={{backgroundColor:'#8e44ad'}}>
-                            {loading ? 'Creando...' : 'Crear Usuario'}
+                        <button type="submit" className="save-btn">
+                            <Save size={18} style={{marginRight:'8px'}} /> CREATE USER
                         </button>
                     </form>
                 </div>
 
-                {/* Lista de Usuarios */}
+                {/* Users List */}
                 <div className="list-section">
-                    <h2>Admins Activos ({users.length})</h2>
+                    <h3>Active Users ({users.length})</h3>
                     <div className="minerals-list">
                         {users.map(u => (
-                            <div key={u.id} className="mineral-item-admin" style={{justifyContent:'space-between', padding:'15px', alignItems:'center'}}>
-                                <div style={{display:'flex', alignItems:'center', gap:'15px'}}>
-                                    <div style={{background:'#f0f0f0', padding:'10px', borderRadius:'50%'}}>
-                                        <Shield size={24} color="#555"/>
-                                    </div>
-                                    <div>
-                                        <h3 style={{margin:0, fontSize:'1.1rem'}}>{u.email}</h3>
-                                        <div style={{display:'flex', gap:'5px', marginTop:'5px'}}>
-                                            <span style={{
-                                                fontSize:'0.75rem',
-                                                padding:'2px 8px',
-                                                borderRadius:'4px',
-                                                background: u.role === 'superadmin' ? '#d4edda' : '#fff3cd',
-                                                color: u.role === 'superadmin' ? '#155724' : '#856404',
-                                                fontWeight: 'bold'
-                                            }}>
-                                                {u.role ? u.role.toUpperCase() : 'UNKNOWN'}
+                            <div key={u.id} className="mineral-item-admin" style={{justifyContent:'space-between'}}>
+                                <div>
+                                    <strong style={{color:'white', display:'block', marginBottom:'5px'}}>{u.email}</strong>
+                                    <div style={{display:'flex', gap:'10px', alignItems:'center'}}>
+                                        <span style={{
+                                            padding:'2px 8px',
+                                            borderRadius:'4px',
+                                            background: u.role === 'superadmin' ? '#d4edda' : '#fff3cd',
+                                            color: u.role === 'superadmin' ? '#155724' : '#856404',
+                                            fontWeight: 'bold',
+                                            fontSize: '0.8rem'
+                                        }}>
+                                            {u.role ? u.role.toUpperCase() : 'UNKNOWN'}
+                                        </span>
+                                        {u.must_change_password == 1 && (
+                                            <span style={{fontSize:'0.75rem', color:'#ff6b6b', border:'1px solid #ff6b6b', padding:'0 5px', borderRadius:'4px'}}>
+                                                Pwd Reset Pending
                                             </span>
-                                            {u.must_change_password == 1 && (
-                                                <span style={{fontSize:'0.75rem', color:'red', border:'1px solid red', padding:'0 5px', borderRadius:'4px'}}>
-                                                    Pwd Reset
-                                                </span>
-                                            )}
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
-                                <button onClick={() => handleDelete(u.id)} className="delete-btn" style={{padding:'8px'}}>
+                                <button onClick={() => handleDelete(u.id)} className="delete-btn" title="Delete User">
                                     <Trash2 size={18}/>
                                 </button>
                             </div>
                         ))}
+                        {users.length === 0 && <p style={{color:'#666', fontStyle:'italic'}}>No users found.</p>}
                     </div>
                 </div>
             </div>

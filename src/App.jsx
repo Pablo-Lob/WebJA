@@ -116,7 +116,7 @@ function App () {
                             </ProtectedRoute>
                         } />
 
-                        <Route path="/admin/catalog" element={
+                        <Route path="/admin/dashboard/catalog" element={
                             <ProtectedRoute>
                                 <ManageCatalog />
                             </ProtectedRoute>
@@ -128,7 +128,7 @@ function App () {
                             </ProtectedRoute>
                         } />
 
-                        <Route path="/admin/users" element={
+                        <Route path="/admin/dashboard/users" element={
                             <ProtectedRoute>
                                 <ManageAdmins/>
                             </ProtectedRoute>
@@ -164,7 +164,7 @@ function App () {
                             </ProtectedRoute>
                         } />
 
-                        <Route path="/admin/blog" element={
+                        <Route path="/admin/dashboard/blog" element={
                             <ProtectedRoute>
                                 <ManageBlog/>
                             </ProtectedRoute>

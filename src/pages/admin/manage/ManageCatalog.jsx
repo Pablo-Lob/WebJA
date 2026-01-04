@@ -7,7 +7,7 @@ const ManageCatalog = () => {
     const [minerals, setMinerals] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Estado Edición
+    // Edit State
     const [editingId, setEditingId] = useState(null);
 
     const [newItem, setNewItem] = useState({ name: '', description: '' });
@@ -18,11 +18,11 @@ const ManageCatalog = () => {
     const fetchMinerals = async () => {
         try {
             const response = await fetch(`${API_URL}&t=${Date.now()}`);
-            if (!response.ok) throw new Error("Error servidor");
+            if (!response.ok) throw new Error("Server error");
             const data = await response.json();
             setMinerals(Array.isArray(data) ? data : []);
         } catch (error) {
-            console.error("Error cargando catálogo:", error);
+            console.error("Error loading catalog:", error);
         }
     };
 
@@ -32,7 +32,7 @@ const ManageCatalog = () => {
         if (e.target.files) setImageFiles(Array.from(e.target.files));
     };
 
-    // Cargar datos en formulario
+    // Load data into form
     const handleEdit = (mineral) => {
         setEditingId(mineral.id);
         setNewItem({ name: mineral.name, description: mineral.description });
@@ -43,7 +43,8 @@ const ManageCatalog = () => {
         setEditingId(null);
         setNewItem({ name: '', description: '' });
         setImageFiles([]);
-        document.getElementById('file-upload').value = "";
+        const fileInput = document.getElementById('file-upload');
+        if (fileInput) fileInput.value = "";
     };
 
     const handleSubmit = async (e) => {
@@ -69,22 +70,22 @@ const ManageCatalog = () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                alert(editingId ? "Mineral actualizado" : "Mineral creado");
+                alert(editingId ? "Mineral updated" : "Mineral created");
                 cancelEdit();
                 fetchMinerals();
             } else {
-                alert("Error: " + (result.error || "Desconocido"));
+                alert("Error: " + (result.error || "Unknown"));
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("Error de conexión");
+            alert("Connection error");
         } finally {
             setLoading(false);
         }
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("¿Eliminar mineral?")) {
+        if (window.confirm("Delete mineral?")) {
             try {
                 await fetch(`${API_URL}&id=${id}`, { method: 'DELETE' });
                 fetchMinerals();
@@ -96,29 +97,29 @@ const ManageCatalog = () => {
         <div className="manage-catalog-container">
             <div className="catalog-header">
                 <button onClick={() => navigate('/admin/dashboard')} className="back-btn-simple">
-                    ← Volver
+                    ← Back
                 </button>
-                <h1>Gestor de Catálogo</h1>
+                <h1>Catalog Manager</h1>
             </div>
 
             <div className="admin-grid">
                 <div className="upload-section">
                     <div style={{display:'flex', justifyContent:'space-between'}}>
-                        <h2>{editingId ? 'Editar Mineral' : 'Añadir Mineral'}</h2>
-                        {editingId && <button onClick={cancelEdit} className="cancel-btn">Cancelar</button>}
+                        <h2>{editingId ? 'Edit Mineral' : 'Add Mineral'}</h2>
+                        {editingId && <button onClick={cancelEdit} className="cancel-btn">Cancel</button>}
                     </div>
 
                     <form onSubmit={handleSubmit}>
                         <input
                             type="text"
-                            placeholder="Nombre del Mineral"
+                            placeholder="Mineral Name"
                             className="admin-input"
                             value={newItem.name}
                             onChange={e => setNewItem({...newItem, name: e.target.value})}
                             required
                         />
                         <textarea
-                            placeholder="Descripción detallada..."
+                            placeholder="Detailed description..."
                             className="admin-textarea"
                             value={newItem.description}
                             onChange={e => setNewItem({...newItem, description: e.target.value})}
@@ -127,7 +128,7 @@ const ManageCatalog = () => {
 
                         <div className="file-input-wrapper">
                             <label style={{display:'block', marginBottom:'5px', color:'#aaa'}}>
-                                {editingId ? 'Añadir más imágenes (se sumarán):' : 'Imágenes:'}
+                                {editingId ? 'Add more images (will be appended):' : 'Images:'}
                             </label>
                             <input
                                 id="file-upload"
@@ -136,7 +137,7 @@ const ManageCatalog = () => {
                                 accept="image/*"
                                 onChange={handleImageChange}
                                 className="file-input"
-                                required={!editingId} // Solo requerido si es nuevo
+                                required={!editingId} // Only required if new
                             />
                         </div>
 
@@ -147,13 +148,13 @@ const ManageCatalog = () => {
                         </div>
 
                         <button type="submit" className="save-btn" disabled={loading}>
-                            {loading ? 'Guardando...' : (editingId ? 'Actualizar' : 'Publicar')}
+                            {loading ? 'Saving...' : (editingId ? 'Update' : 'Publish')}
                         </button>
                     </form>
                 </div>
 
                 <div className="list-section">
-                    <h2>Inventario Actual</h2>
+                    <h2>Current Inventory</h2>
                     <div className="minerals-list">
                         {minerals.map(mineral => (
                             <div key={mineral.id} className="mineral-item-admin">
@@ -164,11 +165,11 @@ const ManageCatalog = () => {
                                 )}
                                 <div className="mineral-info">
                                     <h3>{mineral.name}</h3>
-                                    <small>{mineral.images ? mineral.images.length : 0} imágenes</small>
+                                    <small>{mineral.images ? mineral.images.length : 0} images</small>
                                 </div>
                                 <div className="actions">
-                                    <button onClick={() => handleEdit(mineral)} className="edit-btn">Editar</button>
-                                    <button onClick={() => handleDelete(mineral.id)} className="delete-btn">Eliminar</button>
+                                    <button onClick={() => handleEdit(mineral)} className="edit-btn">Edit</button>
+                                    <button onClick={() => handleDelete(mineral.id)} className="delete-btn">Delete</button>
                                 </div>
                             </div>
                         ))}

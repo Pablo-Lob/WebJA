@@ -9,7 +9,9 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const LOGIN_URL = 'https://itsstonesfzco.com/login.php';
+    // Make sure this points to your real API
+    const LOGIN_URL = 'https://itsstonesfzco.com/api.php?table=admin_users&action=login';
+    // Or if you handle login in a separate file: 'https://itsstonesfzco.com/login.php'
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,7 +23,8 @@ const Login = () => {
             formData.append('email', email);
             formData.append('password', password);
 
-            const response = await fetch(LOGIN_URL, {
+            // Assuming your backend expects POST to login
+            const response = await fetch('https://itsstonesfzco.com/login.php', {
                 method: 'POST',
                 body: formData
             });
@@ -29,27 +32,21 @@ const Login = () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                // 1. Guardar Token e ID
                 localStorage.setItem('adminToken', result.token);
                 localStorage.setItem('adminUserId', result.user.id);
-
-                // 2. IMPORTANTE: Guardar el ROL para usarlo en el Dashboard
-                // (Asegúrate de que tu login.php devuelva 'role' dentro de 'user')
                 localStorage.setItem('adminRole', result.user.role || 'editor');
 
-                // 3. Lógica de Cambio de Contraseña (ACTIVADA)
-                // Si la base de datos dice que debe cambiarla, lo mandamos allí
+                // Redirect based on password reset requirement
                 if (result.user.must_change_password == 1) {
                     navigate('/admin/change-password');
                 } else {
                     navigate('/admin/dashboard');
                 }
             } else {
-                setError(result.message || 'Credenciales incorrectas');
+                setError(result.message || 'Invalid credentials');
             }
-        } catch (error) {
-            console.error("Error login:", error);
-            setError('Error de conexión con el servidor');
+        } catch (err) {
+            setError('Connection error. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -59,15 +56,15 @@ const Login = () => {
         <div className="login-container">
             <div className="login-card">
                 <div className="login-header">
-                    <h1>Panel de Administración</h1>
-                    <p>Acceso seguro ITS-Stones</p>
+                    <h2>Admin Panel</h2>
+                    <p>Secure Access</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="login-form">
                     {error && <div className="login-error">{error}</div>}
 
                     <div className="form-group">
-                        <label htmlFor="email">Correo Electrónico</label>
+                        <label htmlFor="email">Email Address</label>
                         <input
                             type="email"
                             id="email"
@@ -79,24 +76,24 @@ const Login = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Contraseña</label>
+                        <label htmlFor="password">Password</label>
                         <input
                             type="password"
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Introduce tu contraseña"
+                            placeholder="Enter your password"
                             required
                         />
                     </div>
 
                     <button type="submit" className="login-button" disabled={loading}>
-                        {loading ? 'Verificando...' : 'Entrar'}
+                        {loading ? 'Verifying...' : 'Login'}
                     </button>
                 </form>
 
                 <div className="login-footer">
-                    <a href="/">← Volver a la web</a>
+                    <a href="/">← Back to Website</a>
                 </div>
             </div>
         </div>

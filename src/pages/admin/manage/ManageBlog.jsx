@@ -1,123 +1,232 @@
 import React, { useState } from 'react';
-import './ManageBlog.css'; // Estilos específicos para la administración
+import { useNavigate } from 'react-router-dom'; // Importante para volver al dashboard
+import './ManageBlog.css';
 
 const ManageBlog = () => {
-    // Modo edición o lista
+    const navigate = useNavigate();
     const [view, setView] = useState('list'); // 'list' | 'create' | 'edit'
 
+    // Form Data State
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
         excerpt: '',
-        content: '', // Aquí conectarías un Rich Text Editor si quisieras
+        content: '',
         category: '',
-        metaTitle: '', // Para SEO
-        metaDesc: ''   // Para SEO
+        newCategory: '', // For custom category creation
+        metaTitle: '',
+        metaDesc: ''
     });
+
+    // Files State
+    const [coverImage, setCoverImage] = useState(null);
+    const [coverPreview, setCoverPreview] = useState(null);
+    const [isCustomCategory, setIsCustomCategory] = useState(false);
+
+    // Simulated Categories
+    const [categories, setCategories] = useState(['Market', 'Sustainability', 'Logistics', 'Projects']);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Category Logic
+    const handleCategoryChange = (e) => {
+        const value = e.target.value;
+        if (value === 'NEW_CUSTOM') {
+            setIsCustomCategory(true);
+            setFormData({ ...formData, category: '' });
+        } else {
+            setIsCustomCategory(false);
+            setFormData({ ...formData, category: value });
+        }
+    };
+
+    // Cover Image Logic
+    const handleCoverImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setCoverImage(file);
+            setCoverPreview(URL.createObjectURL(file));
+        }
+    };
+
+    // "Insert Image into Content" Logic (Simulation)
+    const handleContentImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // HERE YOU WOULD CALL YOUR API TO UPLOAD THE FILE
+            const fakeUrl = URL.createObjectURL(file);
+
+            // Insert HTML img tag into content textarea
+            const imgTag = `\n<img src="${fakeUrl}" alt="Description" style="width:100%; border-radius:4px; margin: 20px 0;" />\n`;
+            setFormData(prev => ({
+                ...prev,
+                content: prev.content + imgTag
+            }));
+
+            alert("Image inserted at the end of content (Simulation).");
+        }
+    };
+
     const handleSave = (e) => {
         e.preventDefault();
-        console.log("Guardando en BD:", formData);
-        alert("Artículo guardado (Mira la consola)");
-        setView('list');
+
+        // Determine final category
+        const finalCategory = isCustomCategory ? formData.newCategory : formData.category;
+
+        console.log("Saving Article...");
+        console.log("Data:", { ...formData, category: finalCategory });
+        console.log("Cover File:", coverImage);
+
+        alert("Article Saved (Check Console)");
+        // setView('list');
     };
 
     return (
         <div className="admin-blog-container">
             <div className="admin-header">
-                <h2>Panel de Control / <span className="highlight">Blog</span></h2>
-                {view === 'list' && (
-                    <button className="btn-neon" onClick={() => setView('create')}>
-                        + NUEVO ARTÍCULO
+                <h2>Manage <span className="highlight">Blog</span></h2>
+
+                <div className="header-actions">
+                    {/* Botón para volver al Dashboard principal */}
+                    <button className="btn-secondary" onClick={() => navigate('/admin/dashboard')} style={{marginRight: '10px'}}>
+                        &larr; Dashboard
                     </button>
-                )}
-                {view !== 'list' && (
-                    <button className="btn-ghost" onClick={() => setView('list')}>
-                        ← VOLVER
-                    </button>
-                )}
+
+                    {view === 'list' && (
+                        <button className="btn-gold" onClick={() => setView('create')}>
+                            + New Article
+                        </button>
+                    )}
+                    {view !== 'list' && (
+                        <button className="btn-secondary" onClick={() => setView('list')}>
+                            Cancel / List
+                        </button>
+                    )}
+                </div>
             </div>
 
             {view === 'list' ? (
-                /* --- VISTA LISTA --- */
+                /* --- LIST VIEW --- */
                 <div className="data-table-wrapper">
-                    <table className="neon-table">
+                    <table className="admin-table">
                         <thead>
                         <tr>
-                            <th>Título</th>
-                            <th>Slug</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {/* Ejemplo estático */}
                         <tr>
-                            <td>El Futuro de la IA</td>
-                            <td>futuro-ia-2026</td>
-                            <td><span className="status-badge published">Publicado</span></td>
+                            <td>Global Granite Trends</td>
+                            <td>Market</td>
+                            <td><span className="status-badge published">Published</span></td>
                             <td>
-                                <button className="action-btn edit" onClick={() => setView('edit')}>✏️</button>
-                                <button className="action-btn delete">🗑️</button>
+                                <button className="action-btn" onClick={() => setView('edit')}>✏️</button>
+                                <button className="action-btn">🗑️</button>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             ) : (
-                /* --- VISTA FORMULARIO --- */
-                <div className="editor-wrapper">
-                    <form onSubmit={handleSave} className="admin-form">
+                /* --- FORM VIEW --- */
+                <form onSubmit={handleSave} className="admin-form">
+
+                    {/* LEFT COLUMN: CONTENT */}
+                    <div className="form-section">
+                        <h4>Article Content</h4>
+
+                        <div className="form-group">
+                            <label>Main Title</label>
+                            <input type="text" name="title" value={formData.title} onChange={handleChange} required placeholder="Ex: The Evolution of Marble..." />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Slug (URL Friendly)</label>
+                            <input type="text" name="slug" value={formData.slug} onChange={handleChange} placeholder="ex: marble-evolution-2026" />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Excerpt (Short Summary)</label>
+                            <textarea name="excerpt" rows="3" value={formData.excerpt} onChange={handleChange} placeholder="Short description for the card..." />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Full Content (HTML or Text)</label>
+                            {/* Content Image Upload Helper */}
+                            <div style={{marginBottom: '10px', padding: '10px', background: '#222', borderRadius: '4px'}}>
+                                <label style={{display:'inline-block', marginRight:'10px', fontSize:'0.8rem'}}>Insert image into text:</label>
+                                <input type="file" onChange={handleContentImageUpload} className="btn-upload" accept="image/*" />
+                            </div>
+
+                            <textarea
+                                name="content"
+                                rows="15"
+                                value={formData.content}
+                                onChange={handleChange}
+                                placeholder="Write the article content here. You can use basic HTML tags..."
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    {/* RIGHT COLUMN: META & MEDIA */}
+                    <div className="side-column">
                         <div className="form-section">
-                            <h4>Contenido Principal</h4>
+                            <h4>Classification & Media</h4>
+
                             <div className="form-group">
-                                <label>Título</label>
-                                <input type="text" name="title" value={formData.title} onChange={handleChange} required />
-                            </div>
-                            <div className="form-group">
-                                <label>Slug (URL)</label>
-                                <input type="text" name="slug" value={formData.slug} onChange={handleChange} placeholder="ej: mi-nuevo-articulo" />
-                            </div>
-                            <div className="form-group">
-                                <label>Categoría</label>
-                                <select name="category" value={formData.category} onChange={handleChange} className="dark-select">
-                                    <option value="">Selecciona...</option>
-                                    <option value="Dev">Desarrollo</option>
-                                    <option value="Security">Ciberseguridad</option>
-                                    <option value="Innovation">Innovación</option>
+                                <label>Category</label>
+                                <select className="admin-select" value={isCustomCategory ? 'NEW_CUSTOM' : formData.category} onChange={handleCategoryChange}>
+                                    <option value="">Select...</option>
+                                    {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                    <option value="NEW_CUSTOM">+ Add New...</option>
                                 </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Contenido</label>
-                                <textarea name="content" rows="10" value={formData.content} onChange={handleChange}></textarea>
-                            </div>
-                        </div>
 
-                        {/* SECCIÓN SEO CLAVE */}
-                        <div className="form-section seo-box">
-                            <h4>🚀 Configuración SEO</h4>
-                            <p className="seo-help">Estos datos son los que Google mostrará en los resultados de búsqueda.</p>
-
-                            <div className="form-group">
-                                <label>Meta Title (Max 60 chars)</label>
-                                <input type="text" name="metaTitle" maxLength="60" placeholder="Título atractivo para Google" value={formData.metaTitle} onChange={handleChange} />
+                                {isCustomCategory && (
+                                    <input
+                                        type="text"
+                                        name="newCategory"
+                                        placeholder="New Category Name"
+                                        value={formData.newCategory}
+                                        onChange={handleChange}
+                                        style={{marginTop: '10px', borderColor: '#d4af37'}}
+                                        autoFocus
+                                    />
+                                )}
                             </div>
 
                             <div className="form-group">
-                                <label>Meta Description (Max 160 chars)</label>
-                                <textarea name="metaDesc" rows="3" maxLength="160" placeholder="Resumen que incita al clic..." value={formData.metaDesc} onChange={handleChange}></textarea>
+                                <label>Cover Image</label>
+                                <input type="file" onChange={handleCoverImageChange} accept="image/*" className="btn-upload" style={{width: '100%'}} />
+                                {coverPreview && (
+                                    <img src={coverPreview} alt="Preview" className="preview-img" />
+                                )}
+                                {!coverPreview && <div className="helper-text">No image selected</div>}
                             </div>
                         </div>
 
-                        <div className="form-actions">
-                            <button type="submit" className="btn-neon">GUARDAR CAMBIOS</button>
+                        <div className="form-section" style={{marginTop: '30px'}}>
+                            <h4>SEO (Google)</h4>
+                            <div className="form-group">
+                                <label>Meta Title</label>
+                                <input type="text" name="metaTitle" value={formData.metaTitle} onChange={handleChange} maxLength="60" />
+                            </div>
+                            <div className="form-group">
+                                <label>Meta Description</label>
+                                <textarea name="metaDesc" rows="4" value={formData.metaDesc} onChange={handleChange} maxLength="160"></textarea>
+                            </div>
+
+                            <button type="submit" className="btn-gold" style={{width: '100%', marginTop: '20px'}}>
+                                SAVE ARTICLE
+                            </button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                </form>
             )}
         </div>
     );
