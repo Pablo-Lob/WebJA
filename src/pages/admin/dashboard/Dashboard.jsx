@@ -98,7 +98,7 @@ const Dashboard = () => {
             </div>
 
             <div className="dashboard-footer">
-                <a href="/public" className="back-to-site">
+                <a href="/" className="back-to-site">
                     Go to Website
                 </a>
             </div>

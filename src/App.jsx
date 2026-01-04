@@ -137,7 +137,7 @@ function App () {
                             </ProtectedRoute>
                         }  />
 
-                        <Route path="/admin/About-us" element={
+                        <Route path="/admin/about-us" element={
                             <ProtectedRoute>
                                 <ManageAbout />
                             </ProtectedRoute>

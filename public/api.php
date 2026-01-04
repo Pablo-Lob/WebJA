@@ -52,13 +52,49 @@ if (!in_array($table, $allowedTables)) {
 }
 
 // 4. DIRECTORIOS DE SUBIDA
-$uploadDir = 'uploads/';
 if ($table === 'siteConfig') {
-    $uploadDir .= 'config/';
-} elseif ($table === 'minerals') {
-    $uploadDir .= 'catalog/';
-} else {
-    $uploadDir .= $table . '/';
+    if ($method === 'GET') {
+        $stmt = $pdo->query("SELECT * FROM siteConfig");
+        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+        exit;
+    }
+    if ($method === 'POST') {
+        // 1. Guardar Textos ($_POST)
+        foreach ($_POST as $key => $value) {
+            $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (:key, :value) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':key' => $key, ':value' => $value]);
+        }
+
+        // 2. Guardar Archivos ($_FILES) - Ahora detecta cualquier nombre (hero_image, about_image...)
+        if (!empty($_FILES)) {
+            foreach ($_FILES as $key => $file) {
+                if ($file['error'] === 0) {
+                    // Validar tipo
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $mime = $finfo->file($file['tmp_name']);
+                    if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'])) {
+
+                        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+                        // Usamos la $key (ej: hero_image) como parte del nombre
+                        $filename = $key . '_' . time() . '.' . $ext;
+
+                        if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
+                            $imageUrl = $baseUrl . $filename;
+                            // Guardar la URL en la BD
+                            $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute([$key, $imageUrl]);
+                        }
+                    }
+                }
+            }
+        }
+
+        echo json_encode(["status" => "success"]);
+        exit;
+    }
+    exit;
 }
 
 if (!file_exists($uploadDir)) {
