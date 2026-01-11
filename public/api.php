@@ -1,18 +1,33 @@
 <?php
-// api.php - VERSIÓN SEGURA Y COMPLETA
 
-// 1. SEGURIDAD CORS: Solo permitir tu dominio y localhost
+// Cargar variables de entorno (.env)
+function loadEnv($path) {
+    if (!file_exists($path)) {
+        http_response_code(500);
+        echo json_encode(["error" => "Falta configuración .env"]);
+        exit;
+    }
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        $_ENV[trim($name)] = trim($value);
+    }
+}
+try {
+    loadEnv(__DIR__ . '/.env');
+} catch (Exception $e) {
+    exit; // Silencioso en producción
+}
+
+// 1. SEGURIDAD CORS: Solo permitir dominio
 $allowed_origins = [
     "https://itsstonesfzco.com",
     "https://www.itsstonesfzco.com",
-    "http://localhost:5173",
-    "http://localhost:3000"
 ];
 
 if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {
     header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
-} else {
-    // Si no es un origen permitido, no mandamos el header (bloqueo implícito)
 }
 
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -27,13 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // 2. CONEXIÓN BD
-$host = "localhost";
-$dbname = "u536355856_its_stones";
-$user = "u536355856_admin";
-$password = "TCe6QwHLJFHuny"; // <--- ¡PON TU CONTRASEÑA REAL AQUÍ!
-
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $password);
+    $pdo = new PDO(
+        "mysql:host=" . $_ENV['DB_HOST'] . ";dbname=" . $_ENV['DB_NAME'] . ";charset=utf8mb4",
+        $_ENV['DB_USER'],
+        $_ENV['DB_PASSWORD']
+    );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     http_response_code(500);
@@ -43,7 +57,8 @@ try {
 
 // 3. ENRUTAMIENTO
 $table = isset($_GET['table']) ? $_GET['table'] : 'minerals';
-$allowedTables = ['minerals', 'branches', 'services', 'siteConfig', 'admin_users'];
+// Agregamos 'blog' a tu lista original
+$allowedTables = ['minerals', 'branches', 'services', 'siteConfig', 'admin_users', 'blog'];
 
 if (!in_array($table, $allowedTables)) {
     http_response_code(400);
@@ -51,64 +66,16 @@ if (!in_array($table, $allowedTables)) {
     exit;
 }
 
-// 4. DIRECTORIOS DE SUBIDA
-if ($table === 'siteConfig') {
-    if ($method === 'GET') {
-        $stmt = $pdo->query("SELECT * FROM siteConfig");
-        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-        exit;
-    }
-    if ($method === 'POST') {
-        // 1. Guardar Textos ($_POST)
-        foreach ($_POST as $key => $value) {
-            $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (:key, :value) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([':key' => $key, ':value' => $value]);
-        }
-
-        // 2. Guardar Archivos ($_FILES) - Ahora detecta cualquier nombre (hero_image, about_image...)
-        if (!empty($_FILES)) {
-            foreach ($_FILES as $key => $file) {
-                if ($file['error'] === 0) {
-                    // Validar tipo
-                    $finfo = new finfo(FILEINFO_MIME_TYPE);
-                    $mime = $finfo->file($file['tmp_name']);
-                    if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'])) {
-
-                        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-                        // Usamos la $key (ej: hero_image) como parte del nombre
-                        $filename = $key . '_' . time() . '.' . $ext;
-
-                        if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-                            $imageUrl = $baseUrl . $filename;
-                            // Guardar la URL en la BD
-                            $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->execute([$key, $imageUrl]);
-                        }
-                    }
-                }
-            }
-        }
-
-        echo json_encode(["status" => "success"]);
-        exit;
-    }
-    exit;
-}
-
+// Configuración de Directorios
+$uploadDir = 'uploads/';
 if (!file_exists($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
-
-// Base URL para las imágenes
 $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
 $baseUrl = $protocol . "://" . $_SERVER['HTTP_HOST'] . "/" . $uploadDir;
 $method = $_SERVER['REQUEST_METHOD'];
 
-// ==========================================
-//  LÓGICA SITE CONFIG
-// ==========================================
+//  LÓGICA SITE CONFIG (Tu bloque original)
 if ($table === 'siteConfig') {
     if ($method === 'GET') {
         $stmt = $pdo->query("SELECT * FROM siteConfig");
@@ -116,31 +83,23 @@ if ($table === 'siteConfig') {
         exit;
     }
     if ($method === 'POST') {
-        // 1. Guardar Textos (Cualquier campo de texto que venga en el FormData)
+        // 1. Guardar Textos
         foreach ($_POST as $key => $value) {
             $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (:key, :value) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':key' => $key, ':value' => $value]);
         }
-
-        // 2. Guardar Archivos (Detecta hero_image, mission_image, about_image...)
+        // 2. Guardar Archivos
         if (!empty($_FILES)) {
             foreach ($_FILES as $key => $file) {
                 if ($file['error'] === 0) {
-                    // Validar tipo MIME
                     $finfo = new finfo(FILEINFO_MIME_TYPE);
                     $mime = $finfo->file($file['tmp_name']);
-
                     if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'])) {
                         $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-
-                        // Usamos el nombre del campo (ej: hero_image) para nombrar el archivo
                         $filename = $key . '_' . time() . '.' . $ext;
-
                         if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
                             $imageUrl = $baseUrl . $filename;
-
-                            // Guardamos la URL en la BD usando la misma clave
                             $sql = "INSERT INTO siteConfig (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
                             $stmt = $pdo->prepare($sql);
                             $stmt->execute([$key, $imageUrl]);
@@ -149,16 +108,57 @@ if ($table === 'siteConfig') {
                 }
             }
         }
-
         echo json_encode(["status" => "success"]);
         exit;
     }
-    exit;
 }
 
-// ==========================================
+//  LÓGICA BLOG
+if ($table === 'blog') {
+    if ($method === 'GET') {
+        $stmt = $pdo->query("SELECT * FROM blog ORDER BY created_at DESC");
+        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+        exit;
+    }
+    elseif ($method === 'POST') {
+        $title = $_POST['title'];
+        $slug = $_POST['slug'];
+        $excerpt = $_POST['excerpt'];
+        $content = $_POST['content'];
+        $category = $_POST['category'];
+        $metaTitle = $_POST['metaTitle'] ?? '';
+        $metaDesc = $_POST['metaDesc'] ?? '';
+
+        $imgUrl = '';
+        // Lógica de subida idéntica a tu estilo original
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            if (in_array($finfo->file($_FILES['image']['tmp_name']), ['image/jpeg', 'image/png', 'image/webp'])) {
+                $fname = 'blog_' . time() . '_' . basename($_FILES['image']['name']);
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $fname)) {
+                    $imgUrl = $baseUrl . $fname;
+                }
+            }
+        }
+
+        $id = $_POST['id'] ?? null;
+        if ($id) {
+            $sql = "UPDATE blog SET title=?, slug=?, excerpt=?, content=?, category=?, meta_title=?, meta_desc=?";
+            $params = [$title, $slug, $excerpt, $content, $category, $metaTitle, $metaDesc];
+            if ($imgUrl) { $sql .= ", image=?"; $params[] = $imgUrl; }
+            $sql .= " WHERE id=?"; $params[] = $id;
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO blog (title, slug, excerpt, content, category, meta_title, meta_desc, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $slug, $excerpt, $content, $category, $metaTitle, $metaDesc, $imgUrl]);
+        }
+        echo json_encode(["status" => "success"]);
+        exit;
+    }
+}
+
 //  LÓGICA ESTÁNDAR (Minerales, Services, Branches)
-// ==========================================
 
 if ($method === 'GET') {
     $stmt = $pdo->query("SELECT * FROM $table ORDER BY id DESC");
@@ -170,27 +170,21 @@ if ($method === 'GET') {
 }
 
 elseif ($method === 'POST') {
-    // ADMIN USERS (Crear usuario con Hash)
+    // ADMIN USERS
     if ($table === 'admin_users') {
         $action = $_POST['action'] ?? '';
-
         if ($action === 'create') {
             $email = $_POST['email'];
-            $rawPass = $_POST['password'];
+            $pass = $_POST['password'];
             $role = $_POST['role'] ?? 'editor';
-            // ¡AQUÍ ESTÁ EL HASH!
-            $hash = password_hash($rawPass, PASSWORD_DEFAULT);
-
-            $stmt = $pdo->prepare("INSERT INTO admin_users (email, password, role) VALUES (?, ?, ?)");
+            $hash = password_hash($pass, PASSWORD_DEFAULT);
             try {
+                $stmt = $pdo->prepare("INSERT INTO admin_users (email, password, role) VALUES (?, ?, ?)");
                 $stmt->execute([$email, $hash, $role]);
                 echo json_encode(["status" => "success"]);
-            } catch (Exception $e) {
-                echo json_encode(["error" => "Email duplicado o error"]);
-            }
+            } catch (Exception $e) { echo json_encode(["error" => "Error"]); }
             exit;
         }
-        // Cambio de contraseña
         if ($action === 'change_password') {
             $id = $_POST['id'];
             $newPass = $_POST['new_password'];
@@ -202,7 +196,6 @@ elseif ($method === 'POST') {
         }
     }
 
-    // MINERALS / BRANCHES / SERVICES
     $id = $_POST['id'] ?? null;
     $isUpdate = !empty($id);
     $imagePaths = [];
@@ -212,21 +205,27 @@ elseif ($method === 'POST') {
         $files = $_FILES['images'];
         for ($i = 0; $i < count($files['name']); $i++) {
             if ($files['error'][$i] === 0) {
-                $fname = time() . '_' . basename($files['name'][$i]);
-                if (move_uploaded_file($files['tmp_name'][$i], $uploadDir . $fname)) $imagePaths[] = $baseUrl . $fname;
+                // Validación básica seguridad
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                if (in_array($finfo->file($files['tmp_name'][$i]), ['image/jpeg', 'image/png', 'image/webp'])) {
+                    $fname = time() . '_' . basename($files['name'][$i]);
+                    if (move_uploaded_file($files['tmp_name'][$i], $uploadDir . $fname)) $imagePaths[] = $baseUrl . $fname;
+                }
             }
         }
     } elseif (($table === 'branches' || $table === 'services') && isset($_FILES['image'])) {
         if ($_FILES['image']['error'] === 0) {
-            $fname = time() . '_' . basename($_FILES['image']['name']);
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $fname)) $imagePaths[] = $baseUrl . $fname;
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            if (in_array($finfo->file($_FILES['image']['tmp_name']), ['image/jpeg', 'image/png', 'image/webp'])) {
+                $fname = time() . '_' . basename($_FILES['image']['name']);
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $fname)) $imagePaths[] = $baseUrl . $fname;
+            }
         }
     }
 
     // Insertar/Actualizar BD
     if ($table === 'minerals') {
-        $name = $_POST['name'];
-        $desc = $_POST['description'];
+        $name = $_POST['name']; $desc = $_POST['description'];
         if ($isUpdate) {
             $oldImgs = json_decode($_POST['existing_images'] ?? '[]', true) ?: [];
             $finalImgs = array_merge($oldImgs, $imagePaths);
@@ -237,7 +236,6 @@ elseif ($method === 'POST') {
             $stmt->execute([$name, $desc, json_encode($imagePaths)]);
         }
     } elseif ($table === 'branches') {
-        // Lógica branches...
         $city = $_POST['city']; $desc = $_POST['description']; $det = $_POST['details'];
         if ($isUpdate) {
             $sql = "UPDATE branches SET city=?, description=?, details=?";
@@ -252,7 +250,6 @@ elseif ($method === 'POST') {
             $stmt->execute([$city, $desc, $det, $img]);
         }
     } elseif ($table === 'services') {
-        // Lógica services...
         $title = $_POST['title']; $desc = $_POST['description'];
         if ($isUpdate) {
             $sql = "UPDATE services SET title=?, description=?";
@@ -273,8 +270,6 @@ elseif ($method === 'POST') {
 elseif ($method === 'DELETE') {
     $id = $_GET['id'] ?? null;
     if (!$id) exit;
-    // ... (Tu lógica de borrado original estaba bien, la mantenemos implícita o cópiala del anterior)
-    // Borrado simplificado para ahorrar espacio aquí:
     $stmt = $pdo->prepare("DELETE FROM $table WHERE id = ?");
     $stmt->execute([$id]);
     echo json_encode(["status" => "deleted"]);

@@ -1,5 +1,25 @@
 <?php
-$allowed_origins = ["https://itsstonesfzco.com", "https://www.itsstonesfzco.com", "http://localhost:5173"];
+
+// Helper .env
+function loadEnv($path) {
+    if (!file_exists($path)) { throw new Exception("Env file not found"); }
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        $_ENV[trim($name)] = trim($value);
+    }
+}
+try {
+    loadEnv(__DIR__ . '/.env');
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(["status" => "error", "message" => "Server Config Error"]);
+    exit;
+}
+
+// CORS y Headers
+$allowed_origins = ["https://itsstonesfzco.com", "https://www.itsstonesfzco.com"];
 if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {
     header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
 }
@@ -13,13 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // CONFIGURACIÓN BD
-$host = "localhost";
-$dbname = "u536355856_its_stones";
-$user = "u536355856_admin";
-$password = "TCe6QwHLJFHuny";
-
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $password);
+    $pdo = new PDO(
+        "mysql:host=" . $_ENV['DB_HOST'] . ";dbname=" . $_ENV['DB_NAME'] . ";charset=utf8mb4",
+        $_ENV['DB_USER'],
+        $_ENV['DB_PASSWORD']
+    );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     http_response_code(500);
@@ -27,6 +46,7 @@ try {
     exit;
 }
 
+// Lógica de Login original
 $input = json_decode(file_get_contents('php://input'), true) ?: [];
 $email = $_POST['email'] ?? $input['email'] ?? '';
 $pass = $_POST['password'] ?? $input['password'] ?? '';
@@ -51,7 +71,7 @@ if ($userFound && password_verify($pass, $userFound['password'])) {
             "id" => $userFound['id'],
             "email" => $userFound['email'],
             "role" => $userFound['role'],
-            "must_change_password" => $userFound['must_change_password'] == 1 // Enviamos este flag
+            "must_change_password" => $userFound['must_change_password'] == 1
         ]
     ]);
 } else {

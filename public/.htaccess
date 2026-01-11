@@ -8,6 +8,11 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+
 # 1. Compresión GZIP
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
