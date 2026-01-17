@@ -1,6 +1,5 @@
 .about-section {
     background-color: var(--bg-dark);
-    color: white;
     padding:  100px 20px;
     display: flex;
     justify-content: center;
@@ -36,6 +35,43 @@
     height: 3px;
     background: #d4af37;
     margin-bottom: 30px;
+}
+
+.person {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.about-person-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #d4af37;
+
+}
+
+.person-text {
+    margin-left: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.name-person-about {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #d4af37 !important;
+    margin: 0;
+    margin-bottom: 4px;
+    line-height: 1.1;
+}
+
+.job-tittle-person-about {
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.2;
 }
 
 .highlight-text {
