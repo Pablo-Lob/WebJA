@@ -1,8 +1,8 @@
 import React from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
-import { useConfig } from '../../context/ConfigContext.jsx'; // Importamos hook
+import { useConfig } from '../../context/ConfigContext.jsx';
 
 const Footer = () => {
     const { config } = useConfig();
@@ -22,23 +22,16 @@ const Footer = () => {
             <div className="footer-content">
                 <div className="footer-grid">
 
-                    {/* Productos  */}
+                    {/* Menu */}
                     <div className="footer-column">
-                        <h3 className="footer-heading">Products</h3>
+                        <h3 className="footer-heading">Menu</h3>
                         <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Precious Metals</a></li>
-                            <li><a href="#" className="footer-link">Gemstones</a></li>
-                        </ul>
-                    </div>
-
-                    {/* Servicios  */}
-                    <div className="footer-column">
-                        <h3 className="footer-heading">Service</h3>
-                        <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Global Sourcing & Importation</a></li>
-                            <li><a href="#" className="footer-link">Quality Assurance & Certification</a></li>
-                            <li><a href="#" className="footer-link">Secure Logistics</a></li>
-                            <li><a href="#" className="footer-link">Consultation & Market Insight</a></li>
+                            <li><a href="/" className="footer-link">Home</a></li>
+                            <li><a href="/about-us" className="footer-link">About Us</a></li>
+                            <li><a href="/products" className="footer-link">Products</a></li>
+                            <li><a href="/services" className="footer-link">Services</a></li>
+                            <li><a href="/contact-us" className="footer-link">Contact Us</a></li>
+                            <li><a href="" className="footer-link">News & Blog</a></li>
                         </ul>
                     </div>
 
@@ -92,6 +85,11 @@ const Footer = () => {
                                 </a>
                             </div>
 
+                            <div className="contact-item">
+                                <Link to ="/contact" className="gold-button-outline">
+                                    Contact Our Team <ArrowRight size={16} />
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
